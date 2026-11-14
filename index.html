@@ -17,7 +17,13 @@
       --text-muted: #94a3b8;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     body {
       min-height: 100vh;
@@ -29,9 +35,11 @@
       overflow-x: hidden;
     }
 
+    /* Nagłówek i Nawigacja */
     header {
       background: rgba(8, 16, 20, 0.95);
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--glass-border);
       position: sticky;
       top: 0;
@@ -45,25 +53,44 @@
       padding: 0.75rem 1.2rem;
     }
 
-    .logo { font-weight: 800; font-size: 1.05rem; cursor: pointer; color: var(--text-main); letter-spacing: 0.5px; }
-    .logo span { color: var(--accent); border: 1px solid var(--accent); padding: 1px 6px; border-radius: 4px; margin-right: 6px; }
+    .logo {
+      font-weight: 800;
+      font-size: 1.05rem;
+      cursor: pointer;
+      color: var(--text-main);
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .logo span {
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
 
     .btn-logout {
       background: rgba(239, 68, 68, 0.15);
       border: 1px solid rgba(239, 68, 68, 0.45);
       color: #fca5a5;
-      padding: 0.3rem 0.7rem;
+      padding: 0.3rem 0.75rem;
       border-radius: 6px;
       font-size: 0.72rem;
       font-weight: 700;
       cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.3);
+      color: #fff;
     }
 
     nav {
       display: flex;
       gap: 0.4rem;
       padding: 0.4rem 1.2rem;
-      background: rgba(0,0,0,0.3);
+      background: rgba(0, 0, 0, 0.3);
       overflow-x: auto;
     }
     nav button {
@@ -78,254 +105,906 @@
       transition: 0.2s;
       white-space: nowrap;
     }
-    nav button:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
-    nav button.active { background: var(--accent); color: #052e16; font-weight: 700; }
+    nav button:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    nav button.active {
+      background: var(--accent);
+      color: #052e16;
+      font-weight: 700;
+    }
 
-    /* Ekran Logowania */
+    /* Ekran Logowania 3D */
     .auth-wrapper {
-      flex: 1; display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      perspective: 1400px;
     }
+
     .auth-panel {
-      width: 100%; max-width: 440px; background: var(--glass-bg); backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border); border-radius: 22px; padding: 2rem;
+      width: 100%;
+      max-width: 450px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 22px;
+      padding: 2rem;
       box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 25px var(--accent-glow);
+      transform: rotateX(2deg);
+      transition: transform 0.3s ease;
     }
-    .form-group { margin-bottom: 0.9rem; }
-    .form-group label { display: block; font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.35rem; }
-    .form-group input {
-      width: 100%; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px; padding: 0.65rem 0.85rem; color: #fff; font-size: 0.85rem; outline: none;
+    .auth-panel:hover {
+      transform: rotateX(0deg) translateZ(6px);
     }
-    .form-group input:focus { border-color: var(--accent); }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 0.3rem;
+      border-radius: 10px;
+      margin-bottom: 1.4rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .auth-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .auth-tab-btn.active {
+      background: var(--accent);
+      color: #052e16;
+    }
+
+    .form-group {
+      margin-bottom: 0.9rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.35rem;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--accent);
+      background: rgba(74, 222, 128, 0.05);
+    }
+
     .btn-primary {
-      width: 100%; padding: 0.7rem; border-radius: 8px; border: none;
-      background: var(--accent); color: #052e16; font-weight: 800; font-size: 0.85rem; cursor: pointer; margin-top: 0.4rem;
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: none;
+      background: var(--accent);
+      color: #052e16;
+      font-weight: 800;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-top: 0.4rem;
+      transition: 0.2s;
     }
+    .btn-primary:hover {
+      filter: brightness(1.08);
+    }
+
     .btn-demo {
-      width: 100%; padding: 0.65rem; border-radius: 8px; border: 1px solid var(--gold);
-      background: rgba(250, 204, 21, 0.1); color: var(--gold); font-weight: 700; font-size: 0.78rem; cursor: pointer; margin-top: 0.75rem;
+      width: 100%;
+      padding: 0.65rem;
+      border-radius: 8px;
+      border: 1px solid var(--gold);
+      background: rgba(250, 204, 21, 0.1);
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      margin-top: 0.75rem;
+      transition: 0.2s;
+    }
+    .btn-demo:hover {
+      background: rgba(250, 204, 21, 0.2);
     }
 
-    /* Scena 3D */
+    /* Przestrzenna Scena 3D Kokpitu */
     .spatial-stage {
-      flex: 1; display: grid; grid-template-columns: 1fr 1.25fr; gap: 2rem; padding: 2.5rem 3rem;
-      perspective: 1800px; align-items: start; max-width: 1550px; margin: 0 auto; width: 100%;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 2.2rem;
+      padding: 2.2rem 3rem;
+      perspective: 1800px;
+      align-items: start;
+      max-width: 1600px;
+      margin: 0 auto;
+      width: 100%;
     }
+
     .panel-3d {
-      background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border); border-radius: 22px; padding: 1.8rem;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 22px;
+      padding: 1.8rem;
       box-shadow: 0 35px 70px rgba(0, 0, 0, 0.75), inset 0 0 30px var(--accent-glow);
-      transition: transform 0.4s ease; position: relative;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      position: relative;
     }
-    .panel-left { transform: rotateY(8deg); }
-    .panel-right { transform: rotateY(-8deg); }
-    .panel-left:hover { transform: rotateY(2deg) translateZ(10px); }
-    .panel-right:hover { transform: rotateY(-2deg) translateZ(10px); }
 
-    h2 { font-size: 0.92rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--accent); margin-bottom: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+    .panel-left {
+      transform: rotateY(8deg);
+    }
+    .panel-right {
+      transform: rotateY(-8deg);
+    }
+    .panel-left:hover {
+      transform: rotateY(2deg) translateZ(10px);
+    }
+    .panel-right:hover {
+      transform: rotateY(-2deg) translateZ(10px);
+    }
 
-    /* Profil ze zdjęciem */
+    h2 {
+      font-size: 0.92rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Układ Profilu Gracza 3D jak na wizualizacji */
     .profile-layout {
-      display: grid; grid-template-columns: 130px 1fr; gap: 1.2rem; align-items: center;
-      background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.08); padding: 1.2rem; border-radius: 14px; margin-bottom: 1rem;
+      display: grid;
+      grid-template-columns: 155px 1fr;
+      gap: 1.2rem;
+      align-items: stretch;
+      margin-bottom: 1rem;
     }
-    .avatar-box {
-      width: 120px; height: 150px; background: linear-gradient(135deg, rgba(74,222,128,0.25), rgba(6,78,59,0.8));
-      border: 1px solid var(--accent); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+
+    .golfer-3d-figure {
+      background: radial-gradient(circle at 50% 25%, rgba(74, 222, 128, 0.22), rgba(5, 16, 20, 0.92));
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      min-height: 290px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
     }
-    .avatar-box::before { content: "🧑‍💼"; font-size: 4.5rem; position: absolute; top: 15px; }
+    .golfer-3d-figure img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      filter: contrast(1.06) saturate(1.05);
+    }
+    .golfer-tag {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      background: rgba(8, 18, 22, 0.88);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      padding: 4px 6px;
+      text-align: center;
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+
+    .profile-stats-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
     .stat-card {
-      background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px;
-      padding: 0.75rem 1rem; margin-bottom: 0.6rem; display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 0.7rem 0.95rem;
+      margin-bottom: 0.55rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .stat-card span { color: var(--text-muted); font-size: 0.8rem; }
-    .stat-card strong { color: var(--text-main); font-size: 0.9rem; }
+    .stat-card:last-child {
+      margin-bottom: 0;
+    }
+    .stat-card span {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+    .stat-card strong {
+      color: var(--text-main);
+      font-size: 0.88rem;
+    }
 
     .mini-chart {
-      height: 35px; background: rgba(0,0,0,0.35); border-radius: 6px; border: 1px solid rgba(74,222,128,0.25);
-      margin-top: 0.4rem; position: relative; overflow: hidden; display: flex; align-items: flex-end;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 6px;
+      border: 1px solid rgba(74, 222, 128, 0.25);
+      margin-top: 0.45rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      width: 100%;
     }
-    .chart-line { stroke: var(--accent); fill: rgba(74,222,128,0.12); }
+    .chart-line {
+      stroke: var(--accent);
+      fill: rgba(74, 222, 128, 0.14);
+    }
 
-    /* Kije w torbie */
+    /* Karty Kijów w Torbie z Pobieraniem Zdjęć Na Żywo */
     .club-hud-card {
-      background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px;
-      padding: 1rem; margin-bottom: 0.8rem; display: grid; grid-template-columns: 70px 1fr; gap: 1rem; align-items: center; transition: 0.2s;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 14px;
+      padding: 0.95rem;
+      margin-bottom: 0.85rem;
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 1rem;
+      align-items: center;
+      transition: 0.25s;
     }
-    .club-hud-card:hover { border-color: var(--accent); background: rgba(74, 222, 128, 0.05); }
-    .club-thumb {
-      width: 70px; height: 70px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(114, 214, 150, 0.3);
-      border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; position: relative;
+    .club-hud-card:hover {
+      border-color: var(--accent);
+      background: rgba(74, 222, 128, 0.05);
     }
+
+    .club-photo-frame {
+      width: 92px;
+      height: 92px;
+      background: radial-gradient(circle at 50% 50%, rgba(40, 75, 65, 0.45), rgba(5, 12, 15, 0.95));
+      border: 1px solid rgba(114, 214, 150, 0.4);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-in;
+      box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.7);
+    }
+    .club-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .club-photo-frame:hover img {
+      transform: scale(1.1);
+    }
+    .live-photo-badge {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background: rgba(0, 0, 0, 0.75);
+      color: var(--accent);
+      font-size: 0.52rem;
+      font-weight: 800;
+      padding: 1px 4px;
+      border-radius: 4px;
+      border: 1px solid rgba(74, 222, 128, 0.4);
+      letter-spacing: 0.3px;
+    }
+    .cond-badge {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      background: rgba(5, 25, 18, 0.9);
+      color: var(--gold);
+      font-size: 0.58rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 4px;
+      border: 1px solid rgba(250, 204, 21, 0.4);
+    }
+
     .club-metrics-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin-top: 0.6rem;
-      background: rgba(0, 0, 0, 0.3); padding: 0.5rem; border-radius: 8px; font-size: 0.72rem; text-align: center;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.45rem;
+      margin-top: 0.55rem;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 0.45rem;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
-    .club-metrics-grid div span { display: block; color: var(--text-muted); font-size: 0.62rem; }
-    .club-metrics-grid div strong { color: var(--accent); }
+    .club-metrics-grid div span {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.6rem;
+      margin-bottom: 1px;
+    }
+    .club-metrics-grid div strong {
+      color: var(--accent);
+      font-size: 0.75rem;
+    }
 
     .btn-action {
-      margin-top: 0.6rem; width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--accent);
-      background: rgba(74, 222, 128, 0.12); color: var(--accent); font-weight: 700; font-size: 0.75rem; cursor: pointer; transition: 0.2s;
+      margin-top: 0.6rem;
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid var(--accent);
+      background: rgba(74, 222, 128, 0.12);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: 0.2s;
     }
-    .btn-action:hover { background: var(--accent); color: #052e16; }
+    .btn-action:hover {
+      background: var(--accent);
+      color: #052e16;
+    }
 
-    /* Forum 5-letnie */
+    /* Box dodawania nowego kija z Auto-Foto Live */
+    .add-club-live-box {
+      display: none;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    /* Forum 5-letniej społeczności */
     .forum-stats-bar {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.9rem; margin-bottom: 1.2rem; text-align: center;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.8rem;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 0.9rem;
+      margin-bottom: 1.2rem;
+      text-align: center;
     }
-    .forum-stat-num { font-size: 1.1rem; font-weight: 800; color: var(--accent); }
-    .forum-stat-lbl { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .forum-stat-num {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .forum-stat-lbl {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-    .forum-filters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
-    .filter-pill {
-      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-muted);
-      padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.72rem; font-weight: 600; cursor: pointer;
+    .forum-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
     }
-    .filter-pill.active, .filter-pill:hover { background: rgba(74, 222, 128, 0.18); border-color: var(--accent); color: var(--accent); }
+    .filter-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      padding: 0.38rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .filter-pill.active, .filter-pill:hover {
+      background: rgba(74, 222, 128, 0.18);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
 
     .forum-post-card {
-      background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 1.2rem; margin-bottom: 1rem;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
     }
-    .forum-post-card.pinned { border-color: rgba(250, 204, 21, 0.45); background: linear-gradient(145deg, rgba(250, 204, 21, 0.05), rgba(255, 255, 255, 0.03)); }
-    .user-badge { font-size: 0.62rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase; margin-left: 4px; }
+    .forum-post-card.pinned {
+      border-color: rgba(250, 204, 21, 0.45);
+      background: linear-gradient(145deg, rgba(250, 204, 21, 0.05), rgba(255, 255, 255, 0.03));
+    }
+
+    .user-badge {
+      font-size: 0.62rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-left: 5px;
+    }
     .badge-og { background: rgba(56, 189, 248, 0.15); color: var(--blue); border: 1px solid rgba(56, 189, 248, 0.4); }
     .badge-pro { background: rgba(250, 204, 21, 0.15); color: var(--gold); border: 1px solid rgba(250, 204, 21, 0.4); }
     .badge-vet { background: rgba(74, 222, 128, 0.15); color: var(--accent); border: 1px solid rgba(74, 222, 128, 0.4); }
 
     .comment-box {
-      background: rgba(0, 0, 0, 0.32); border-left: 3px solid var(--accent); padding: 0.75rem 0.9rem;
-      border-radius: 0 8px 8px 0; margin-top: 0.55rem; font-size: 0.78rem; line-height: 1.4;
+      background: rgba(0, 0, 0, 0.32);
+      border-left: 3px solid var(--accent);
+      padding: 0.75rem 0.9rem;
+      border-radius: 0 8px 8px 0;
+      margin-top: 0.55rem;
+      font-size: 0.78rem;
+      line-height: 1.4;
     }
+
     .new-thread-box {
-      display: none; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem; margin-bottom: 1.2rem;
-    }
-    .new-thread-box input, .new-thread-box select, .new-thread-box textarea {
-      width: 100%; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 6px; padding: 0.55rem; color: #fff; font-size: 0.8rem; margin-bottom: 0.6rem; outline: none;
+      display: none;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.2rem;
     }
 
-    /* Skup, Marketplace, Czat */
-    .cpo-grid { display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
-    .cpo-item { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
-    .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; }
-    .market-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 1.1rem; display: flex; flex-direction: column; justify-content: space-between; }
-    
-    .chat-container { display: flex; flex-direction: column; height: 400px; background: rgba(0, 0, 0, 0.25); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08); overflow: hidden; }
-    .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem; }
-    .msg { max-width: 80%; padding: 0.7rem 0.9rem; border-radius: 10px; font-size: 0.8rem; line-height: 1.4; }
-    .msg.incoming { background: rgba(255, 255, 255, 0.08); align-self: flex-start; }
-    .msg.outgoing { background: rgba(74, 222, 128, 0.2); border: 1px solid var(--glass-border); align-self: flex-end; color: var(--accent); }
-    .chat-input-area { display: flex; padding: 0.75rem; background: rgba(10, 20, 24, 0.8); border-top: 1px solid rgba(255, 255, 255, 0.08); gap: 0.5rem; }
-    .chat-input-area input { flex: 1; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; padding: 0.6rem 0.9rem; color: #fff; font-size: 0.8rem; outline: none; }
-    .chat-input-area button { background: var(--accent); color: #052e16; border: none; padding: 0 1.2rem; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+    /* Skup CPO & Marketplace & Czat */
+    .cpo-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+    }
+    .cpo-item {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      gap: 1rem;
+      align-items: center;
+    }
 
-    /* Modal AI Gapping */
-    #aiModalOverlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px);
-      display: none; align-items: center; justify-content: center; z-index: 300; padding: 1rem;
+    .market-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.1rem;
+      width: 100%;
+    }
+    .market-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 1.1rem;
+      display: grid;
+      grid-template-columns: 95px 1fr;
+      gap: 1rem;
+      align-items: center;
+      transition: 0.2s;
+    }
+    .market-card:hover {
+      border-color: var(--accent);
+      background: rgba(74, 222, 128, 0.04);
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 430px;
+      background: rgba(0, 0, 0, 0.28);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .msg {
+      max-width: 80%;
+      padding: 0.7rem 0.95rem;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+    .msg.incoming {
+      background: rgba(255, 255, 255, 0.08);
+      align-self: flex-start;
+    }
+    .msg.outgoing {
+      background: rgba(74, 222, 128, 0.2);
+      border: 1px solid var(--glass-border);
+      align-self: flex-end;
+      color: var(--accent);
+    }
+    .chat-input-area {
+      display: flex;
+      padding: 0.75rem;
+      background: rgba(10, 20, 24, 0.85);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      gap: 0.5rem;
+    }
+    .chat-input-area input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 0.65rem 0.9rem;
+      color: #fff;
+      font-size: 0.8rem;
+      outline: none;
+    }
+    .chat-input-area button {
+      background: var(--accent);
+      color: #052e16;
+      border: none;
+      padding: 0 1.2rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    /* Modal AI Gapping oraz Modal Podglądu Zdjęcia HD */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.76);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+      padding: 1rem;
     }
     .ai-popup-card {
-      width: 100%; max-width: 520px; background: rgba(16, 30, 34, 0.96); border: 2px solid var(--gold);
-      border-radius: 20px; padding: 1.8rem; box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(250, 204, 21, 0.2);
+      width: 100%;
+      max-width: 550px;
+      background: rgba(14, 28, 32, 0.96);
+      border: 2px solid var(--gold);
+      border-radius: 20px;
+      padding: 1.8rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), inset 0 0 25px rgba(250, 204, 21, 0.18);
     }
 
     #toast {
-      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-      background: var(--accent); color: #052e16; padding: 0.6rem 1.2rem; border-radius: 20px;
-      font-size: 0.8rem; font-weight: 700; display: none; z-index: 200; box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #052e16;
+      padding: 0.65rem 1.3rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      display: none;
+      z-index: 400;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
     }
 
     @media (max-width: 1024px) {
-      .spatial-stage { grid-template-columns: 1fr; padding: 1rem; perspective: none; }
-      .panel-left, .panel-right { transform: none !important; }
-      .market-grid { grid-template-columns: 1fr; }
-      .forum-stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .spatial-stage {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+        perspective: none;
+      }
+      .panel-left, .panel-right {
+        transform: none !important;
+      }
+      .profile-layout {
+        grid-template-columns: 1fr;
+      }
+      .golfer-3d-figure {
+        min-height: 230px;
+        max-width: 200px;
+        margin: 0 auto;
+      }
+      .market-grid {
+        grid-template-columns: 1fr;
+      }
+      .cpo-item {
+        grid-template-columns: 70px 1fr;
+      }
+      .cpo-item .cpo-actions {
+        grid-column: span 2;
+      }
+      .forum-stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- Pasek górny -->
   <header>
     <div class="header-top">
-      <div class="logo" id="logoBtn"><span>TGN</span> GLOBAL GOLF</div>
+      <div class="logo" id="logoBtn">
+        <span>TGN</span> GLOBAL GOLF
+      </div>
       <div id="headerRightInfo" style="display:flex; align-items:center; gap:0.75rem;">
-        <span style="font-size: 0.7rem; color: var(--text-muted);">Spatial HUD v3.5 Ultimate</span>
+        <span style="font-size: 0.7rem; color: var(--text-muted);">Live Club Image Engine v4.0</span>
       </div>
     </div>
     <nav id="mainNav" style="display:none;">
       <button class="active" data-tab="profile">👤 Kokpit 3D & Torba</button>
-      <button data-tab="forum">💬 Forum (5 lat)</button>
+      <button data-tab="forum">💬 Forum (2021–2026)</button>
       <button data-tab="cpo">⚡ Skup TGN CPO</button>
-      <button data-tab="marketplace">🤝 Marketplace</button>
-      <button data-tab="chat">💬 Czat</button>
+      <button data-tab="marketplace">🤝 Marketplace C2C</button>
+      <button data-tab="chat">💬 Czat ze sprzedawcą</button>
     </nav>
   </header>
 
-  <!-- Ekran Logowania -->
+  <!-- Ekran Logowania i Rejestracji -->
   <div id="authScreen" class="auth-wrapper">
     <div class="auth-panel">
       <div style="text-align: center; margin-bottom: 1.2rem;">
         <div style="font-size: 1.3rem; font-weight: 800; letter-spacing: 0.5px;">
-          <span style="color: var(--accent); border: 1px solid var(--accent); padding: 2px 7px; border-radius: 5px; margin-right: 6px;">TGN</span>KOKPIT 3D
+          <span style="color: var(--accent); border: 1px solid var(--accent); padding: 2px 7px; border-radius: 5px; margin-right: 6px;">TGN</span>ID PORTAL 3D
         </div>
-        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem;">Portal społeczności i telemetrii golfowej</p>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem;">Zaloguj się do swojego przestrzennego kokpitu golfowego</p>
       </div>
-      <div class="form-group">
-        <label>E-mail / Identyfikator</label>
-        <input type="email" id="loginEmail" value="marek.kowalski@tgngolf.pl">
+
+      <div class="auth-tabs">
+        <button id="tabLoginBtn" class="auth-tab-btn active" onclick="auth.switchAuthMode('login')">Logowanie</button>
+        <button id="tabRegisterBtn" class="auth-tab-btn" onclick="auth.switchAuthMode('register')">Rejestracja</button>
       </div>
-      <div class="form-group">
-        <label>Hasło</label>
-        <input type="password" id="loginPass" value="********">
+
+      <!-- Logowanie -->
+      <div id="loginForm">
+        <div class="form-group">
+          <label>Adres E-mail lub Login TGN</label>
+          <input type="email" id="loginEmail" value="marek.kowalski@tgngolf.pl">
+        </div>
+        <div class="form-group">
+          <label>Hasło</label>
+          <input type="password" id="loginPass" value="********">
+        </div>
+        <button class="btn-primary" onclick="auth.handleLogin()">Zaloguj się do Kokpitu 3D</button>
+        <button class="btn-demo" onclick="auth.loginDemo()">⚡ Szybkie wejście Demo (Marek Kowalski • HCP 12.4)</button>
       </div>
-      <button class="btn-primary" onclick="auth.loginDemo()">Zaloguj do Kokpitu 3D</button>
-      <button class="btn-demo" onclick="auth.loginDemo()">⚡ Szybkie wejście Demo (Marek Kowalski)</button>
+
+      <!-- Rejestracja -->
+      <div id="registerForm" style="display:none;">
+        <div class="form-group">
+          <label>Imię i Nazwisko</label>
+          <input type="text" id="regName" placeholder="np. Jan Nowak">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;">
+          <div class="form-group">
+            <label>Handicap (HCP)</label>
+            <input type="number" step="0.1" id="regHcp" value="18.5">
+          </div>
+          <div class="form-group">
+            <label>Miasto</label>
+            <input type="text" id="regCity" value="Warszawa">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Adres E-mail</label>
+          <input type="email" id="regEmail" placeholder="twoj@email.pl">
+        </div>
+        <div class="form-group">
+          <label>Hasło</label>
+          <input type="password" id="regPass" placeholder="Minimum 6 znaków">
+        </div>
+        <button class="btn-primary" onclick="auth.handleRegister()">Utwórz Profil 3D & Cyfrową Torbę</button>
+      </div>
     </div>
   </div>
 
   <!-- Główna Scena 3D -->
   <main class="spatial-stage" id="appContainer" style="display:none;">
-    <!-- Dynamiczne panele -->
+    <!-- Zawartość wstrzykiwana przez router JS -->
   </main>
 
-  <!-- Wyskakujące okienko AI Gapping Assistant (jak na zdjęciu) -->
-  <div id="aiModalOverlay">
+  <!-- Modal AI Gapping Assistant (dokładnie jak na wizualizacji) -->
+  <div id="aiModalOverlay" class="modal-overlay">
     <div class="ai-popup-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.8rem;">
-        <h3 style="color: var(--gold); font-size: 0.95rem; text-transform:uppercase;">🌟 Wizyta w Nowej Kolekcji 2026 – Rekomendacja</h3>
+        <h3 style="color: var(--gold); font-size: 0.95rem; text-transform:uppercase;">🌟 Wizyta w Nowej Kolekcji 2026 – Rekomendacja dla Ciebie</h3>
         <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="app.closeAiModal()">✕</span>
       </div>
-      <p style="font-size: 0.8rem; color: var(--text-main); line-height: 1.5; margin-bottom: 0.9rem;">
-        Cześć, Marek! Twoja gra (HCP 12.4, Swing 96 mph) jest gotowa na kolejny poziom. Nowa Kolekcja TGN 2026 oferuje znaczące usprawnienia dopasowane do Twoich parametrów.<br><br>
-        Najważniejsze: Nowy <strong>Pro-Wedge 52°</strong> z serii 2026 idealnie wypełnia Twoją lukę dysansową, o której informuje nasza Gapping AI.<br><br>
-        Twoja obecna torba ma najwyższą wartość Trade-In. Zobacz spersonalizowaną ofertę z kalkulacją dla całej Twojej torby.
+      <p style="font-size: 0.82rem; color: var(--text-main); line-height: 1.55; margin-bottom: 1rem;">
+        Cześć, <strong>Marek</strong>! Twoja gra (HCP 12.4, Swing 96 mph) jest gotowa na kolejny poziom. Nowa Kolekcja TGN 2026 oferuje znaczące usprawnienia dopasowane do Twoich parametrów.<br><br>
+        Najważniejsze: Nowy <strong>Pro-Wedge 52°</strong> z serii 2026 idealnie wypełnia Twoją lukę dystansową, o której informuje nasza Gapping AI, dając precyzję wokół greenu.<br>
+        Ponadto, nowa seria <strong>TGN Evolution Series 2026</strong> (Driver i Irony) oferuje większe wybaczanie błędów i lepszą aerodynamikę.<br><br>
+        Twoja obecna torba ma najwyższą wartość Trade-In (<strong>14 200 PLN</strong>). Zobacz spersonalizowaną ofertę z kalkulacją dla całej Twojej torby.
       </p>
-      <button class="btn-action" style="background: rgba(250,204,21,0.15); border-color: var(--gold); color: var(--gold);" onclick="app.closeAiModal(); app.switchTab('cpo');">
-        [ ZOBACZ SPERSONALIZOWANĄ OFERTĘ KOLEKCJI 2026 ]
+      <button class="btn-action" style="background: rgba(250,204,21,0.16); border-color: var(--gold); color: var(--gold);" onclick="app.closeAiModal(); app.switchTab('cpo');">
+        [ ZOBACZ SPERSONALIZOWANĄ OFERTĘ KOLEKCJI 2026 I KALKULACJĘ UPGRADE'U ]
       </button>
+    </div>
+  </div>
+
+  <!-- Modal powiększenia zdjęcia kija HD -->
+  <div id="photoZoomModal" class="modal-overlay" onclick="app.closePhotoZoom()">
+    <div class="ai-popup-card" style="max-width:440px; border-color:var(--accent); text-align:center;" onclick="event.stopPropagation()">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+        <h3 id="zoomClubTitle" style="color:var(--accent); font-size:0.9rem;">Podgląd Kija HD</h3>
+        <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="app.closePhotoZoom()">✕</span>
+      </div>
+      <div style="width:100%; height:260px; border-radius:14px; overflow:hidden; border:1px solid var(--glass-border); background:#050c0f; margin-bottom:0.8rem;">
+        <img id="zoomClubImg" src="" alt="Club HD" style="width:100%; height:100%; object-fit:cover;">
+      </div>
+      <p id="zoomClubMeta" style="font-size:0.78rem; color:var(--text-muted);"></p>
     </div>
   </div>
 
   <div id="toast">Powiadomienie</div>
 
   <script>
+    /* =========================================================================
+       SILNIK POBIERANIA ZDJĘĆ KIJÓW NA ŻYWO (LIVE CLUB IMAGE RESOLVER)
+       1. Sprawdza bazę studyjnych fotografii konkretnych modeli (Qi10, JPX 923, Odyssey, Vokey, Dynapower).
+       2. Dla nowych wpisanych kijów odpytuje na żywo Wikipedia/Wikimedia REST API oraz proxy obrazów.
+       ========================================================================= */
+    const ClubImageEngine = {
+      cache: {},
+
+      // Baza wyselekcjonowanych, realistycznych ujęć główek kijów (Driver, Iron, Putter, Wedge)
+      curatedModels: [
+        {
+          keywords: ["qi10", "taylormade", "stealth", "sim2", "driver", "dynapower", "g430", "tsr", "paradym"],
+          url: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85"
+        },
+        {
+          keywords: ["mizuno", "jpx", "923", "iron", "t200", "t100", "p790", "forged", "apex", "żelazo"],
+          url: "https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=600&q=85"
+        },
+        {
+          keywords: ["odyssey", "putter", "scotty", "cameron", "newport", "spider", "ai-one"],
+          url: "https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=85"
+        },
+        {
+          keywords: ["wedge", "vokey", "sm9", "sm10", "jaws", "cleveland", "52", "56", "60"],
+          url: "https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?auto=format&fit=crop&w=600&q=85"
+        }
+      ],
+
+      // Zwraca natychmiastowe zdjęcie początkowe przed dociągnięciem z API Live
+      getInitialImage: (clubName, customUrl) => {
+        if (customUrl && customUrl.startsWith('http')) return customUrl;
+        if (ClubImageEngine.cache[clubName]) return ClubImageEngine.cache[clubName];
+
+        const lower = clubName.toLowerCase();
+        for (const item of ClubImageEngine.curatedModels) {
+          if (item.keywords.some(k => lower.includes(k))) {
+            return item.url;
+          }
+        }
+        return "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85";
+      },
+
+      // Asynchronicznie pobiera zdjęcie kija na żywo z otwartego API Wikimedia / Wikipedia Search
+      fetchLiveImageForClub: async (clubName, imgElementId) => {
+        if (ClubImageEngine.cache[clubName]) {
+          const el = document.getElementById(imgElementId);
+          if (el) el.src = ClubImageEngine.cache[clubName];
+          return;
+        }
+
+        // Wyczyść nazwę z przedrostków typu "DRIVER:" lub "IRON:"
+        const cleanQuery = clubName
+          .replace(/DRIVER:|IRON:|PUTTER:|WEDGE:|HYBRYDA:/gi, '')
+          .replace(/[^a-zA-Z0-9\s]/g, ' ')
+          .trim();
+
+        try {
+          // Zapytanie na żywo do darmowego API Wikimedia Commons o zdjęcia sprzętu golfowego
+          const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(cleanQuery + ' golf club')}&gsrlimit=3&prop=pageimages&piprop=thumbnail&pithumbsize=500&format=json&origin=*`;
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+
+          if (data && data.query && data.query.pages) {
+            const pages = Object.values(data.query.pages);
+            const pageWithThumb = pages.find(p => p.thumbnail && p.thumbnail.source);
+            if (pageWithThumb) {
+              const liveUrl = pageWithThumb.thumbnail.source;
+              ClubImageEngine.cache[clubName] = liveUrl;
+              const imgEl = document.getElementById(imgElementId);
+              if (imgEl) imgEl.src = liveUrl;
+              return;
+            }
+          }
+        } catch (err) {
+          // W razie blokady sieciowej zostaje dopasowane zdjęcie studyjne HD z curatedModels
+        }
+
+        const fallback = ClubImageEngine.getInitialImage(clubName);
+        ClubImageEngine.cache[clubName] = fallback;
+      }
+    };
+
+    /* =========================================================================
+       BAZA DANYCH APLIKACJI (STAN, TORBA, FORUM 2021-2026, MARKETPLACE, CZAT)
+       ========================================================================= */
+    const DefaultUser = {
+      name: "Marek Kowalski",
+      email: "marek.kowalski@tgngolf.pl",
+      hcp: 12.4,
+      level: "Średniozaawansowany",
+      city: "Warszawa",
+      lastRound: "82 (Sobota)",
+      swingSpeed: "96 mph",
+      avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80"
+    };
+
     const AppData = {
       activeForumFilter: "ALL",
-      user: {
-        name: "Marek Kowalski",
-        hcp: 12.4,
-        level: "Średniozaawansowany",
-        city: "Warszawa",
-        lastRound: "82 (Sobota)",
-        swingSpeed: "96 mph"
-      },
+      user: { ...DefaultUser },
       bag: [
-        { id: 1, name: "DRIVER: TAYLOR MADE Qi10", loft: "10.5°, Shaft: VENTUS Blue 6S", val: "1 800 PLN", cpoOffer: "1 450 PLN", speed: "145 mph", smash: "1.48", attack: "+3°", cond: "9/10", icon: "🏌️‍♂️" },
-        { id: 2, name: "IRON: MIZUNO JPX 923", loft: "7-Iron, Steel Shaft DG 105 S", val: "3 400 PLN", cpoOffer: "2 700 PLN", speed: "118 mph", spin: "6500 RPM", cond: "9.5/10", icon: "⚙️" },
-        { id: 3, name: "PUTTER: ODYSSEY AI-ONE #7", loft: "34\", Grip: SUPERSTROKE", val: "1 200 PLN", cpoOffer: "950 PLN", speed: "N/A", cond: "Mint", icon: "🎯" }
+        {
+          id: 1,
+          name: "DRIVER: TAYLOR MADE Qi10",
+          loft: "10.5°, Shaft: VENTUS Blue 6S",
+          val: "1 800 PLN",
+          cpoOffer: "1 450 PLN",
+          speed: "145 mph",
+          smash: "1.48",
+          attack: "+3.2°",
+          cond: "9/10",
+          imgUrl: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85"
+        },
+        {
+          id: 2,
+          name: "IRON: MIZUNO JPX 923 HOT METAL",
+          loft: "7-Iron, Steel Shaft DG 105 S",
+          val: "3 400 PLN",
+          cpoOffer: "2 750 PLN",
+          speed: "118 mph",
+          smash: "1.39",
+          attack: "-4.1°",
+          cond: "9.5/10",
+          imgUrl: "https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=600&q=85"
+        },
+        {
+          id: 3,
+          name: "PUTTER: ODYSSEY AI-ONE #7",
+          loft: "34\", Grip: SUPERSTROKE Tour 2.0",
+          val: "1 200 PLN",
+          cpoOffer: "950 PLN",
+          speed: "Green",
+          smash: "1.02",
+          attack: "+1.0°",
+          cond: "Mint",
+          imgUrl: "https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=85"
+        }
       ],
       forumPosts: [
         {
@@ -333,148 +1012,322 @@
           pinned: true,
           catKey: "PORADNIKI",
           category: "📌 PRZYPIĘTY PORADNIK • PGA PRO",
-          title: "[KOMPENDIUM 2021–2026] Jak zejść z HCP 36 do jednocyfrowego",
+          title: "[KOMPENDIUM 2021–2026] Jak zejść z HCP 36 do jednocyfrowego – mapa drogowa treningu i gappingu",
           author: "Pro Adam Szymański",
-          badge: "PGA PRO",
+          badge: "PGA PRO • 1 420 postów",
           badgeClass: "badge-pro",
-          date: "Październik 2026",
+          date: "Zaktualizowano: Listopad 2026 (Oryginał: Maj 2021)",
           views: "48 920",
           likes: 312,
-          content: "Analiza ponad 3 000 raportów z TrackMana. Utrzymuj odstęp 12-15m między każdym kijem w torbie.",
-          comments: [{ author: "StaryWyga", badge: "TGN OG", badgeClass: "badge-og", date: "2021", text: "Świetna baza wiedzy!" }]
+          content: "Przez ostatnie 5 lat na forum TGN przeanalizowaliśmy ponad 3 000 raportów z TrackMana naszych klubowiczów. 80% graczy traci najwięcej uderzeń między 40 a 100 metrem oraz przez źle dobrany loft drivera. Poniżej zebraliśmy najważniejsze wnioski z 5 sezonów: 1) Testuj carry, nie total distance. 2) Utrzymuj odstęp 12-15m między każdym kijem w torbie. 3) Zapisuj statystyki putów po każdej rundzie.",
+          comments: [
+            { author: "StaryWyga_Golf", badge: "TGN OG • 2021", badgeClass: "badge-og", date: "14.06.2021", text: "Klasyk tego forum! W 2021 zaczynałem z HCP 28 czytając ten wątek, dzisiaj kończę sezon 2026 z 8.4." },
+            { author: "Kamil_Golf", badge: "WETERAN • 890 postów", badgeClass: "badge-vet", date: "03.09.2024", text: "Punkt o gappingu wedge'y zmienił u mnie wszystko. Dokupiłem 52° i od razu urwałem 4 uderzenia na rundę." },
+            { author: "Marek Kowalski", badge: "HCP 12.4", badgeClass: "badge-vet", date: "2 dni temu", text: "Właśnie algorytm TGN wykrył u mnie lukę 15m na Gap Wedge – wracam do tego poradnika przed fittingiem!" }
+          ]
         },
         {
           id: 102,
           pinned: false,
           catKey: "FITTING",
           category: "⚙️ Custom Fitting & Telemetria",
-          title: "Shaft Stiff vs Regular przy swing speed 95-98 mph",
-          author: "Marek Kowalski",
+          title: "Shaft Stiff vs Regular przy swing speed 95-98 mph – wielki test społeczności TGN",
+          author: "Marek Kowalski (HCP 12.4)",
           badge: "TRUSTED SELLER",
           badgeClass: "badge-vet",
-          date: "Wczoraj",
+          date: "Wczoraj, 18:45",
           views: "1 240",
           likes: 47,
-          content: "Czy przejście na Ventus Blue 6S (Stiff) w Wilsonie Dynapower ustabilizuje rozrzut?",
-          comments: [{ author: "Trener PGA Tomasz", badge: "FITTING MASTER", badgeClass: "badge-pro", date: "Wczoraj", text: "Przy 96 mph Stiff da lepszą kontrolę spinu." }]
+          content: "Zauważyłem na symulatorze, że przy mojej średniej prędkości drivera 96 mph i dynamicznym przejściu z backswingu piłka ucieka w prawy push-fade. Czy przejście z Ventus Regular na Ventus Blue 6S (Stiff) w Wilsonie Dynapower ustabilizuje rozrzut?",
+          comments: [
+            { author: "Trener PGA Tomasz", badge: "FITTING MASTER", badgeClass: "badge-pro", date: "Wczoraj, 19:12", text: "Przy 96 mph jesteś dokładnie na granicy. Kluczowy jest tzw. transition (tempo). Jeśli agresywnie przyspieszasz z góry, 6S obniży spin o ok. 350 RPM i zacieśni dyspersję." },
+            { author: "Janusz_G", badge: "TGN OG • 2021", badgeClass: "badge-og", date: "Dzisiaj, 08:30", text: "Miałem identyczne liczby na TrackManie w 2023 roku. Zmiana na Stiff 65g dała mi +11 metrów carry i o połowę mniej piłek w lesie." }
+          ]
+        },
+        {
+          id: 103,
+          pinned: false,
+          catKey: "SPRZET",
+          category: "🏌️ Sprzęt & Recenzje Graczy",
+          title: "Mizuno JPX 923 Hot Metal vs Forged po 3 sezonach gry – wrażenia i zdjęcia główek",
+          author: "Bartek_W",
+          badge: "TGN OG • 2021",
+          badgeClass: "badge-og",
+          date: "3 dni temu",
+          views: "3 410",
+          likes: 89,
+          content: "Od 2023 roku gram na Mizuno JPX 923 Hot Metal i jestem zachwycony wybaczaniem błędów, ale rozważam przesiadkę na model Forged lub nową serię 2026. Kto z Was robił taki przeskok przy HCP w okolicach 10-13?",
+          comments: [
+            { author: "Michał_Kraków", badge: "HCP 7.1", badgeClass: "badge-vet", date: "2 dni temu", text: "Zrobiłem ten ruch rok temu. Na początku straciłem ok. 4m na 7-ironie, ale kontrola odległości z roughu jest bezcenna." }
+          ]
         }
       ],
       marketplace: [
-        { title: "Wilson Dynapower Driver", seller: "Janusz_G", price: "1 150 PLN", cond: "Stan: 9/10", desc: "Znakomity driver, regular flex." }
+        {
+          title: "Wilson Dynapower Carbon Driver 10.5°",
+          seller: "Janusz_G (HCP 14)",
+          price: "1 150 PLN",
+          cond: "Stan: 9/10",
+          desc: "Znakomity driver, Fujikura Ventus Regular, headcover w zestawie.",
+          imgUrl: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85"
+        },
+        {
+          title: "Zestaw Ironów Mizuno JPX 923 Forged (5-PW)",
+          seller: "Kamil_Golf (HCP 8.2)",
+          price: "3 690 PLN",
+          cond: "Stan: 9/10",
+          desc: "Shaft Project X IO Stiff. Kute żelaza, niesamowite czucie przy trafieniu.",
+          imgUrl: "https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=600&q=85"
+        },
+        {
+          title: "Putter Scotty Cameron Special Select Newport 2",
+          seller: "Bartek_W (HCP 11)",
+          price: "1 450 PLN",
+          cond: "Stan: Mint",
+          desc: "Długość 34 cale, oryginalny grip Pistolini Plus, stan kolekcjonerski.",
+          imgUrl: "https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=85"
+        },
+        {
+          title: "Wedge Titleist Vokey SM10 (52° / 12F)",
+          seller: "Piotr_T (HCP 15)",
+          price: "520 PLN",
+          cond: "Stan: 8.5/10",
+          desc: "Idealny Gap Wedge do uzupełnienia luki dystansowej około 100 metrów.",
+          imgUrl: "https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?auto=format&fit=crop&w=600&q=85"
+        }
       ],
       chatMessages: [
-        { sender: "Janusz_G", text: "Cześć! Oferta na driver aktualna?", type: "incoming" },
-        { sender: "Marek Kowalski", text: "Tak, zapraszam do kontaktu.", type: "outgoing" }
+        { sender: "Janusz_G", text: "Cześć! Czy oferta wymiany lub zakupu kijów z Twojej torby jest aktualna?", type: "incoming" },
+        { sender: "Marek Kowalski", text: "Cześć! Tak, właśnie przeglądam wycenę Mizuno JPX 923 i Qi10 w kokpicie 3D.", type: "outgoing" },
+        { sender: "Janusz_G", text: "Super, możemy się złapać w sobotę na symulatorze w Warszawie na testy!", type: "incoming" }
       ]
     };
 
+    /* =========================================================================
+       MODUŁ LOGOWANIA I SESJI
+       ========================================================================= */
     const auth = {
+      switchAuthMode: (mode) => {
+        document.getElementById('tabLoginBtn').classList.toggle('active', mode === 'login');
+        document.getElementById('tabRegisterBtn').classList.toggle('active', mode === 'register');
+        document.getElementById('loginForm').style.display = mode === 'login' ? 'block' : 'none';
+        document.getElementById('registerForm').style.display = mode === 'register' ? 'block' : 'none';
+      },
+
       loginDemo: () => {
+        AppData.user = { ...DefaultUser };
+        localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
+        auth.enterApp('Zalogowano do kokpitu 3D: ' + AppData.user.name);
+      },
+
+      handleLogin: () => {
+        const email = document.getElementById('loginEmail').value.trim();
+        const pass = document.getElementById('loginPass').value.trim();
+        if (!email || !pass) {
+          app.showToast('Wpisz e-mail oraz hasło!');
+          return;
+        }
+        const nameFromEmail = email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase());
+        AppData.user = { ...DefaultUser, name: nameFromEmail || DefaultUser.name, email };
+        localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
+        auth.enterApp('Witaj w kokpicie 3D, ' + AppData.user.name + '!');
+      },
+
+      handleRegister: () => {
+        const name = document.getElementById('regName').value.trim();
+        const hcp = parseFloat(document.getElementById('regHcp').value) || 24.0;
+        const city = document.getElementById('regCity').value.trim() || 'Warszawa';
+        const email = document.getElementById('regEmail').value.trim();
+        const pass = document.getElementById('regPass').value.trim();
+
+        if (!name || !email || !pass) {
+          app.showToast('Wypełnij wszystkie pola rejestracji!');
+          return;
+        }
+
+        const level = hcp <= 10 ? 'Zaawansowany' : (hcp <= 20 ? 'Średniozaawansowany' : 'Początkujący');
+        AppData.user = {
+          ...DefaultUser,
+          name,
+          email,
+          hcp,
+          level,
+          city
+        };
+        localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
+        auth.enterApp('Utworzono profil 3D: ' + name);
+      },
+
+      enterApp: (msg) => {
         document.getElementById('authScreen').style.display = 'none';
         document.getElementById('mainNav').style.display = 'flex';
         document.getElementById('appContainer').style.display = 'grid';
-        
+
         document.getElementById('headerRightInfo').innerHTML = `
-          <span style="font-size: 0.72rem; color: var(--accent); font-weight:700;">● ${AppData.user.name}</span>
+          <span style="font-size: 0.74rem; color: var(--accent); font-weight:700;">● ${AppData.user.name} (HCP ${AppData.user.hcp})</span>
           <button class="btn-logout" onclick="auth.logout()">Wyloguj</button>
         `;
 
         app.switchTab('profile');
-        app.showToast('Witaj w kokpicie 3D, Marek!');
+        if (msg) app.showToast(msg);
       },
+
       logout: () => {
+        localStorage.removeItem('tgn_user');
         document.getElementById('authScreen').style.display = 'flex';
         document.getElementById('mainNav').style.display = 'none';
         document.getElementById('appContainer').style.display = 'none';
-        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Spatial HUD v3.5</span>`;
-        app.showToast('Wylogowano');
+        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Live Club Image Engine v4.0</span>`;
+        app.showToast('Wylogowano z kokpitu 3D');
       }
     };
 
+    /* =========================================================================
+       KOMPONENT 1: KOKPIT 3D (PROFIL GRACZA + CYFROWA TORBA ZE ZDJĘCIAMI NA ŻYWO)
+       ========================================================================= */
     const ProfileAndBagComponent = {
       render: () => {
         const leftPanel = `
           <section class="panel-3d panel-left">
-            <h2>Profil Gracza: ${AppData.user.name.toUpperCase()} <span style="font-size:1.1rem;">🇵🇱</span></h2>
+            <h2>
+              <span>PROFIL GRACZA: ${AppData.user.name.toUpperCase()}</span>
+              <span style="font-size:1.15rem;">🇵🇱</span>
+            </h2>
             
             <div class="profile-layout">
-              <div class="avatar-box">
-                <span style="font-size:0.65rem; background:rgba(0,0,0,0.6); width:100%; text-align:center; padding:2px; color:var(--accent); font-weight:700;">PROFIL 3D</span>
+              <!-- Postać Gracza 3D jak na wizualizacji -->
+              <div class="golfer-3d-figure">
+                <img src="https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=500&q=80" alt="Golfer 3D Avatar">
+                <div class="golfer-tag">TGN PRO AVATAR • HCP ${AppData.user.hcp}</div>
               </div>
+
+              <!-- Statystyki po prawej stronie postaci -->
+              <div class="profile-stats-col">
+                <div class="stat-card">
+                  <span>Handicap Index:</span>
+                  <strong style="color:var(--accent); font-size:1.05rem;">${AppData.user.hcp}</strong>
+                </div>
+                <div class="stat-card">
+                  <span>Poziom:</span>
+                  <strong>${AppData.user.level}</strong>
+                </div>
+                <div class="stat-card">
+                  <span>Lokalizacja:</span>
+                  <strong>${AppData.user.city}</strong>
+                </div>
+                <div class="stat-card">
+                  <span>Ostatnia Runda:</span>
+                  <strong>${AppData.user.lastRound}</strong>
+                </div>
+
+                <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
+                  <div style="display:flex; justify-content:space-between; width:100%;">
+                    <span>Średnia Prędkość Swingu:</span>
+                    <strong style="color:var(--accent);">${AppData.user.swingSpeed}</strong>
+                  </div>
+                  <div class="mini-chart">
+                    <svg viewBox="0 0 100 30" width="100%" height="32" preserveAspectRatio="none">
+                      <path class="chart-line" d="M0,26 L18,22 L35,24 L52,9 L70,17 L86,12 L100,7 L100,30 L0,30 Z" stroke-width="2"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Alert Gapping AI otwierający Modal z wizualizacji -->
+            <div class="stat-card" style="border-color: var(--gold); background: rgba(250, 204, 21, 0.07); cursor:pointer; margin-top: 0.6rem;" onclick="app.openAiModal()">
               <div>
-                <p style="font-size: 0.75rem; color: var(--text-muted);">Handicap Index</p>
-                <strong style="font-size: 1.3rem; color: var(--accent);">${AppData.user.hcp}</strong>
-                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">Poziom: <strong>${AppData.user.level}</strong></p>
-                <p style="font-size: 0.75rem; color: var(--text-muted);">Lokalizacja: <strong>${AppData.user.city}</strong></p>
+                <span style="color: var(--gold); font-weight: 800; display:block; font-size:0.82rem;">⚠️ Gapping AI: Sprawdź Gap Wedge (52°)</span>
+                <p style="font-size: 0.72rem; color: var(--text-muted); margin-top:2px;">Wykryto lukę dystansową 15m. Kliknij, aby otworzyć rekomendację Kolekcji 2026.</p>
               </div>
-            </div>
-
-            <div class="stat-card">
-              <span>Ostatnia Runda</span>
-              <strong>${AppData.user.lastRound}</strong>
-            </div>
-
-            <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
-              <div style="display:flex; justify-content:space-between; width:100%;">
-                <span>Średnia Prędkość Swingu</span>
-                <strong>${AppData.user.swingSpeed}</strong>
-              </div>
-              <div class="mini-chart" style="width:100%;">
-                <svg viewBox="0 0 100 30" width="100%" height="30">
-                  <path class="chart-line" d="M0,25 Q25,8 50,16 T100,6" fill="none" stroke-width="2"/>
-                </svg>
-              </div>
-            </div>
-
-            <div class="stat-card" style="border-color: var(--gold); cursor:pointer;" onclick="app.openAiModal()">
-              <div>
-                <span style="color: var(--gold); font-weight: 700;">⚠️ Gapping AI: Sprawdź Gap Wedge</span>
-                <p style="font-size: 0.7rem; color: var(--text-muted);">Wykryto lukę dystansu w dolnym zakresie.</p>
-              </div>
-              <button class="btn-action" style="width: auto; padding: 0.3rem 0.8rem; margin:0;">Analizuj</button>
+              <button class="btn-action" style="width: auto; padding: 0.4rem 0.85rem; margin:0; border-color:var(--gold); color:var(--gold);">Rekomendacja 2026</button>
             </div>
           </section>
         `;
 
-        let clubsHTML = AppData.bag.map(c => `
-          <div class="club-hud-card">
-            <div class="club-thumb">
-              <span>${c.icon}</span>
-              <span style="position:absolute; bottom:2px; right:4px; font-size:0.55rem; color:var(--accent); font-weight:700;">${c.cond}</span>
-            </div>
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3 style="font-size: 0.85rem; color: var(--accent);">${c.name}</h3>
-                <span style="font-size: 0.72rem; color: var(--gold); font-weight:700;">${c.val}</span>
+        let clubsHTML = AppData.bag.map(c => {
+          const imgId = `bag_club_img_${c.id}`;
+          const initialSrc = ClubImageEngine.getInitialImage(c.name, c.imgUrl);
+
+          return `
+            <div class="club-hud-card">
+              <div class="club-photo-frame" onclick="app.openPhotoZoom('${c.name.replace(/'/g, "")}', '${initialSrc}', '${c.loft} • Wartość: ${c.val}')">
+                <img id="${imgId}" src="${initialSrc}" alt="${c.name}" onerror="this.src='https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85'">
+                <span class="live-photo-badge">LIVE HD</span>
+                <span class="cond-badge">${c.cond}</span>
               </div>
-              <p style="font-size: 0.7rem; color: var(--text-muted);">${c.loft}</p>
-              
-              <div class="club-metrics-grid">
-                <div><span>Prędkość piłki</span><strong>${c.speed}</strong></div>
-                <div><span>Smash Factor</span><strong>${c.smash || '1.48'}</strong></div>
-                <div><span>Kąt natarcia</span><strong>${c.attack || '+3°'}</strong></div>
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
+                  <h3 style="font-size: 0.88rem; color: var(--accent); font-weight:800;">${c.name}</h3>
+                  <span style="font-size: 0.76rem; color: var(--gold); font-weight:800;">Wartość: ${c.val}</span>
+                </div>
+                <p style="font-size: 0.72rem; color: var(--text-muted); margin-top:2px;">${c.loft}</p>
+                
+                <div class="club-metrics-grid">
+                  <div><span>Prędkość piłki</span><strong>${c.speed}</strong></div>
+                  <div><span>Smash Factor</span><strong>${c.smash}</strong></div>
+                  <div><span>Kąt natarcia</span><strong>${c.attack}</strong></div>
+                </div>
               </div>
             </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
 
         const rightPanel = `
           <section class="panel-3d panel-right">
-            <h2>Moja Torba: Cyfrowa Kopia (14/14 kijów)</h2>
+            <h2>
+              <span>MOJA TORBA: CYFROWA KOPIA (${AppData.bag.length}/14 KIJÓW)</span>
+              <button class="btn-action" style="width:auto; margin:0; padding:0.3rem 0.7rem; font-size:0.7rem;" onclick="app.toggleAddClubLive()">+ Dodaj kij (Auto-Foto Live)</button>
+            </h2>
+
+            <!-- Formularz dodawania dowolnego kija z pobieraniem zdjęcia na żywo -->
+            <div id="addClubLiveBox" class="add-club-live-box">
+              <h3 style="font-size:0.82rem; color:var(--accent); margin-bottom:0.5rem;">🔍 Wpisz model kija – system pobierze jego grafikę na żywo</h3>
+              <div class="form-group" style="margin-bottom:0.5rem;">
+                <input type="text" id="newClubName" placeholder="np. IRON: MIZUNO JPX 923 lub DRIVER: PING G430 MAX">
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-bottom:0.5rem;">
+                <input type="text" id="newClubSpec" placeholder="Specyfikacja (np. 9°, Stiff)" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.78rem;">
+                <input type="text" id="newClubVal" placeholder="Wartość (np. 2 100 PLN)" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.78rem;">
+              </div>
+              <div class="form-group" style="margin-bottom:0.5rem;">
+                <input type="text" id="newClubCustomImg" placeholder="(Opcjonalnie) Wklej bezpośredni link URL do zdjęcia kija">
+              </div>
+              <button class="btn-primary" style="padding:0.5rem;" onclick="app.addClubWithLivePhoto()">Pobierz zdjęcie i dodaj kij do torby</button>
+            </div>
+
             ${clubsHTML}
-            <div style="background: rgba(0,0,0,0.35); padding: 1rem; border-radius: 14px; text-align: center; margin-top: 1rem; border: 1px solid rgba(255,255,255,0.06);">
-              <p style="font-size: 0.7rem; color: var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Całkowita wartość torby</p>
-              <strong style="font-size: 1.4rem; color: var(--accent); display:block; margin: 0.2rem 0 0.8rem;">14 200 PLN</strong>
-              <button class="btn-action" style="margin-top:0.4rem;" onclick="app.switchTab('cpo')">⚡ SPRZEDAJ NATYCHMIAST DO SKUPU TGN CPO</button>
-              <button class="btn-action" style="background: rgba(250,204,21,0.1); border-color: var(--gold); color: var(--gold);" onclick="app.switchTab('cpo')">🔄 TRADE-IN NA NOWY MODEL 2026</button>
+
+            <div style="background: rgba(0,0,0,0.38); padding: 1rem; border-radius: 14px; margin-top: 0.9rem; border: 1px solid rgba(255,255,255,0.08);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
+                <span style="font-size: 0.75rem; color: var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Całkowita wartość torby</span>
+                <strong style="font-size: 1.35rem; color: var(--accent);">14 200 PLN</strong>
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.6rem;">
+                <button class="btn-action" style="margin:0;" onclick="app.switchTab('marketplace')">🤝 Zarządzaj sprzedażą C2C</button>
+                <button class="btn-action" style="margin:0; background: rgba(250,204,21,0.12); border-color: var(--gold); color: var(--gold);" onclick="app.switchTab('cpo')">⚡ Sprzedaj do Skupu TGN CPO</button>
+              </div>
+              <button class="btn-action" style="margin-top:0.5rem;" onclick="app.openAiModal()">🔄 TRADE-IN NA NOWY MODEL 2026 (Z DOPŁATĄ)</button>
             </div>
           </section>
         `;
 
         return leftPanel + rightPanel;
+      },
+
+      afterRender: () => {
+        // Dla każdego kija bez sztywnego URL dociągnij zdjęcie na żywo z API
+        AppData.bag.forEach(c => {
+          if (!c.imgUrl) {
+            ClubImageEngine.fetchLiveImageForClub(c.name, `bag_club_img_${c.id}`);
+          }
+        });
       }
     };
 
+    /* =========================================================================
+       KOMPONENT 2: ROZBUDOWANE 5-LETNIE FORUM (2021–2026)
+       ========================================================================= */
     const ForumComponent = {
       render: () => {
         const filteredPosts = AppData.activeForumFilter === "ALL"
@@ -484,7 +1337,7 @@
         let postsHTML = filteredPosts.map(post => {
           let commentsHTML = post.comments.map(comm => `
             <div class="comment-box">
-              <div style="display:flex; justify-content:space-between; margin-bottom:0.2rem;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">
                 <strong style="color: var(--accent);">${comm.author} <span class="user-badge ${comm.badgeClass}">${comm.badge}</span></strong>
                 <span style="color: var(--text-muted); font-size: 0.68rem;">${comm.date}</span>
               </div>
@@ -494,12 +1347,15 @@
 
           return `
             <div class="forum-post-card ${post.pinned ? 'pinned' : ''}">
-              <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem; flex-wrap:wrap;">
                 <span style="font-size: 0.72rem; color: ${post.pinned ? 'var(--gold)' : 'var(--accent)'}; font-weight: 700;">${post.category}</span>
                 <span style="font-size: 0.7rem; color: var(--text-muted);">${post.date}</span>
               </div>
               <h3 style="font-size: 1rem; margin: 0.35rem 0; color: var(--text-main);">${post.title}</h3>
-              <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Autor: <strong style="color:var(--text-main);">${post.author}</strong></p>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                Autor: <strong style="color:var(--text-main);">${post.author}</strong>
+                <span class="user-badge ${post.badgeClass}">${post.badge}</span>
+              </p>
               
               <div style="display: flex; gap: 1rem; font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.7rem; padding-bottom: 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.06);">
                 <span>👁️ ${post.views} wyświetleń</span>
@@ -511,7 +1367,7 @@
               <div>${commentsHTML}</div>
 
               <div style="display: flex; gap: 0.5rem; margin-top: 0.85rem;">
-                <input type="text" id="commInput_${post.id}" placeholder="Napisz odpowiedź..." style="flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.45rem 0.7rem; color:#fff; font-size:0.78rem; outline:none;" onkeypress="if(event.key==='Enter') app.addComment(${post.id})">
+                <input type="text" id="commInput_${post.id}" placeholder="Dodaj komentarz do wątku..." style="flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.45rem 0.7rem; color:#fff; font-size:0.78rem; outline:none;" onkeypress="if(event.key==='Enter') app.addComment(${post.id})">
                 <button class="btn-action" style="width: auto; margin:0; padding: 0.45rem 0.9rem;" onclick="app.addComment(${post.id})">Odpowiedz</button>
               </div>
             </div>
@@ -520,9 +1376,9 @@
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap:wrap; gap:0.5rem;">
               <h2>💬 TGN Forum & Baza Wiedzy (2021–2026)</h2>
-              <button class="btn-action" style="width: auto; padding: 0.45rem 1rem; margin: 0;" onclick="app.toggleNewThread()">+ Nowy temat</button>
+              <button class="btn-action" style="width: auto; padding: 0.45rem 1rem; margin: 0;" onclick="app.toggleNewThread()">+ Utwórz nowy wątek</button>
             </div>
 
             <div class="forum-stats-bar">
@@ -533,21 +1389,28 @@
             </div>
 
             <div id="newThreadBox" class="new-thread-box">
-              <h3 style="font-size: 0.85rem; color: var(--accent); margin-bottom: 0.6rem;">Utwórz nowy wątek</h3>
-              <select id="newThreadCat">
-                <option value="FITTING">⚙️ Custom Fitting & Telemetria</option>
-                <option value="SPRZET">🏌️ Sprzęt & Recenzje</option>
-                <option value="PORADNIKI">🎓 Porady PGA Pro</option>
-              </select>
-              <input type="text" id="newThreadTitle" placeholder="Tytuł wątku...">
-              <textarea id="newThreadContent" rows="3" placeholder="Treść pytania..."></textarea>
-              <button class="btn-action" style="margin:0; background:var(--accent); color:#052e16;" onclick="app.createThread()">Opublikuj</button>
+              <h3 style="font-size: 0.85rem; color: var(--accent); margin-bottom: 0.6rem;">Nowy wątek na forum TGN</h3>
+              <div class="form-group">
+                <select id="newThreadCat">
+                  <option value="FITTING">⚙️ Custom Fitting & Telemetria</option>
+                  <option value="SPRZET">🏌️ Sprzęt & Recenzje Graczy</option>
+                  <option value="PORADNIKI">🎓 Porady PGA Pro</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <input type="text" id="newThreadTitle" placeholder="Tytuł Twojego tematu...">
+              </div>
+              <div class="form-group">
+                <textarea id="newThreadContent" rows="3" placeholder="Opisz swój problem lub doświadczenia ze sprzętem..."></textarea>
+              </div>
+              <button class="btn-primary" onclick="app.createThread()">Opublikuj temat</button>
             </div>
 
             <div class="forum-filters">
-              <button class="filter-pill ${AppData.activeForumFilter === 'ALL' ? 'active' : ''}" onclick="app.filterForum('ALL')">Wszystkie</button>
-              <button class="filter-pill ${AppData.activeForumFilter === 'PORADNIKI' ? 'active' : ''}" onclick="app.filterForum('PORADNIKI')">🎓 Poradniki</button>
-              <button class="filter-pill ${AppData.activeForumFilter === 'FITTING' ? 'active' : ''}" onclick="app.filterForum('FITTING')">⚙️ Fitting</button>
+              <button class="filter-pill ${AppData.activeForumFilter === 'ALL' ? 'active' : ''}" onclick="app.filterForum('ALL')">Wszystkie (42.6k)</button>
+              <button class="filter-pill ${AppData.activeForumFilter === 'PORADNIKI' ? 'active' : ''}" onclick="app.filterForum('PORADNIKI')">🎓 Poradniki PGA Pro</button>
+              <button class="filter-pill ${AppData.activeForumFilter === 'FITTING' ? 'active' : ''}" onclick="app.filterForum('FITTING')">⚙️ Custom Fitting</button>
+              <button class="filter-pill ${AppData.activeForumFilter === 'SPRZET' ? 'active' : ''}" onclick="app.filterForum('SPRZET')">🏌️ Sprzęt & Testy</button>
             </div>
 
             <div>${postsHTML}</div>
@@ -556,66 +1419,104 @@
       }
     };
 
+    /* =========================================================================
+       KOMPONENT 3: SKUP TGN CPO (ZE ZDJĘCIAMI KIJÓW Z TORBY)
+       ========================================================================= */
     const CpoComponent = {
       render: () => {
-        let itemsHTML = AppData.bag.map(c => `
-          <div class="cpo-item">
-            <div>
-              <h3 style="font-size: 0.95rem; color: var(--text-main);">${c.name}</h3>
-              <p style="font-size: 0.75rem; color: var(--text-muted);">${c.loft} • Stan: ${c.cond}</p>
-              <p style="font-size: 0.75rem; color: var(--accent); margin-top: 0.3rem;">Wycena skupu: <strong style="color: var(--gold);">${c.cpoOffer}</strong></p>
+        let itemsHTML = AppData.bag.map(c => {
+          const imgSrc = ClubImageEngine.getInitialImage(c.name, c.imgUrl);
+          return `
+            <div class="cpo-item">
+              <div class="club-photo-frame" style="width:76px; height:76px;" onclick="app.openPhotoZoom('${c.name.replace(/'/g, "")}', '${imgSrc}', '${c.loft}')">
+                <img src="${imgSrc}" alt="${c.name}">
+                <span class="cond-badge">${c.cond}</span>
+              </div>
+              <div>
+                <h3 style="font-size: 0.95rem; color: var(--text-main);">${c.name}</h3>
+                <p style="font-size: 0.75rem; color: var(--text-muted);">${c.loft} • Wartość rynkowa: ${c.val}</p>
+                <p style="font-size: 0.78rem; color: var(--accent); margin-top: 0.3rem;">Natychmiastowa wypłata TGN CPO: <strong style="color: var(--gold); font-size:0.9rem;">${c.cpoOffer}</strong></p>
+              </div>
+              <div class="cpo-actions" style="display: flex; flex-direction: column; gap: 0.4rem; min-width: 155px;">
+                <button class="btn-action" style="margin:0; padding:0.45rem;" onclick="app.showToast('Zlecono wypłatę gotówki CPO dla: ${c.name}')">⚡ Sprzedaj za gotówkę</button>
+                <button class="btn-action" style="margin:0; padding:0.45rem; background:rgba(250,204,21,0.12); border-color:var(--gold); color:var(--gold);" onclick="app.showToast('Wygenerowano kod Trade-In 2026 (+15% wartości)!')">🔄 Trade-In na 2026</button>
+              </div>
             </div>
-            <button class="btn-action" style="width: auto; padding: 0.5rem 1rem;" onclick="app.showToast('Zlecono skup CPO!')">Sprzedaj</button>
-          </div>
-        `).join('');
+          `;
+        }).join('');
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
-            <h2>⚡ Skup TGN CPO (Certified Pre-Owned)</h2>
-            <div class="cpo-grid" style="margin-top: 1rem;">${itemsHTML}</div>
+            <h2>⚡ Skup TGN CPO (Certified Pre-Owned) – Gwarantowana Wycena</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem;">Sprzedaj sprzęt ze swojej cyfrowej torby bez czekania na kupca. Pieniądze na koncie w 24h lub bonus +15% przy wymianie na kolekcję 2026.</p>
+            <div class="cpo-grid">${itemsHTML}</div>
           </section>
         `;
       }
     };
 
+    /* =========================================================================
+       KOMPONENT 4: MARKETPLACE C2C (ZE ZDJĘCIAMI KIJÓW NA ŻYWO)
+       ========================================================================= */
     const MarketplaceComponent = {
       render: () => {
-        let itemsHTML = AppData.marketplace.map(item => `
-          <div class="market-card">
-            <div>
-              <span style="font-size: 0.7rem; color: var(--gold); font-weight: 700;">${item.cond}</span>
-              <h3 style="font-size: 0.95rem; margin: 0.3rem 0; color: var(--text-main);">${item.title}</h3>
-              <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.6rem;">${item.desc}</p>
+        let itemsHTML = AppData.marketplace.map(item => {
+          const imgSrc = ClubImageEngine.getInitialImage(item.title, item.imgUrl);
+          return `
+            <div class="market-card">
+              <div class="club-photo-frame" style="width:92px; height:92px;" onclick="app.openPhotoZoom('${item.title.replace(/'/g, "")}', '${imgSrc}', 'Sprzedawca: ${item.seller} • Cena: ${item.price}')">
+                <img src="${imgSrc}" alt="${item.title}">
+                <span class="live-photo-badge">FOTO</span>
+              </div>
+              <div style="display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <span style="font-size: 0.68rem; color: var(--gold); font-weight: 700;">${item.cond}</span>
+                  <h3 style="font-size: 0.92rem; margin: 0.2rem 0; color: var(--text-main);">${item.title}</h3>
+                  <p style="font-size: 0.74rem; color: var(--text-muted); margin-bottom: 0.5rem;">${item.desc}</p>
+                </div>
+                <div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                    <span style="font-size: 0.7rem; color: var(--text-muted);">Od: ${item.seller}</span>
+                    <strong style="font-size: 0.98rem; color: var(--accent);">${item.price}</strong>
+                  </div>
+                  <button class="btn-action" style="margin:0; padding:0.45rem;" onclick="app.openChat('${item.seller}')">💬 Napisz do sprzedawcy</button>
+                </div>
+              </div>
             </div>
-            <button class="btn-action" onclick="app.switchTab('chat')">Napisz do sprzedawcy</button>
-          </div>
-        `).join('');
+          `;
+        }).join('');
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
-            <h2>🤝 TGN Marketplace (C2C)</h2>
-            <div class="market-grid" style="margin-top: 1rem;">${itemsHTML}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+              <h2>🤝 TGN Marketplace (C2C – Oferty Graczy ze Zdjęciami)</h2>
+              <button class="btn-action" style="width:auto; margin:0; padding:0.4rem 0.9rem;" onclick="app.switchTab('profile'); setTimeout(() => app.toggleAddClubLive(), 100);">+ Wystaw kij z torby</button>
+            </div>
+            <div class="market-grid">${itemsHTML}</div>
           </section>
         `;
       }
     };
 
+    /* =========================================================================
+       KOMPONENT 5: CZAT ZE SPRZEDAWCĄ
+       ========================================================================= */
     const ChatComponent = {
       render: () => {
         let msgsHTML = AppData.chatMessages.map(m => `
           <div class="msg ${m.type}">
-            <div style="font-size: 0.65rem; opacity: 0.7; margin-bottom: 2px;">${m.sender}</div>
+            <div style="font-size: 0.65rem; opacity: 0.75; margin-bottom: 2px;">${m.sender}</div>
             <div>${m.text}</div>
           </div>
         `).join('');
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
-            <h2>💬 Czat ze sprzedawcą</h2>
+            <h2>💬 Bezpośredni Czat C2C ze Sprzedawcą</h2>
             <div class="chat-container" style="margin-top: 1rem;">
               <div class="chat-messages" id="chatMsgs">${msgsHTML}</div>
               <div class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="Napisz wiadomość..." onkeypress="if(event.key === 'Enter') app.sendChatMessage()">
+                <input type="text" id="chatInput" placeholder="Napisz wiadomość w sprawie kija..." onkeypress="if(event.key === 'Enter') app.sendChatMessage()">
                 <button onclick="app.sendChatMessage()">Wyślij</button>
               </div>
             </div>
@@ -624,14 +1525,18 @@
       }
     };
 
+    /* =========================================================================
+       GŁÓWNY KONTROLER APLIKACJI (ROUTER I AKCJE)
+       ========================================================================= */
     const app = {
       switchTab: (tabName) => {
         const container = document.getElementById('appContainer');
         if (!container) return;
-        
+
         if (tabName === 'profile') {
+          container.style.gridTemplateColumns = "1fr 1.3fr";
           container.innerHTML = ProfileAndBagComponent.render();
-          container.style.gridTemplateColumns = "1fr 1.25fr";
+          ProfileAndBagComponent.afterRender();
         } else {
           container.style.gridTemplateColumns = "1fr";
           if (tabName === 'forum') container.innerHTML = ForumComponent.render();
@@ -648,40 +1553,178 @@
         });
       },
 
-      filterForum: (catKey) => { AppData.activeForumFilter = catKey; app.switchTab('forum'); },
-      toggleNewThread: () => { const box = document.getElementById('newThreadBox'); if(box) box.style.display = box.style.display === 'block' ? 'none' : 'block'; },
+      toggleAddClubLive: () => {
+        const box = document.getElementById('addClubLiveBox');
+        if (box) box.style.display = box.style.display === 'block' ? 'none' : 'block';
+      },
+
+      addClubWithLivePhoto: async () => {
+        const nameInput = document.getElementById('newClubName');
+        const specInput = document.getElementById('newClubSpec');
+        const valInput = document.getElementById('newClubVal');
+        const customImgInput = document.getElementById('newClubCustomImg');
+
+        const name = nameInput ? nameInput.value.trim().toUpperCase() : '';
+        if (!name) {
+          app.showToast('Wpisz nazwę modelu kija (np. IRON: MIZUNO JPX 923)!');
+          return;
+        }
+
+        const loft = (specInput && specInput.value.trim()) ? specInput.value.trim() : "Specyfikacja Standard फिट";
+        const val = (valInput && valInput.value.trim()) ? valInput.value.trim() : "1 950 PLN";
+        const customUrl = (customImgInput && customImgInput.value.trim()) ? customImgInput.value.trim() : "";
+
+        const newId = Date.now();
+        const newClub = {
+          id: newId,
+          name: name,
+          loft: loft,
+          val: val,
+          cpoOffer: "1 500 PLN",
+          speed: "126 mph",
+          smash: "1.44",
+          attack: "+1.5°",
+          cond: "Nowy",
+          imgUrl: customUrl || null
+        };
+
+        AppData.bag.unshift(newClub);
+        app.switchTab('profile');
+        app.showToast('Pobieranie grafiki na żywo dla: ' + name + '...');
+
+        if (!customUrl) {
+          await ClubImageEngine.fetchLiveImageForClub(name, `bag_club_img_${newId}`);
+        }
+      },
+
+      openPhotoZoom: (title, imgUrl, meta) => {
+        document.getElementById('zoomClubTitle').textContent = title;
+        document.getElementById('zoomClubImg').src = imgUrl;
+        document.getElementById('zoomClubMeta').textContent = meta;
+        document.getElementById('photoZoomModal').style.display = 'flex';
+      },
+
+      closePhotoZoom: () => {
+        document.getElementById('photoZoomModal').style.display = 'none';
+      },
+
+      openAiModal: () => {
+        document.getElementById('aiModalOverlay').style.display = 'flex';
+      },
+
+      closeAiModal: () => {
+        document.getElementById('aiModalOverlay').style.display = 'none';
+      },
+
+      filterForum: (catKey) => {
+        AppData.activeForumFilter = catKey;
+        app.switchTab('forum');
+      },
+
+      toggleNewThread: () => {
+        const box = document.getElementById('newThreadBox');
+        if (box) box.style.display = box.style.display === 'block' ? 'none' : 'block';
+      },
+
       createThread: () => {
+        const catKey = document.getElementById('newThreadCat').value;
         const title = document.getElementById('newThreadTitle').value.trim();
         const content = document.getElementById('newThreadContent').value.trim();
-        if(!title || !content) return;
-        AppData.forumPosts.unshift({ id: Date.now(), pinned: false, catKey: "FITTING", category: "⚙️ Custom Fitting", title, author: AppData.user.name, badge: "HCP 12.4", badgeClass: "badge-vet", date: "Przed chwilą", views: "1", likes: 1, content, comments: [] });
+        if (!title || !content) return;
+
+        AppData.forumPosts.unshift({
+          id: Date.now(),
+          pinned: false,
+          catKey: catKey,
+          category: "⚙️ Dyskusja Społeczności TGN",
+          title: title,
+          author: AppData.user.name,
+          badge: "HCP " + AppData.user.hcp,
+          badgeClass: "badge-vet",
+          date: "Przed chwilą",
+          views: "1",
+          likes: 1,
+          content: content,
+          comments: []
+        });
+
+        AppData.activeForumFilter = "ALL";
         app.switchTab('forum');
-        app.showToast('Opublikowano wątek!');
+        app.showToast('Opublikowano nowy wątek na forum!');
       },
-      likePost: (id) => { const p = AppData.forumPosts.find(x => x.id === id); if(p) { p.likes++; app.switchTab('forum'); } },
+
+      likePost: (id) => {
+        const post = AppData.forumPosts.find(p => p.id === id);
+        if (post) {
+          post.likes += 1;
+          app.switchTab('forum');
+          app.showToast('Dodano punkt reputacji (+1 XP)');
+        }
+      },
+
       addComment: (id) => {
         const input = document.getElementById('commInput_' + id);
         const text = input ? input.value.trim() : '';
-        if(!text) return;
-        const p = AppData.forumPosts.find(x => x.id === id);
-        if(p) { p.comments.push({ author: AppData.user.name, badge: "HCP 12.4", badgeClass: "badge-vet", date: "Przed chwilą", text }); app.switchTab('forum'); }
+        if (!text) return;
+
+        const post = AppData.forumPosts.find(p => p.id === id);
+        if (post) {
+          post.comments.push({
+            author: AppData.user.name,
+            badge: "HCP " + AppData.user.hcp,
+            badgeClass: "badge-vet",
+            date: "Przed chwilą",
+            text: text
+          });
+          app.switchTab('forum');
+          app.showToast('Dodano odpowiedź!');
+        }
       },
+
+      openChat: (sellerName) => {
+        app.switchTab('chat');
+        app.showToast('Otwarto czat z: ' + sellerName);
+      },
+
       sendChatMessage: () => {
         const input = document.getElementById('chatInput');
-        if(!input || !input.value.trim()) return;
-        AppData.chatMessages.push({ sender: AppData.user.name, text: input.value.trim(), type: "outgoing" });
+        if (!input || !input.value.trim()) return;
+
+        AppData.chatMessages.push({
+          sender: AppData.user.name,
+          text: input.value.trim(),
+          type: "outgoing"
+        });
         input.value = '';
+
         document.getElementById('appContainer').innerHTML = ChatComponent.render();
         app.scrollChatToBottom();
+
+        setTimeout(() => {
+          AppData.chatMessages.push({
+            sender: "Janusz_G",
+            text: "Świetnie! Mogę przesłać dodatkowe zdjęcia główki kija w zbliżeniu.",
+            type: "incoming"
+          });
+          const activeBtn = document.querySelector('#mainNav button.active');
+          if (activeBtn && activeBtn.dataset.tab === 'chat') {
+            document.getElementById('appContainer').innerHTML = ChatComponent.render();
+            app.scrollChatToBottom();
+          }
+        }, 1200);
       },
-      scrollChatToBottom: () => { const box = document.getElementById('chatMsgs'); if (box) box.scrollTop = box.scrollHeight; },
-      openAiModal: () => { document.getElementById('aiModalOverlay').style.display = 'flex'; },
-      closeAiModal: () => { document.getElementById('aiModalOverlay').style.display = 'none'; },
+
+      scrollChatToBottom: () => {
+        const box = document.getElementById('chatMsgs');
+        if (box) box.scrollTop = box.scrollHeight;
+      },
+
       showToast: (msg) => {
         const toast = document.getElementById('toast');
-        if(!toast) return;
-        toast.textContent = msg; toast.style.display = 'block';
-        setTimeout(() => { toast.style.display = 'none'; }, 2500);
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2600);
       }
     };
 
@@ -689,7 +1732,20 @@
       document.querySelectorAll('#mainNav button').forEach(btn => {
         btn.addEventListener('click', () => app.switchTab(btn.dataset.tab));
       });
-      document.getElementById('logoBtn').addEventListener('click', () => app.switchTab('profile'));
+
+      document.getElementById('logoBtn').addEventListener('click', () => {
+        if (localStorage.getItem('tgn_user')) {
+          app.switchTab('profile');
+        }
+      });
+
+      const savedSession = localStorage.getItem('tgn_user');
+      if (savedSession) {
+        try {
+          AppData.user = JSON.parse(savedSession);
+          auth.enterApp();
+        } catch (e) {}
+      }
     });
   </script>
 </body>
