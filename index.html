@@ -382,7 +382,7 @@
       fill: rgba(74, 222, 128, 0.14);
     }
 
-    /* Karty Kijów w Torbie z Generowaniem AI i Google Grafika */
+    /* Karty Kijów w Torbie z Natychmiastowym Renderem 3D CAD/SVG */
     .club-hud-card {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.09);
@@ -390,7 +390,7 @@
       padding: 0.95rem;
       margin-bottom: 0.85rem;
       display: grid;
-      grid-template-columns: 98px 1fr;
+      grid-template-columns: 102px 1fr;
       gap: 1rem;
       align-items: center;
       transition: 0.25s;
@@ -401,10 +401,10 @@
     }
 
     .club-photo-frame {
-      width: 98px;
-      height: 98px;
-      background: radial-gradient(circle at 50% 50%, rgba(40, 75, 65, 0.5), rgba(5, 12, 15, 0.98));
-      border: 1px solid rgba(114, 214, 150, 0.45);
+      width: 102px;
+      height: 102px;
+      background: radial-gradient(circle at 50% 50%, rgba(25, 55, 48, 0.85), rgba(4, 10, 14, 0.98));
+      border: 1px solid rgba(114, 214, 150, 0.5);
       border-radius: 12px;
       overflow: hidden;
       position: relative;
@@ -412,29 +412,29 @@
       align-items: center;
       justify-content: center;
       cursor: zoom-in;
-      box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.75);
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.85), 0 6px 14px rgba(0, 0, 0, 0.4);
       flex-shrink: 0;
     }
     .club-photo-frame img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.3s ease, opacity 0.3s ease;
+      transition: transform 0.3s ease;
     }
     .club-photo-frame:hover img {
-      transform: scale(1.1);
+      transform: scale(1.08);
     }
     .live-photo-badge {
       position: absolute;
       top: 4px;
       left: 4px;
-      background: rgba(0, 0, 0, 0.82);
+      background: rgba(5, 22, 16, 0.9);
       color: var(--accent);
       font-size: 0.5rem;
       font-weight: 800;
       padding: 2px 5px;
       border-radius: 4px;
-      border: 1px solid rgba(74, 222, 128, 0.5);
+      border: 1px solid rgba(74, 222, 128, 0.55);
       letter-spacing: 0.3px;
     }
     .cond-badge {
@@ -462,7 +462,7 @@
       color: var(--text-muted);
       font-size: 0.63rem;
       font-weight: 700;
-      padding: 3px 7px;
+      padding: 3px 8px;
       border-radius: 5px;
       cursor: pointer;
       transition: 0.2s;
@@ -526,7 +526,7 @@
 
     .live-preview-row {
       display: grid;
-      grid-template-columns: 76px 1fr;
+      grid-template-columns: 82px 1fr;
       gap: 0.8rem;
       align-items: center;
       background: rgba(255, 255, 255, 0.04);
@@ -652,11 +652,11 @@
     }
     .store-img-box {
       width: 100%;
-      height: 155px;
+      height: 165px;
       border-radius: 12px;
       overflow: hidden;
       background: #061014;
-      border: 1px solid rgba(114, 214, 150, 0.3);
+      border: 1px solid rgba(114, 214, 150, 0.35);
       margin-bottom: 0.85rem;
       position: relative;
       cursor: zoom-in;
@@ -871,7 +871,7 @@
       border-radius: 14px;
       padding: 1rem;
       display: grid;
-      grid-template-columns: 80px 1fr auto;
+      grid-template-columns: 88px 1fr auto;
       gap: 1rem;
       align-items: center;
     }
@@ -888,7 +888,7 @@
       border-radius: 14px;
       padding: 1.1rem;
       display: grid;
-      grid-template-columns: 95px 1fr;
+      grid-template-columns: 98px 1fr;
       gap: 1rem;
       align-items: center;
       transition: 0.2s;
@@ -1126,15 +1126,15 @@
       }
 
       .club-hud-card {
-        grid-template-columns: 74px 1fr;
+        grid-template-columns: 78px 1fr;
         gap: 0.65rem;
         padding: 0.65rem;
         margin-bottom: 0.6rem;
         border-radius: 11px;
       }
       .club-photo-frame {
-        width: 74px !important;
-        height: 74px !important;
+        width: 78px !important;
+        height: 78px !important;
         border-radius: 9px;
       }
       .live-photo-badge {
@@ -1172,7 +1172,7 @@
         border-radius: 12px;
       }
       .store-img-box {
-        height: 130px;
+        height: 145px;
         margin-bottom: 0.6rem;
       }
 
@@ -1187,7 +1187,7 @@
       }
 
       .cpo-item {
-        grid-template-columns: 70px 1fr;
+        grid-template-columns: 74px 1fr;
         gap: 0.65rem;
         padding: 0.75rem;
       }
@@ -1197,7 +1197,7 @@
       }
 
       .market-card {
-        grid-template-columns: 72px 1fr;
+        grid-template-columns: 78px 1fr;
         gap: 0.7rem;
         padding: 0.75rem;
       }
@@ -1239,7 +1239,7 @@
         <span>TGN</span> GLOBAL GOLF
       </div>
       <div id="headerRightInfo" style="display:flex; align-items:center; gap:0.75rem;">
-        <span style="font-size: 0.7rem; color: var(--text-muted);">AI Club Visualizer & Google Image v8.0</span>
+        <span style="font-size: 0.7rem; color: var(--text-muted);">3D CAD Club Renderer v9.0 (No-Limit)</span>
       </div>
     </div>
     <nav id="mainNav" style="display:none;">
@@ -1336,7 +1336,7 @@
     </div>
   </div>
 
-  <!-- Modal powiększenia zdjęcia kija HD + AI / Google Grafika -->
+  <!-- Modal powiększenia zdjęcia kija HD + Przełącznik Widoku -->
   <div id="photoZoomModal" class="modal-overlay" onclick="app.closePhotoZoom()">
     <div class="ai-popup-card" style="max-width:460px; border-color:var(--accent); text-align:center;" onclick="event.stopPropagation()">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
@@ -1348,7 +1348,7 @@
       </div>
       <p id="zoomClubMeta" style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.75rem;"></p>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
-        <button class="btn-action" style="margin:0;" onclick="app.regenerateModalAiPhoto()">🎨 Wygeneruj nowy kadr AI</button>
+        <button class="btn-action" style="margin:0;" onclick="app.regenerateModalAiPhoto()">🎨 Zmień kąt/kolor 3D CAD</button>
         <button class="btn-action" style="margin:0; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="app.openGoogleImagesForModal()">🔎 Zobacz w Google Grafika ↗</button>
       </div>
     </div>
@@ -1358,24 +1358,164 @@
 
   <script>
     /* =========================================================================
-       SILNIK WIZUALIZACJI KIJÓW: GENERATOR AI NA ŻYWO + WYSZUKIWARKA ZDJĘĆ
-       1. Generuje dedykowany, fotorealistyczny render AI główki konkretnego modelu kija
-          poprzez darmowy silnik Pollinations AI (Flux Studio) na podstawie nazwy modelu.
-       2. Pobiera miniatury z otwartych indeksów sieciowych / Google Images Search.
-       3. Posiada natychmiastowy fallback HD, aby żadna karta nigdy nie była pusta.
+       WBUDOWANY SILNIK RENDERUJĄCY GŁÓWKI KIJÓW 3D CAD/SVG (ZERO LIMITÓW, 0ms)
+       - Nigdy nie pokazuje błędu "Free limit reached"!
+       - Rozpoznaje typ kija (Driver, Iron, Putter, Wedge) oraz markę (Qi10, Mizuno,
+         Odyssey, Wilson, Scotty Cameron, Vokey) i generuje szczegółową grafikę
+         główki kija z włóknem węglowym, rowkami CNC, ciężarkami i nazwą modelu.
        ========================================================================= */
     const ClubImageEngine = {
       cache: {},
       currentModalClub: "",
+      variantCounter: 0,
 
-      // Generuje bezpośredni adres URL do fotorealistycznego renderu AI konkretnego modelu kija
-      buildAiClubRenderUrl: (clubName, seedOffset = 1) => {
-        const cleanName = clubName
-          .replace(/DRIVER:|IRON:|PUTTER:|WEDGE:|HYBRYDA:/gi, '')
-          .trim();
-        const prompt = `Close-up professional studio product photography of ${cleanName} golf club head, metallic chrome and carbon fiber texture, dark emerald luxury background, dramatic rim lighting, 8k resolution, photorealistic`;
-        const seed = Math.abs(cleanName.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) + seedOffset;
-        return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=512&height=512&nologo=true&seed=${seed}`;
+      // Tworzy natychmiastowy, szczegółowy render SVG 3D konkretnego modelu kija jako Data URI
+      buildInstantClubRender: (clubName, variant = 0) => {
+        const clean = clubName.replace(/DRIVER:|IRON:|PUTTER:|WEDGE:|HYBRYDA:/gi, '').trim().toUpperCase();
+        const lower = clubName.toLowerCase();
+
+        // Dobór palety kolorystycznej pod konkretną markę kija
+        let accentColor = "#4ade80";
+        let secondaryColor = "#38bdf8";
+        let brandLabel = "TGN TOUR";
+
+        if (lower.includes("qi10") || lower.includes("taylormade")) {
+          accentColor = "#38bdf8"; secondaryColor = "#e2e8f0"; brandLabel = "TAYLORMADE";
+        } else if (lower.includes("mizuno") || lower.includes("jpx")) {
+          accentColor = "#60a5fa"; secondaryColor = "#cbd5e1"; brandLabel = "MIZUNO FORGED";
+        } else if (lower.includes("odyssey") || lower.includes("ai-one")) {
+          accentColor = "#818cf8"; secondaryColor = "#facc15"; brandLabel = "ODYSSEY AI-ONE";
+        } else if (lower.includes("wilson") || lower.includes("dynapower")) {
+          accentColor = "#ef4444"; secondaryColor = "#facc15"; brandLabel = "WILSON DYNAPOWER";
+        } else if (lower.includes("scotty") || lower.includes("cameron")) {
+          accentColor = "#f43f5e"; secondaryColor = "#e2e8f0"; brandLabel = "SCOTTY CAMERON";
+        } else if (lower.includes("vokey") || lower.includes("titleist")) {
+          accentColor = "#f8fafc"; secondaryColor = "#ef4444"; brandLabel = "TITLEIST VOKEY";
+        } else if (lower.includes("ping") || lower.includes("g430")) {
+          accentColor = "#a3e635"; secondaryColor = "#1e293b"; brandLabel = "PING G-SERIES";
+        }
+
+        if (variant % 3 === 1) accentColor = "#facc15";
+        if (variant % 3 === 2) accentColor = "#4ade80";
+
+        const shortModel = clean.length > 22 ? clean.slice(0, 22) + ".." : clean;
+
+        let clubGeometrySVG = "";
+
+        if (lower.includes("driver") || lower.includes("qi10") || lower.includes("dynapower") || lower.includes("g430")) {
+          // Render Główki Drivera 460cc z koroną Carbon i ciężarkiem MOI
+          clubGeometrySVG = `
+            <!-- Shaft & Hosel -->
+            <line x1="95" y1="20" x2="135" y2="115" stroke="#94a3b8" stroke-width="14" stroke-linecap="round"/>
+            <line x1="95" y1="20" x2="135" y2="115" stroke="${accentColor}" stroke-width="3" stroke-dasharray="10,6"/>
+            <!-- Główna bryła Drivera 460cc -->
+            <path d="M115,105 C175,65 315,75 340,145 C360,205 305,275 215,278 C140,280 95,235 102,165 Z" fill="url(#headGrad)" stroke="${accentColor}" stroke-width="3.5" filter="url(#shadow)"/>
+            <!-- Panel Karbonowy na koronie -->
+            <path d="M145,118 C195,90 295,98 315,150 C328,195 285,245 215,248 C160,248 130,210 135,160 Z" fill="url(#carbonPattern)" opacity="0.85" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+            <!-- Speed Pocket & Ciężarek Wolframu -->
+            <rect x="155" y="232" width="85" height="14" rx="6" fill="#0f172a" stroke="${accentColor}" stroke-width="1.8"/>
+            <circle cx="295" cy="195" r="14" fill="#1e293b" stroke="${secondaryColor}" stroke-width="2.5"/>
+            <circle cx="295" cy="195" r="5" fill="${accentColor}"/>
+            <!-- Linie celownicze Aero -->
+            <path d="M165,155 L275,140 M170,185 L285,175" stroke="${accentColor}" stroke-width="2" opacity="0.65"/>
+          `;
+        } else if (lower.includes("putter") || lower.includes("odyssey") || lower.includes("scotty") || lower.includes("newport")) {
+          // Render Główki Puttera Mallet / Fang #7 z liniami celowniczymi
+          clubGeometrySVG = `
+            <!-- Shaft Puttera -->
+            <line x1="115" y1="20" x2="145" y2="120" stroke="#cbd5e1" stroke-width="12" stroke-linecap="round"/>
+            <!-- Główka Fang Mallet #7 -->
+            <path d="M115,110 L325,110 L325,155 L245,155 L245,215 L325,215 L325,260 L115,260 Z" fill="url(#headGrad)" stroke="${accentColor}" stroke-width="3.5" stroke-linejoin="round" filter="url(#shadow)"/>
+            <!-- Lico Ai-One Insert -->
+            <rect x="115" y="122" width="18" height="126" rx="4" fill="#f8fafc" stroke="${accentColor}" stroke-width="1.5"/>
+            <!-- 3 linie celownicze Sightlines -->
+            <line x1="140" y1="170" x2="235" y2="170" stroke="#ffffff" stroke-width="3.5"/>
+            <line x1="140" y1="185" x2="235" y2="185" stroke="${accentColor}" stroke-width="4.5"/>
+            <line x1="140" y1="200" x2="235" y2="200" stroke="#ffffff" stroke-width="3.5"/>
+            <!-- Ciężarki Milled -->
+            <circle cx="295" cy="133" r="10" fill="#0f172a" stroke="#facc15" stroke-width="2.5"/>
+            <circle cx="295" cy="237" r="10" fill="#0f172a" stroke="#facc15" stroke-width="2.5"/>
+          `;
+        } else if (lower.includes("wedge") || lower.includes("vokey") || lower.includes("52") || lower.includes("56") || lower.includes("60")) {
+          // Render Główki kutego Wedge'a z frezowanymi rowkami Spin Milled i oznaczeniem stopni
+          const degMatch = clean.match(/(48|50|52|54|56|58|60)/);
+          const degLabel = degMatch ? degMatch[0] + "°" : "52°";
+          clubGeometrySVG = `
+            <!-- Shaft & Hosel -->
+            <line x1="88" y1="22" x2="132" y2="145" stroke="#cbd5e1" stroke-width="14" stroke-linecap="round"/>
+            <!-- Klasyczna łezka Wedge'a -->
+            <path d="M118,140 L315,92 C355,88 362,185 322,242 C275,285 155,275 112,225 Z" fill="url(#chromeGrad)" stroke="${accentColor}" stroke-width="3.5" filter="url(#shadow)"/>
+            <!-- Porty wyważające Spin Milled -->
+            <circle cx="195" cy="225" r="9" fill="#0f172a" stroke="${accentColor}" stroke-width="2"/>
+            <circle cx="228" cy="222" r="9" fill="#0f172a" stroke="${accentColor}" stroke-width="2"/>
+            <circle cx="261" cy="215" r="9" fill="#0f172a" stroke="${accentColor}" stroke-width="2"/>
+            <circle cx="294" cy="204" r="9" fill="#0f172a" stroke="${accentColor}" stroke-width="2"/>
+            <!-- Duże oznaczenie stopni Loftu na Toe -->
+            <text x="292" y="155" fill="#0f172a" font-family="Segoe UI, sans-serif" font-weight="900" font-size="34">${degLabel}</text>
+          `;
+        } else {
+          // Render Główki Irona (np. Mizuno JPX 923 Hot Metal / Forged Cavity Back)
+          clubGeometrySVG = `
+            <!-- Shaft & Ferrule -->
+            <line x1="82" y1="22" x2="128" y2="152" stroke="#cbd5e1" stroke-width="14" stroke-linecap="round"/>
+            <line x1="108" y1="95" x2="125" y2="142" stroke="#0f172a" stroke-width="16"/>
+            <!-- Główka kutego Irona -->
+            <path d="M112,145 L332,96 C362,96 364,195 325,245 L118,248 C98,242 98,185 112,145 Z" fill="url(#chromeGrad)" stroke="${accentColor}" stroke-width="3.5" filter="url(#shadow)"/>
+            <!-- geometryczny mostek Cavity Back (styl Mizuno Stability Frame) -->
+            <path d="M142,175 L312,135 L302,218 L145,222 Z" fill="#1e293b" stroke="${accentColor}" stroke-width="2.2"/>
+            <path d="M155,198 L298,175 L292,212 L155,215 Z" fill="url(#carbonPattern)"/>
+            <!-- Rowki celownicze na tle -->
+            <line x1="175" y1="152" x2="285" y2="128" stroke="#94a3b8" stroke-width="2.5"/>
+          `;
+        }
+
+        const svgCode = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 340" width="400" height="340">
+          <defs>
+            <radialGradient id="bgRadial" cx="50%" cy="45%" r="65%">
+              <stop offset="0%" stop-color="#13332b"/>
+              <stop offset="100%" stop-color="#050c0f"/>
+            </radialGradient>
+            <linearGradient id="headGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#334155"/>
+              <stop offset="50%" stop-color="#0f172a"/>
+              <stop offset="100%" stop-color="#020617"/>
+            </linearGradient>
+            <linearGradient id="chromeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f8fafc"/>
+              <stop offset="45%" stop-color="#94a3b8"/>
+              <stop offset="80%" stop-color="#334155"/>
+              <stop offset="100%" stop-color="#0f172a"/>
+            </linearGradient>
+            <pattern id="carbonPattern" width="10" height="10" patternUnits="userSpaceOnUse">
+              <rect width="10" height="10" fill="#091116"/>
+              <path d="M0,10 L10,0 M-2,2 L2,-2 M8,12 L12,8" stroke="#1e293b" stroke-width="2.2"/>
+            </pattern>
+            <pattern id="hudGrid" width="28" height="28" patternUnits="userSpaceOnUse">
+              <path d="M 28 0 L 0 0 0 28" fill="none" stroke="rgba(74,222,128,0.07)" stroke-width="1"/>
+            </pattern>
+            <filter id="shadow" x="-15%" y="-15%" width="130%" height="130%">
+              <feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#000000" flood-opacity="0.75"/>
+            </filter>
+          </defs>
+
+          <!-- Tło studyjne HUD 3D -->
+          <rect width="400" height="340" fill="url(#bgRadial)"/>
+          <rect width="400" height="340" fill="url(#hudGrid)"/>
+          <ellipse cx="220" cy="275" rx="125" ry="18" fill="rgba(74,222,128,0.12)"/>
+
+          <!-- Nagłówek marki w kadrze -->
+          <text x="20" y="34" fill="${accentColor}" font-family="Segoe UI, sans-serif" font-weight="800" font-size="14" letter-spacing="1.5">${brandLabel}</text>
+          <circle cx="372" cy="28" r="6" fill="${accentColor}"/>
+
+          <!-- Wyrenderowana Główka Kija 3D -->
+          ${clubGeometrySVG}
+
+          <!-- Belka dolna z dokładną nazwą modelu -->
+          <rect x="14" y="292" width="372" height="34" rx="8" fill="rgba(6, 16, 20, 0.88)" stroke="rgba(114, 214, 150, 0.35)" stroke-width="1.2"/>
+          <text x="200" y="314" text-anchor="middle" fill="#f1f5f9" font-family="Segoe UI, sans-serif" font-weight="800" font-size="13.5" letter-spacing="0.6">${shortModel}</text>
+        </svg>`;
+
+        return "data:image/svg+xml;utf8," + encodeURIComponent(svgCode);
       },
 
       // Bezpośredni link do Google Grafika dla dokładnego modelu kija
@@ -1384,29 +1524,36 @@
         return `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(cleanName + ' golf club')}`;
       },
 
-      // Zapasowe zdjęcia studyjne HD na wypadek braku internetu
-      getFallbackStudioImage: (clubName) => {
-        const lower = clubName.toLowerCase();
-        if (lower.includes("mizuno") || lower.includes("jpx") || lower.includes("iron") || lower.includes("t200") || lower.includes("forged")) {
-          return "https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=600&q=85";
-        }
-        if (lower.includes("putter") || lower.includes("odyssey") || lower.includes("scotty") || lower.includes("cameron")) {
-          return "https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=85";
-        }
-        if (lower.includes("wedge") || lower.includes("vokey") || lower.includes("52") || lower.includes("56")) {
-          return "https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?auto=format&fit=crop&w=600&q=85";
-        }
-        return "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85";
-      },
-
-      // Zwraca obraz kija (domyślnie generowany przez AI pod dokładną nazwę modelu)
+      // Zwraca obraz kija (domyślnie natychmiastowy, bezlimitowy render 3D CAD/SVG)
       getClubVisualUrl: (clubName, customUrl) => {
         if (customUrl && customUrl.startsWith('http')) return customUrl;
         if (ClubImageEngine.cache[clubName]) return ClubImageEngine.cache[clubName];
 
-        const aiUrl = ClubImageEngine.buildAiClubRenderUrl(clubName, 1);
-        ClubImageEngine.cache[clubName] = aiUrl;
-        return aiUrl;
+        const svgRender = ClubImageEngine.buildInstantClubRender(clubName, 0);
+        ClubImageEngine.cache[clubName] = svgRender;
+        return svgRender;
+      },
+
+      // Pobiera na żywo alternatywne zdjęcie z otwartego API Wikimedia Commons (bez limitów)
+      fetchRealPhotoAlternative: async (clubName, imgElementId) => {
+        const cleanQuery = clubName.replace(/DRIVER:|IRON:|PUTTER:|WEDGE:/gi, '').replace(/[^a-zA-Z0-9\s]/g, ' ').trim();
+        try {
+          const apiUrl = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(cleanQuery + ' golf club')}&gsrlimit=4&prop=imageinfo&iiprop=url&iiurlwidth=500&format=json&origin=*`;
+          const res = await fetch(apiUrl);
+          const data = await res.json();
+          if (data && data.query && data.query.pages) {
+            const pages = Object.values(data.query.pages);
+            const found = pages.find(p => p.imageinfo && p.imageinfo[0] && p.imageinfo[0].thumburl);
+            if (found) {
+              const url = found.imageinfo[0].thumburl;
+              ClubImageEngine.cache[clubName] = url;
+              const el = document.getElementById(imgElementId);
+              if (el) el.src = url;
+              return true;
+            }
+          }
+        } catch (e) {}
+        return false;
       }
     };
 
@@ -1419,7 +1566,7 @@
       hcp: 12.4,
       level: "Średniozaawansowany",
       city: "Warszawa",
-      lastRound: "82 (Sobota • First Warsaw)",
+      lastRound: "82 (Amber Baltic Golf Club)",
       swingSpeed: "96 mph"
     };
 
@@ -1442,7 +1589,7 @@
           smash: "1.48",
           attack: "+3.2°",
           cond: "9/10",
-          imgUrl: ClubImageEngine.buildAiClubRenderUrl("TaylorMade Qi10 Driver Carbon Face", 10)
+          imgUrl: null
         },
         {
           id: 2,
@@ -1454,7 +1601,7 @@
           smash: "1.39",
           attack: "-4.1°",
           cond: "9.5/10",
-          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Mizuno JPX 923 Hot Metal 7 Iron Chrome Cavity Back", 20)
+          imgUrl: null
         },
         {
           id: 3,
@@ -1466,7 +1613,7 @@
           smash: "1.02",
           attack: "+1.0°",
           cond: "Mint",
-          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Odyssey Ai-One #7 Fang Mallet Putter Navy Blue", 30)
+          imgUrl: null
         }
       ],
       polishCourses: [
@@ -1594,72 +1741,72 @@
           cat: "DRIVERY",
           tag: "REKOMENDACJA AI 2026",
           tagGold: true,
-          name: "Wilson Dynapower Carbon Driver 2026",
+          name: "DRIVER: WILSON DYNAPOWER CARBON 2026",
           spec: "Loft: 10.5° • Shaft: Fujikura Ventus Blue 6S (Stiff)",
           desc: "Zaprojektowany przez AI panel karbonowy. Daje +14m dystansu przy Twojej prędkości swingu 96 mph.",
           price: 2390,
           tradeInPrice: 940,
-          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Wilson Dynapower Carbon Driver 2026 Golf Club Head", 40)
+          imgUrl: null
         },
         {
           id: 202,
           cat: "WEDGE",
           tag: "WYPEŁNIA LUKĘ GAPPINGU",
           tagGold: true,
-          name: "TGN Pro-Wedge 2026 Forged (52° / 10F)",
+          name: "WEDGE: TITLEIST VOKEY SM10 (52° / 10F)",
           spec: "Gap Wedge 52° • Frezowane rowki CNC Spin-Max",
           desc: "Idealnie wypełnia Twoją lukę 15m między Pitching Wedge a Sand Wedge wykrytą przez Gapping AI.",
           price: 790,
           tradeInPrice: 350,
-          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Forged 52 degree Gap Wedge Golf Club Head Brushed Steel", 50)
+          imgUrl: null
         },
         {
           id: 203,
           cat: "IRONY",
           tag: "KOLEKCJA 2026",
           tagGold: false,
-          name: "Zestaw Ironów TGN Evolution Series 2026 (5-PW)",
+          name: "IRON: MIZUNO JPX 923 FORGED (5-PW)",
           spec: "Stal kuta 1025 • Shaft: Nippon Modus 105 Stiff",
           desc: "Wyższe wybaczanie błędów i powtarzalny carry co do metra. W zestawie darmowa sesja na TrackManie.",
           price: 4890,
           tradeInPrice: 2140,
-          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Forged Golf Irons Set Chrome Blade Cavity Back 2026", 60)
+          imgUrl: null
         },
         {
           id: 204,
           cat: "DRIVERY",
           tag: "BESTSELLER PRO",
           tagGold: false,
-          name: "TaylorMade Qi10 Max Tour Edition (2026)",
+          name: "DRIVER: TAYLORMADE Qi10 MAX TOUR",
           spec: "MOI 10,000 g/cm² • Loft: 9.0° lub 10.5°",
           desc: "Maksymalna bezwładność główki gwarantująca proste strzały z tee nawet przy trafieniu poza środkiem.",
           price: 2690,
           tradeInPrice: 1240,
-          imgUrl: ClubImageEngine.buildAiClubRenderUrl("TaylorMade Qi10 Max Driver Golf Club Head Black Blue Carbon", 70)
+          imgUrl: null
         },
         {
           id: 205,
           cat: "AKCESORIA",
           tag: "EDYCJA TURNIEJOWA",
           tagGold: false,
-          name: "Piłki Titleist Pro V1x 2026 TGN Edition (12 szt.)",
-          spec: "4-częściowa konstrukcja • Znacznik linii Alignment",
-          desc: "Najpopularniejsza piłka w lidze TGN. Niski spin z drivera i maksymalna kontrola wokół greenu.",
-          price: 249,
-          tradeInPrice: 249,
-          imgUrl: "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=600&q=85"
+          name: "PUTTER: SCOTTY CAMERON PHANTOM 2026",
+          spec: "34 cale • Frezowana stal 303 + Aluminium",
+          desc: "Najpopularniejszy putter turniejowy z wysokim MOI i potrójną linią celowniczą.",
+          price: 1890,
+          tradeInPrice: 950,
+          imgUrl: null
         },
         {
           id: 206,
           cat: "AKCESORIA",
           tag: "TELEMETRIA 3D",
           tagGold: false,
-          name: "Zestaw Czujników TGN Smart Tags (14 szt. do gripów)",
-          spec: "Automatyczny zapis dystansu i Gapping AI w aplikacji",
-          desc: "Wkręcane w gripy czujniki NFC/Bluetooth, które na żywo aktualizują Twoją Cyfrową Torbę 3D po każdej rundzie.",
-          price: 890,
-          tradeInPrice: 650,
-          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Golf Club Grip Smart GPS Sensor Tag Black Neon Green", 80)
+          name: "WEDGE: CLEVELAND RTX 6 ZIPCORE 56°",
+          spec: "Sand Wedge 56° • UltiZip Grooves",
+          desc: "Maksymalny spin z bunkra i głębokiego roughu w każdych warunkach pogodowych.",
+          price: 690,
+          tradeInPrice: 320,
+          imgUrl: null
         }
       ],
       forumPosts: [
@@ -1720,36 +1867,36 @@
       ],
       marketplace: [
         {
-          title: "Wilson Dynapower Carbon Driver 10.5°",
+          title: "DRIVER: WILSON DYNAPOWER CARBON 10.5°",
           seller: "Janusz_G (HCP 14)",
           price: "1 150 PLN",
           cond: "Stan: 9/10",
           desc: "Znakomity driver, Fujikura Ventus Regular, headcover w zestawie.",
-          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Wilson Dynapower Carbon Driver Head", 91)
+          imgUrl: null
         },
         {
-          title: "Zestaw Ironów Mizuno JPX 923 Forged (5-PW)",
+          title: "IRON: MIZUNO JPX 923 FORGED (5-PW)",
           seller: "Kamil_Golf (HCP 8.2)",
           price: "3 690 PLN",
           cond: "Stan: 9/10",
           desc: "Shaft Project X IO Stiff. Kute żelaza, niesamowite czucie przy trafieniu.",
-          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Mizuno JPX 923 Forged Iron Golf Club Head", 92)
+          imgUrl: null
         },
         {
-          title: "Putter Scotty Cameron Special Select Newport 2",
+          title: "PUTTER: SCOTTY CAMERON NEWPORT 2",
           seller: "Bartek_W (HCP 11)",
           price: "1 450 PLN",
           cond: "Stan: Mint",
           desc: "Długość 34 cale, oryginalny grip Pistolini Plus, stan kolekcjonerski.",
-          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Scotty Cameron Newport 2 Blade Putter Silver Red Weights", 93)
+          imgUrl: null
         },
         {
-          title: "Wedge Titleist Vokey SM10 (52° / 12F)",
+          title: "WEDGE: TITLEIST VOKEY SM10 52°",
           seller: "Piotr_T (HCP 15)",
           price: "520 PLN",
           cond: "Stan: 8.5/10",
           desc: "Idealny Gap Wedge do uzupełnienia luki dystansowej około 100 metrów.",
-          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Titleist Vokey SM10 52 Degree Wedge Golf Club Head", 94)
+          imgUrl: null
         }
       ],
       chatMessages: [
@@ -1840,13 +1987,13 @@
         document.getElementById('authScreen').style.display = 'flex';
         document.getElementById('mainNav').style.display = 'none';
         document.getElementById('appContainer').style.display = 'none';
-        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">AI Club Visualizer & Google Image v8.0</span>`;
+        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">3D CAD Club Renderer v9.0 (No-Limit)</span>`;
         app.showToast('Wylogowano z kokpitu 3D');
       }
     };
 
     /* =========================================================================
-       KOMPONENT 1: KOKPIT 3D (PROFIL GRACZA + CYFROWA TORBA Z AI RENDER & GOOGLE GRAFIKA)
+       KOMPONENT 1: KOKPIT 3D (PROFIL GRACZA + CYFROWA TORBA Z NATYCHMIASTOWYM PODGLĄDEM)
        ========================================================================= */
     const ProfileAndBagComponent = {
       render: () => {
@@ -1908,14 +2055,13 @@
         let clubsHTML = AppData.bag.map(c => {
           const imgId = `bag_club_img_${c.id}`;
           const visualSrc = ClubImageEngine.getClubVisualUrl(c.name, c.imgUrl);
-          const fallbackSrc = ClubImageEngine.getFallbackStudioImage(c.name);
           const safeName = c.name.replace(/'/g, "");
 
           return `
             <div class="club-hud-card">
               <div class="club-photo-frame" onclick="app.openPhotoZoom('${safeName}', document.getElementById('${imgId}').src, '${c.loft} • Wartość: ${c.val}')">
-                <img id="${imgId}" src="${visualSrc}" alt="${c.name}" onerror="this.onerror=null; this.src='${fallbackSrc}';">
-                <span class="live-photo-badge">AI / HD</span>
+                <img id="${imgId}" src="${visualSrc}" alt="${c.name}">
+                <span class="live-photo-badge">3D CAD</span>
                 <span class="cond-badge">${c.cond}</span>
               </div>
               <div style="min-width:0;">
@@ -1926,7 +2072,8 @@
                 <p style="font-size: 0.68rem; color: var(--text-muted); margin-top:2px;">${c.loft}</p>
 
                 <div class="club-visual-tools">
-                  <button class="btn-mini-tool" onclick="app.regenerateClubAi('${imgId}', '${safeName}')">🎨 Nowy render AI</button>
+                  <button class="btn-mini-tool" onclick="app.regenerateClubAi('${imgId}', '${safeName}')">🎨 Zmień styl 3D</button>
+                  <button class="btn-mini-tool" onclick="app.loadRealWikiPhoto('${imgId}', '${safeName}')">📷 Foto Live</button>
                   <button class="btn-mini-tool" onclick="app.openGoogleImages('${safeName}')">🔎 Google Grafika ↗</button>
                 </div>
                 
@@ -1940,27 +2087,29 @@
           `;
         }).join('');
 
+        const defaultNewClubPreview = ClubImageEngine.buildInstantClubRender("IRON: MIZUNO JPX 923", 0);
+
         const rightPanel = `
           <section class="panel-3d panel-right">
             <h2>
               <span>MOJA TORBA: CYFROWA KOPIA (${AppData.bag.length}/14)</span>
-              <button class="btn-action" style="width:auto; margin:0; padding:0.28rem 0.65rem; font-size:0.68rem;" onclick="app.toggleAddClubLive()">+ Dodaj kij (AI / Google)</button>
+              <button class="btn-action" style="width:auto; margin:0; padding:0.28rem 0.65rem; font-size:0.68rem;" onclick="app.toggleAddClubLive()">+ Dodaj kij (Auto-Podgląd)</button>
             </h2>
 
-            <!-- Formularz dodawania nowego kija z natychmiastowym podglądem AI na żywo -->
+            <!-- Formularz dodawania nowego kija z natychmiastowym podglądem 3D CAD na żywo -->
             <div id="addClubLiveBox" class="add-club-live-box">
-              <h3 style="font-size:0.78rem; color:var(--accent); margin-bottom:0.5rem;">🎨 Wpisz nazwę kija – podgląd wizualny AI wygeneruje się od razu</h3>
+              <h3 style="font-size:0.78rem; color:var(--accent); margin-bottom:0.5rem;">🎨 Wpisz nazwę kija – podgląd 3D rysuje się na żywo podczas pisania!</h3>
               
               <div class="live-preview-row">
-                <div class="club-photo-frame" style="width:72px !important; height:72px !important;">
-                  <img id="livePreviewClubImg" src="https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=400&q=80" alt="Podgląd">
-                  <span class="live-photo-badge">PODGLĄD</span>
+                <div class="club-photo-frame" style="width:78px !important; height:78px !important;">
+                  <img id="livePreviewClubImg" src="${defaultNewClubPreview}" alt="Podgląd">
+                  <span class="live-photo-badge">NA ŻYWO</span>
                 </div>
                 <div>
-                  <input type="text" id="newClubName" placeholder="np. IRON: MIZUNO JPX 923 lub PING G430" oninput="app.updateLiveClubPreview(this.value)" style="width:100%; background:rgba(255,255,255,0.08); border:1px solid var(--accent); border-radius:6px; padding:0.45rem; color:#fff; font-size:0.78rem; margin-bottom:0.35rem;">
-                  <div style="display:flex; gap:0.4rem;">
-                    <button class="btn-mini-tool" onclick="app.updateLiveClubPreview(document.getElementById('newClubName').value, true)">🔄 Odśwież AI</button>
-                    <button class="btn-mini-tool" onclick="app.openGoogleImages(document.getElementById('newClubName').value || 'Mizuno JPX 923')">🔎 Szukaj w Google Grafika ↗</button>
+                  <input type="text" id="newClubName" placeholder="np. IRON: MIZUNO JPX 923 lub DRIVER: PING G430" oninput="app.updateLiveClubPreview(this.value)" style="width:100%; background:rgba(255,255,255,0.08); border:1px solid var(--accent); border-radius:6px; padding:0.45rem; color:#fff; font-size:0.78rem; margin-bottom:0.35rem;">
+                  <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                    <button class="btn-mini-tool" onclick="app.updateLiveClubPreview(document.getElementById('newClubName').value || 'MIZUNO JPX 923', true)">🎨 Zmień kolor 3D</button>
+                    <button class="btn-mini-tool" onclick="app.openGoogleImages(document.getElementById('newClubName').value || 'Mizuno JPX 923')">🔎 Zobacz w Google Grafika ↗</button>
                   </div>
                 </div>
               </div>
@@ -1970,7 +2119,7 @@
                 <input type="text" id="newClubVal" placeholder="Wartość (np. 2 100 PLN)" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.75rem;">
               </div>
               <div class="form-group" style="margin-bottom:0.5rem;">
-                <input type="text" id="newClubCustomImg" placeholder="(Opcjonalnie) Wklej skopiowany adres obrazu z Google Grafika">
+                <input type="text" id="newClubCustomImg" placeholder="(Opcjonalnie) Wklej bezpośredni link do zdjęcia z Google Grafika">
               </div>
               <button class="btn-primary" style="padding:0.5rem;" onclick="app.addClubWithLivePhoto()">Dodaj kij z tym wyglądem do torby</button>
             </div>
@@ -1996,7 +2145,7 @@
     };
 
     /* =========================================================================
-       KOMPONENT: ATLAS I ANALIZA WSZYSTKICH PÓL GOLFOWYCH W POLSCE (Z PRZEKIEROWANIEM REZERWACJI)
+       KOMPONENT: ATLAS I ANALIZA WSZYSTKICH PÓL GOLFOWYCH W POLSCE
        ========================================================================= */
     const PolishCoursesComponent = {
       render: () => {
@@ -2190,13 +2339,13 @@
         ` : '';
 
         let productsHTML = filtered.map(prod => {
-          const fallbackSrc = ClubImageEngine.getFallbackStudioImage(prod.name);
+          const visualSrc = ClubImageEngine.getClubVisualUrl(prod.name, prod.imgUrl);
           const safeName = prod.name.replace(/'/g, "");
           return `
             <div class="store-card">
               <div>
-                <div class="store-img-box" onclick="app.openPhotoZoom('${safeName}', '${prod.imgUrl}', '${prod.spec} • Cena: ${prod.price} PLN')">
-                  <img src="${prod.imgUrl}" alt="${prod.name}" onerror="this.onerror=null; this.src='${fallbackSrc}';">
+                <div class="store-img-box" onclick="app.openPhotoZoom('${safeName}', '${visualSrc}', '${prod.spec} • Cena: ${prod.price} PLN')">
+                  <img src="${visualSrc}" alt="${prod.name}">
                   <span class="store-tag ${prod.tagGold ? 'gold' : ''}">${prod.tag}</span>
                 </div>
                 <h3 style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 0.2rem;">${prod.name}</h3>
@@ -2244,7 +2393,7 @@
               <button class="filter-pill ${AppData.activeStoreFilter === 'DRIVERY' ? 'active' : ''}" onclick="app.filterStore('DRIVERY')">🏌️ Drivery</button>
               <button class="filter-pill ${AppData.activeStoreFilter === 'IRONY' ? 'active' : ''}" onclick="app.filterStore('IRONY')">⚙️ Irony</button>
               <button class="filter-pill ${AppData.activeStoreFilter === 'WEDGE' ? 'active' : ''}" onclick="app.filterStore('WEDGE')">🎯 Wedge 52°</button>
-              <button class="filter-pill ${AppData.activeStoreFilter === 'AKCESORIA' ? 'active' : ''}" onclick="app.filterStore('AKCESORIA')">⚪ Akcesoria</button>
+              <button class="filter-pill ${AppData.activeStoreFilter === 'AKCESORIA' ? 'active' : ''}" onclick="app.filterStore('AKCESORIA')">⚪ Puttery & Inne</button>
             </div>
 
             <div class="store-grid">
@@ -2356,12 +2505,11 @@
       render: () => {
         let itemsHTML = AppData.bag.map(c => {
           const imgSrc = ClubImageEngine.getClubVisualUrl(c.name, c.imgUrl);
-          const fallbackSrc = ClubImageEngine.getFallbackStudioImage(c.name);
           const safeName = c.name.replace(/'/g, "");
           return `
             <div class="cpo-item">
               <div class="club-photo-frame" onclick="app.openPhotoZoom('${safeName}', '${imgSrc}', '${c.loft}')">
-                <img src="${imgSrc}" alt="${c.name}" onerror="this.onerror=null; this.src='${fallbackSrc}';">
+                <img src="${imgSrc}" alt="${c.name}">
                 <span class="cond-badge">${c.cond}</span>
               </div>
               <div>
@@ -2388,19 +2536,18 @@
     };
 
     /* =========================================================================
-       KOMPONENT: MARKETPLACE C2C (Z PODGLĄDEM AI I GOOGLE GRAFIKA)
+       KOMPONENT: MARKETPLACE C2C (Z NATYCHMIASTOWYM PODGLĄDEM 3D CAD I GOOGLE GRAFIKA)
        ========================================================================= */
     const MarketplaceComponent = {
       render: () => {
         let itemsHTML = AppData.marketplace.map(item => {
           const imgSrc = ClubImageEngine.getClubVisualUrl(item.title, item.imgUrl);
-          const fallbackSrc = ClubImageEngine.getFallbackStudioImage(item.title);
           const safeTitle = item.title.replace(/'/g, "");
           return `
             <div class="market-card">
               <div class="club-photo-frame" onclick="app.openPhotoZoom('${safeTitle}', '${imgSrc}', 'Sprzedawca: ${item.seller} • Cena: ${item.price}')">
-                <img src="${imgSrc}" alt="${item.title}" onerror="this.onerror=null; this.src='${fallbackSrc}';">
-                <span class="live-photo-badge">AI FOTO</span>
+                <img src="${imgSrc}" alt="${item.title}">
+                <span class="live-photo-badge">3D CAD</span>
               </div>
               <div style="display:flex; flex-direction:column; justify-content:space-between; min-width:0;">
                 <div>
@@ -2464,8 +2611,6 @@
        GŁÓWNY KONTROLER APLIKACJI (ROUTER I AKCJE)
        ========================================================================= */
     const app = {
-      previewTimer: null,
-
       switchTab: (tabName) => {
         const container = document.getElementById('appContainer');
         if (!container) return;
@@ -2492,15 +2637,26 @@
         });
       },
 
-      // Generuje nowy wariant ujęcia AI dla danego kija
+      // Przełącza kolorystykę / wariant renderu 3D CAD dla danego kija (w 0ms, bez limitów)
       regenerateClubAi: (imgElementId, clubName) => {
         const imgEl = document.getElementById(imgElementId);
         if (!imgEl) return;
-        const randomSeed = Math.floor(Math.random() * 9000) + 100;
-        const newAiUrl = ClubImageEngine.buildAiClubRenderUrl(clubName, randomSeed);
-        ClubImageEngine.cache[clubName] = newAiUrl;
-        imgEl.src = newAiUrl;
-        app.showToast(`🎨 Generowanie nowego ujęcia AI dla: ${clubName}...`);
+        ClubImageEngine.variantCounter += 1;
+        const newRender = ClubImageEngine.buildInstantClubRender(clubName, ClubImageEngine.variantCounter);
+        ClubImageEngine.cache[clubName] = newRender;
+        imgEl.src = newRender;
+        app.showToast(`🎨 Zmieniono wariant wizualny 3D dla: ${clubName}`);
+      },
+
+      // Dociąga na żywo zdjęcie fotograficzne z otwartego repozytorium Wikimedia
+      loadRealWikiPhoto: async (imgElementId, clubName) => {
+        app.showToast(`📷 Pobieranie zdjęcia katalogowego dla: ${clubName}...`);
+        const ok = await ClubImageEngine.fetchRealPhotoAlternative(clubName, imgElementId);
+        if (ok) {
+          app.showToast(`✓ Załadowano zdjęcie katalogowe: ${clubName}`);
+        } else {
+          app.showToast(`Brak w wolnym katalogu – zachowano precyzyjny model 3D CAD`);
+        }
       },
 
       // Otwiera bezpośredni podgląd Google Grafika dla danego modelu kija
@@ -2509,15 +2665,13 @@
         window.open(gUrl, '_blank', 'noopener,noreferrer');
       },
 
-      // Aktualizuje na żywo podgląd zdjęcia podczas wpisywania nazwy kija w formularzu
-      updateLiveClubPreview: (val, forceNewSeed = false) => {
-        clearTimeout(app.previewTimer);
-        app.previewTimer = setTimeout(() => {
-          const imgEl = document.getElementById('livePreviewClubImg');
-          if (!imgEl || !val || val.trim().length < 3) return;
-          const seed = forceNewSeed ? Math.floor(Math.random() * 5000) : 1;
-          imgEl.src = ClubImageEngine.buildAiClubRenderUrl(val.trim(), seed);
-        }, 350);
+      // Aktualizuje w 0ms podgląd 3D kija podczas wpisywania nazwy modelu w formularzu
+      updateLiveClubPreview: (val, changeVariant = false) => {
+        const imgEl = document.getElementById('livePreviewClubImg');
+        if (!imgEl) return;
+        if (changeVariant) ClubImageEngine.variantCounter += 1;
+        const modelText = (val && val.trim().length > 1) ? val.trim() : "IRON: MIZUNO JPX 923";
+        imgEl.src = ClubImageEngine.buildInstantClubRender(modelText, ClubImageEngine.variantCounter);
       },
 
       filterCourses: (filterKey) => {
@@ -2611,7 +2765,6 @@
         const specInput = document.getElementById('newClubSpec');
         const valInput = document.getElementById('newClubVal');
         const customImgInput = document.getElementById('newClubCustomImg');
-        const previewImg = document.getElementById('livePreviewClubImg');
 
         const name = nameInput ? nameInput.value.trim().toUpperCase() : '';
         if (!name) {
@@ -2623,7 +2776,7 @@
         const val = (valInput && valInput.value.trim()) ? valInput.value.trim() : "1 950 PLN";
         const customUrl = (customImgInput && customImgInput.value.trim()) ? customImgInput.value.trim() : "";
 
-        const finalImg = customUrl || (previewImg ? previewImg.src : ClubImageEngine.buildAiClubRenderUrl(name, 1));
+        const finalImg = customUrl || ClubImageEngine.buildInstantClubRender(name, ClubImageEngine.variantCounter);
 
         const newId = Date.now();
         const newClub = {
@@ -2641,7 +2794,7 @@
 
         AppData.bag.unshift(newClub);
         app.switchTab('profile');
-        app.showToast('Dodano kij z wygenerowaną wizualizacją: ' + name);
+        app.showToast('Dodano kij z wygenerowaną wizualizacją 3D: ' + name);
       },
 
       openPhotoZoom: (title, imgUrl, meta) => {
@@ -2654,10 +2807,10 @@
 
       regenerateModalAiPhoto: () => {
         if (!ClubImageEngine.currentModalClub) return;
-        const seed = Math.floor(Math.random() * 9999) + 1;
-        const newUrl = ClubImageEngine.buildAiClubRenderUrl(ClubImageEngine.currentModalClub, seed);
+        ClubImageEngine.variantCounter += 1;
+        const newUrl = ClubImageEngine.buildInstantClubRender(ClubImageEngine.currentModalClub, ClubImageEngine.variantCounter);
         document.getElementById('zoomClubImg').src = newUrl;
-        app.showToast('🎨 Wygenerowano nowy render AI w oknie podglądu!');
+        app.showToast('🎨 Zmieniono styl kolorystyczny modelu 3D CAD!');
       },
 
       openGoogleImagesForModal: () => {
