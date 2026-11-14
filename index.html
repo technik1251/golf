@@ -276,9 +276,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
 
-    /* Układ Profilu Gracza 3D jak na wizualizacji */
+    /* Układ Profilu Gracza 3D */
     .profile-layout {
       display: grid;
       grid-template-columns: 155px 1fr;
@@ -476,7 +478,6 @@
       color: #052e16;
     }
 
-    /* Box dodawania nowego kija z Auto-Foto Live */
     .add-club-live-box {
       display: none;
       background: rgba(0, 0, 0, 0.45);
@@ -485,6 +486,91 @@
       padding: 1rem;
       margin-top: 0.8rem;
       margin-bottom: 0.8rem;
+    }
+
+    /* Oficjalny Sklep TGN (Store) */
+    .store-banner {
+      background: linear-gradient(135deg, rgba(74, 222, 128, 0.16), rgba(250, 204, 21, 0.1));
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 1.1rem 1.3rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .store-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      width: 100%;
+    }
+    .store-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 16px;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: 0.25s;
+      position: relative;
+    }
+    .store-card:hover {
+      border-color: var(--accent);
+      background: rgba(74, 222, 128, 0.05);
+      transform: translateY(-3px);
+    }
+    .store-img-box {
+      width: 100%;
+      height: 155px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #061014;
+      border: 1px solid rgba(114, 214, 150, 0.3);
+      margin-bottom: 0.85rem;
+      position: relative;
+      cursor: zoom-in;
+    }
+    .store-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.35s ease;
+    }
+    .store-card:hover .store-img-box img {
+      transform: scale(1.06);
+    }
+    .store-tag {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(5, 20, 15, 0.9);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+    .store-tag.gold {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .cart-summary-bar {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 0.9rem 1.2rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
     }
 
     /* Forum 5-letniej społeczności */
@@ -678,7 +764,7 @@
       cursor: pointer;
     }
 
-    /* Modal AI Gapping oraz Modal Podglądu Zdjęcia HD */
+    /* Modale */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -717,6 +803,11 @@
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
     }
 
+    @media (max-width: 1100px) {
+      .store-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
     @media (max-width: 1024px) {
       .spatial-stage {
         grid-template-columns: 1fr;
@@ -734,7 +825,7 @@
         max-width: 200px;
         margin: 0 auto;
       }
-      .market-grid {
+      .market-grid, .store-grid {
         grid-template-columns: 1fr;
       }
       .cpo-item {
@@ -758,11 +849,12 @@
         <span>TGN</span> GLOBAL GOLF
       </div>
       <div id="headerRightInfo" style="display:flex; align-items:center; gap:0.75rem;">
-        <span style="font-size: 0.7rem; color: var(--text-muted);">Live Club Image Engine v4.0</span>
+        <span style="font-size: 0.7rem; color: var(--text-muted);">Live Club Image Engine v4.5</span>
       </div>
     </div>
     <nav id="mainNav" style="display:none;">
       <button class="active" data-tab="profile">👤 Kokpit 3D & Torba</button>
+      <button data-tab="sklep">🛍️ Sklep TGN 2026</button>
       <button data-tab="forum">💬 Forum (2021–2026)</button>
       <button data-tab="cpo">⚡ Skup TGN CPO</button>
       <button data-tab="marketplace">🤝 Marketplace C2C</button>
@@ -833,7 +925,7 @@
     <!-- Zawartość wstrzykiwana przez router JS -->
   </main>
 
-  <!-- Modal AI Gapping Assistant (dokładnie jak na wizualizacji) -->
+  <!-- Modal AI Gapping Assistant -->
   <div id="aiModalOverlay" class="modal-overlay">
     <div class="ai-popup-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.8rem;">
@@ -844,10 +936,10 @@
         Cześć, <strong>Marek</strong>! Twoja gra (HCP 12.4, Swing 96 mph) jest gotowa na kolejny poziom. Nowa Kolekcja TGN 2026 oferuje znaczące usprawnienia dopasowane do Twoich parametrów.<br><br>
         Najważniejsze: Nowy <strong>Pro-Wedge 52°</strong> z serii 2026 idealnie wypełnia Twoją lukę dystansową, o której informuje nasza Gapping AI, dając precyzję wokół greenu.<br>
         Ponadto, nowa seria <strong>TGN Evolution Series 2026</strong> (Driver i Irony) oferuje większe wybaczanie błędów i lepszą aerodynamikę.<br><br>
-        Twoja obecna torba ma najwyższą wartość Trade-In (<strong>14 200 PLN</strong>). Zobacz spersonalizowaną ofertę z kalkulacją dla całej Twojej torby.
+        Twoja obecna torba ma najwyższą wartość Trade-In (<strong>14 200 PLN</strong>). Zobacz spersonalizowaną ofertę w Oficjalnym Sklepie TGN 2026.
       </p>
-      <button class="btn-action" style="background: rgba(250,204,21,0.16); border-color: var(--gold); color: var(--gold);" onclick="app.closeAiModal(); app.switchTab('cpo');">
-        [ ZOBACZ SPERSONALIZOWANĄ OFERTĘ KOLEKCJI 2026 I KALKULACJĘ UPGRADE'U ]
+      <button class="btn-action" style="background: rgba(250,204,21,0.16); border-color: var(--gold); color: var(--gold);" onclick="app.closeAiModal(); app.switchTab('sklep');">
+        [ PRZEJDŹ DO OFICJALNEGO SKLEPU KOLEKCJI 2026 I ODBIERZ ZNIŻKĘ TRADE-IN ]
       </button>
     </div>
   </div>
@@ -871,13 +963,10 @@
   <script>
     /* =========================================================================
        SILNIK POBIERANIA ZDJĘĆ KIJÓW NA ŻYWO (LIVE CLUB IMAGE RESOLVER)
-       1. Sprawdza bazę studyjnych fotografii konkretnych modeli (Qi10, JPX 923, Odyssey, Vokey, Dynapower).
-       2. Dla nowych wpisanych kijów odpytuje na żywo Wikipedia/Wikimedia REST API oraz proxy obrazów.
        ========================================================================= */
     const ClubImageEngine = {
       cache: {},
 
-      // Baza wyselekcjonowanych, realistycznych ujęć główek kijów (Driver, Iron, Putter, Wedge)
       curatedModels: [
         {
           keywords: ["qi10", "taylormade", "stealth", "sim2", "driver", "dynapower", "g430", "tsr", "paradym"],
@@ -897,7 +986,6 @@
         }
       ],
 
-      // Zwraca natychmiastowe zdjęcie początkowe przed dociągnięciem z API Live
       getInitialImage: (clubName, customUrl) => {
         if (customUrl && customUrl.startsWith('http')) return customUrl;
         if (ClubImageEngine.cache[clubName]) return ClubImageEngine.cache[clubName];
@@ -911,7 +999,6 @@
         return "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85";
       },
 
-      // Asynchronicznie pobiera zdjęcie kija na żywo z otwartego API Wikimedia / Wikipedia Search
       fetchLiveImageForClub: async (clubName, imgElementId) => {
         if (ClubImageEngine.cache[clubName]) {
           const el = document.getElementById(imgElementId);
@@ -919,14 +1006,12 @@
           return;
         }
 
-        // Wyczyść nazwę z przedrostków typu "DRIVER:" lub "IRON:"
         const cleanQuery = clubName
           .replace(/DRIVER:|IRON:|PUTTER:|WEDGE:|HYBRYDA:/gi, '')
           .replace(/[^a-zA-Z0-9\s]/g, ' ')
           .trim();
 
         try {
-          // Zapytanie na żywo do darmowego API Wikimedia Commons o zdjęcia sprzętu golfowego
           const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(cleanQuery + ' golf club')}&gsrlimit=3&prop=pageimages&piprop=thumbnail&pithumbsize=500&format=json&origin=*`;
           const response = await fetch(apiUrl);
           const data = await response.json();
@@ -942,9 +1027,7 @@
               return;
             }
           }
-        } catch (err) {
-          // W razie blokady sieciowej zostaje dopasowane zdjęcie studyjne HD z curatedModels
-        }
+        } catch (err) {}
 
         const fallback = ClubImageEngine.getInitialImage(clubName);
         ClubImageEngine.cache[clubName] = fallback;
@@ -952,7 +1035,7 @@
     };
 
     /* =========================================================================
-       BAZA DANYCH APLIKACJI (STAN, TORBA, FORUM 2021-2026, MARKETPLACE, CZAT)
+       BAZA DANYCH APLIKACJI (STAN, SKLEP 2026, TORBA, FORUM, MARKETPLACE, CZAT)
        ========================================================================= */
     const DefaultUser = {
       name: "Marek Kowalski",
@@ -961,12 +1044,13 @@
       level: "Średniozaawansowany",
       city: "Warszawa",
       lastRound: "82 (Sobota)",
-      swingSpeed: "96 mph",
-      avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80"
+      swingSpeed: "96 mph"
     };
 
     const AppData = {
       activeForumFilter: "ALL",
+      activeStoreFilter: "ALL",
+      cart: [],
       user: { ...DefaultUser },
       bag: [
         {
@@ -1003,6 +1087,80 @@
           smash: "1.02",
           attack: "+1.0°",
           cond: "Mint",
+          imgUrl: "https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=85"
+        }
+      ],
+      storeProducts: [
+        {
+          id: 201,
+          cat: "DRIVERY",
+          tag: "REKOMENDACJA AI 2026",
+          tagGold: true,
+          name: "Wilson Dynapower Carbon Driver 2026",
+          spec: "Loft: 10.5° • Shaft: Fujikura Ventus Blue 6S (Stiff)",
+          desc: "Zaprojektowany przez AI panel karbonowy. Daje +14m dystansu przy Twojej prędkości swingu 96 mph.",
+          price: 2390,
+          tradeInPrice: 940,
+          imgUrl: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85"
+        },
+        {
+          id: 202,
+          cat: "WEDGE",
+          tag: "WYPEŁNIA LUKĘ GAPPINGU",
+          tagGold: true,
+          name: "TGN Pro-Wedge 2026 Forged (52° / 10F)",
+          spec: "Gap Wedge 52° • Frezowane rowki CNC Spin-Max",
+          desc: "Idealnie wypełnia Twoją lukę 15m między Pitching Wedge a Sand Wedge wykrytą przez Gapping AI.",
+          price: 790,
+          tradeInPrice: 350,
+          imgUrl: "https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?auto=format&fit=crop&w=600&q=85"
+        },
+        {
+          id: 203,
+          cat: "IRONY",
+          tag: "KOLEKCJA 2026",
+          tagGold: false,
+          name: "Zestaw Ironów TGN Evolution Series 2026 (5-PW)",
+          spec: "Stal kuta 1025 • Shaft: Nippon Modus 105 Stiff",
+          desc: "Wyższe wybaczanie błędów i powtarzalny carry co do metra. W zestawie darmowa sesja na TrackManie.",
+          price: 4890,
+          tradeInPrice: 2140,
+          imgUrl: "https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=600&q=85"
+        },
+        {
+          id: 204,
+          cat: "DRIVERY",
+          tag: "BESTSELLER PRO",
+          tagGold: false,
+          name: "TaylorMade Qi10 Max Tour Edition (2026)",
+          spec: "MOI 10,000 g/cm² • Loft: 9.0° lub 10.5°",
+          desc: "Maksymalna bezwładność główki gwarantująca proste strzały z tee nawet przy trafieniu poza środkiem.",
+          price: 2690,
+          tradeInPrice: 1240,
+          imgUrl: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85"
+        },
+        {
+          id: 205,
+          cat: "AKCESORIA",
+          tag: "EDYCJA TURNIEJOWA",
+          tagGold: false,
+          name: "Piłki Titleist Pro V1x 2026 TGN Edition (12 szt.)",
+          spec: "4-częściowa konstrukcja • Znacznik linii Alignment",
+          desc: "Najpopularniejsza piłka w lidze TGN. Niski spin z drivera i maksymalna kontrola wokół greenu.",
+          price: 249,
+          tradeInPrice: 249,
+          imgUrl: "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=600&q=85"
+        },
+        {
+          id: 206,
+          cat: "AKCESORIA",
+          tag: "TELEMETRIA 3D",
+          tagGold: false,
+          name: "Zestaw Czujników TGN Smart Tags (14 szt. do gripów)",
+          spec: "Automatyczny zapis dystansu i Gapping AI w aplikacji",
+          desc: "Wkręcane w gripy czujniki NFC/Bluetooth, które na żywo aktualizują Twoją Cyfrową Torbę 3D po każdej rundzie.",
+          price: 890,
+          tradeInPrice: 650,
           imgUrl: "https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=85"
         }
       ],
@@ -1056,7 +1214,7 @@
           date: "3 dni temu",
           views: "3 410",
           likes: 89,
-          content: "Od 2023 roku gram na Mizuno JPX 923 Hot Metal i jestem zachwycony wybaczaniem błędów, ale rozważam przesiadkę na model Forged lub nową serię 2026. Kto z Was robił taki przeskok przy HCP w okolicach 10-13?",
+          content: "Od 2023 roku gram na Mizuno JPX 923 Hot Metal i jestem zachwycony wybaczaniem błędów, ale rozważam przesiadką na model Forged lub nową serię 2026. Kto z Was robił taki przeskok przy HCP w okolicach 10-13?",
           comments: [
             { author: "Michał_Kraków", badge: "HCP 7.1", badgeClass: "badge-vet", date: "2 dni temu", text: "Zrobiłem ten ruch rok temu. Na początku straciłem ok. 4m na 7-ironie, ale kontrola odległości z roughu jest bezcenna." }
           ]
@@ -1163,13 +1321,18 @@
         document.getElementById('mainNav').style.display = 'flex';
         document.getElementById('appContainer').style.display = 'grid';
 
-        document.getElementById('headerRightInfo').innerHTML = `
-          <span style="font-size: 0.74rem; color: var(--accent); font-weight:700;">● ${AppData.user.name} (HCP ${AppData.user.hcp})</span>
-          <button class="btn-logout" onclick="auth.logout()">Wyloguj</button>
-        `;
-
+        auth.updateHeaderBar();
         app.switchTab('profile');
         if (msg) app.showToast(msg);
+      },
+
+      updateHeaderBar: () => {
+        const cartCount = AppData.cart.length;
+        document.getElementById('headerRightInfo').innerHTML = `
+          <span style="font-size: 0.74rem; color: var(--gold); font-weight:700; cursor:pointer;" onclick="app.switchTab('sklep')">🛒 Koszyk (${cartCount})</span>
+          <span style="font-size: 0.74rem; color: var(--accent); font-weight:700;">● ${AppData.user.name}</span>
+          <button class="btn-logout" onclick="auth.logout()">Wyloguj</button>
+        `;
       },
 
       logout: () => {
@@ -1177,7 +1340,7 @@
         document.getElementById('authScreen').style.display = 'flex';
         document.getElementById('mainNav').style.display = 'none';
         document.getElementById('appContainer').style.display = 'none';
-        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Live Club Image Engine v4.0</span>`;
+        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Live Club Image Engine v4.5</span>`;
         app.showToast('Wylogowano z kokpitu 3D');
       }
     };
@@ -1195,13 +1358,11 @@
             </h2>
             
             <div class="profile-layout">
-              <!-- Postać Gracza 3D jak na wizualizacji -->
               <div class="golfer-3d-figure">
                 <img src="https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=500&q=80" alt="Golfer 3D Avatar">
                 <div class="golfer-tag">TGN PRO AVATAR • HCP ${AppData.user.hcp}</div>
               </div>
 
-              <!-- Statystyki po prawej stronie postaci -->
               <div class="profile-stats-col">
                 <div class="stat-card">
                   <span>Handicap Index:</span>
@@ -1234,7 +1395,6 @@
               </div>
             </div>
 
-            <!-- Alert Gapping AI otwierający Modal z wizualizacji -->
             <div class="stat-card" style="border-color: var(--gold); background: rgba(250, 204, 21, 0.07); cursor:pointer; margin-top: 0.6rem;" onclick="app.openAiModal()">
               <div>
                 <span style="color: var(--gold); font-weight: 800; display:block; font-size:0.82rem;">⚠️ Gapping AI: Sprawdź Gap Wedge (52°)</span>
@@ -1280,7 +1440,6 @@
               <button class="btn-action" style="width:auto; margin:0; padding:0.3rem 0.7rem; font-size:0.7rem;" onclick="app.toggleAddClubLive()">+ Dodaj kij (Auto-Foto Live)</button>
             </h2>
 
-            <!-- Formularz dodawania dowolnego kija z pobieraniem zdjęcia na żywo -->
             <div id="addClubLiveBox" class="add-club-live-box">
               <h3 style="font-size:0.82rem; color:var(--accent); margin-bottom:0.5rem;">🔍 Wpisz model kija – system pobierze jego grafikę na żywo</h3>
               <div class="form-group" style="margin-bottom:0.5rem;">
@@ -1307,7 +1466,7 @@
                 <button class="btn-action" style="margin:0;" onclick="app.switchTab('marketplace')">🤝 Zarządzaj sprzedażą C2C</button>
                 <button class="btn-action" style="margin:0; background: rgba(250,204,21,0.12); border-color: var(--gold); color: var(--gold);" onclick="app.switchTab('cpo')">⚡ Sprzedaj do Skupu TGN CPO</button>
               </div>
-              <button class="btn-action" style="margin-top:0.5rem;" onclick="app.openAiModal()">🔄 TRADE-IN NA NOWY MODEL 2026 (Z DOPŁATĄ)</button>
+              <button class="btn-action" style="margin-top:0.5rem;" onclick="app.switchTab('sklep')">🔄 WYBIERZ NOWY MODEL 2026 W SKLEPIE (Z DOPŁATĄ TRADE-IN)</button>
             </div>
           </section>
         `;
@@ -1316,7 +1475,6 @@
       },
 
       afterRender: () => {
-        // Dla każdego kija bez sztywnego URL dociągnij zdjęcie na żywo z API
         AppData.bag.forEach(c => {
           if (!c.imgUrl) {
             ClubImageEngine.fetchLiveImageForClub(c.name, `bag_club_img_${c.id}`);
@@ -1326,7 +1484,93 @@
     };
 
     /* =========================================================================
-       KOMPONENT 2: ROZBUDOWANE 5-LETNIE FORUM (2021–2026)
+       KOMPONENT 2: OFICJALNY SKLEP TGN (PRO SHOP & KOLEKCJA 2026)
+       ========================================================================= */
+    const StoreComponent = {
+      render: () => {
+        const filtered = AppData.activeStoreFilter === "ALL"
+          ? AppData.storeProducts
+          : AppData.storeProducts.filter(p => p.cat === AppData.activeStoreFilter);
+
+        const totalCart = AppData.cart.reduce((sum, item) => sum + item.price, 0);
+
+        const cartBarHTML = AppData.cart.length > 0 ? `
+          <div class="cart-summary-bar">
+            <div>
+              <strong style="color:var(--accent); font-size:0.9rem;">🛒 Twój Koszyk TGN (${AppData.cart.length} szt.)</strong>
+              <p style="font-size:0.75rem; color:var(--text-muted);">Produkty: ${AppData.cart.map(i => i.name).join(', ')}</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.8rem;">
+              <strong style="font-size:1.1rem; color:var(--gold);">${totalCart} PLN</strong>
+              <button class="btn-primary" style="width:auto; margin:0; padding:0.5rem 1rem;" onclick="app.checkoutStore()">Złóż zamówienie / Rezerwuj Fitting</button>
+            </div>
+          </div>
+        ` : '';
+
+        let productsHTML = filtered.map(prod => `
+          <div class="store-card">
+            <div>
+              <div class="store-img-box" onclick="app.openPhotoZoom('${prod.name.replace(/'/g, "")}', '${prod.imgUrl}', '${prod.spec} • Cena: ${prod.price} PLN')">
+                <img src="${prod.imgUrl}" alt="${prod.name}">
+                <span class="store-tag ${prod.tagGold ? 'gold' : ''}">${prod.tag}</span>
+              </div>
+              <h3 style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.25rem;">${prod.name}</h3>
+              <p style="font-size: 0.72rem; color: var(--accent); font-weight: 600; margin-bottom: 0.4rem;">${prod.spec}</p>
+              <p style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 0.8rem;">${prod.desc}</p>
+            </div>
+
+            <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.7rem;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.25rem;">
+                <span style="font-size:0.72rem; color:var(--text-muted);">Cena katalogowa:</span>
+                <strong style="font-size:1.05rem; color:var(--text-main);">${prod.price} PLN</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.6rem;">
+                <span style="font-size:0.7rem; color:var(--gold);">Z dopłatą Trade-In (Twój sprzęt):</span>
+                <strong style="font-size:0.9rem; color:var(--gold);">od ${prod.tradeInPrice} PLN</strong>
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.45rem;">
+                <button class="btn-action" style="margin:0; padding:0.5rem;" onclick="app.addToCart(${prod.id}, false)">🛒 Do koszyka</button>
+                <button class="btn-action" style="margin:0; padding:0.5rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="app.addToCart(${prod.id}, true)">🔄 Kup w Trade-In</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+        return `
+          <section class="panel-3d" style="grid-column: span 2;">
+            <h2>
+              <span>🛍️ Oficjalny Sklep TGN – Kolekcja 2026 & Pro Shop</span>
+              <span style="font-size:0.75rem; color:var(--gold);">Dostępny budżet Trade-In Twojej torby: 14 200 PLN</span>
+            </h2>
+
+            <div class="store-banner">
+              <div>
+                <h3 style="font-size: 0.95rem; color: var(--accent); margin-bottom: 0.25rem;">🎯 Spersonalizowany dobór pod Twoje parametry: HCP ${AppData.user.hcp} | Swing Speed ${AppData.user.swingSpeed}</h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted);">Wszystkie kije w sklepie objęte są darmowym Custom Fittingiem na symulatorze TrackMan oraz 2-letnią gwarancją TGN.</p>
+              </div>
+              <button class="btn-action" style="width:auto; margin:0; padding:0.5rem 1rem;" onclick="app.showToast('Zarezerwowano sesję Custom Fittingu z Pro!')">📅 Umów darmowy Fitting</button>
+            </div>
+
+            ${cartBarHTML}
+
+            <div class="forum-filters">
+              <button class="filter-pill ${AppData.activeStoreFilter === 'ALL' ? 'active' : ''}" onclick="app.filterStore('ALL')">Wszystkie produkty (6)</button>
+              <button class="filter-pill ${AppData.activeStoreFilter === 'DRIVERY' ? 'active' : ''}" onclick="app.filterStore('DRIVERY')">🏌️ Drivery 2026</button>
+              <button class="filter-pill ${AppData.activeStoreFilter === 'IRONY' ? 'active' : ''}" onclick="app.filterStore('IRONY')">⚙️ Zestawy Ironów</button>
+              <button class="filter-pill ${AppData.activeStoreFilter === 'WEDGE' ? 'active' : ''}" onclick="app.filterStore('WEDGE')">🎯 Wedge (Gapping AI)</button>
+              <button class="filter-pill ${AppData.activeStoreFilter === 'AKCESORIA' ? 'active' : ''}" onclick="app.filterStore('AKCESORIA')">⚪ Piłki & Czujniki 3D</button>
+            </div>
+
+            <div class="store-grid">
+              ${productsHTML}
+            </div>
+          </section>
+        `;
+      }
+    };
+
+    /* =========================================================================
+       KOMPONENT 3: ROZBUDOWANE 5-LETNIE FORUM (2021–2026)
        ========================================================================= */
     const ForumComponent = {
       render: () => {
@@ -1420,7 +1664,7 @@
     };
 
     /* =========================================================================
-       KOMPONENT 3: SKUP TGN CPO (ZE ZDJĘCIAMI KIJÓW Z TORBY)
+       KOMPONENT 4: SKUP TGN CPO (ZE ZDJĘCIAMI KIJÓW Z TORBY)
        ========================================================================= */
     const CpoComponent = {
       render: () => {
@@ -1439,7 +1683,7 @@
               </div>
               <div class="cpo-actions" style="display: flex; flex-direction: column; gap: 0.4rem; min-width: 155px;">
                 <button class="btn-action" style="margin:0; padding:0.45rem;" onclick="app.showToast('Zlecono wypłatę gotówki CPO dla: ${c.name}')">⚡ Sprzedaj za gotówkę</button>
-                <button class="btn-action" style="margin:0; padding:0.45rem; background:rgba(250,204,21,0.12); border-color:var(--gold); color:var(--gold);" onclick="app.showToast('Wygenerowano kod Trade-In 2026 (+15% wartości)!')">🔄 Trade-In na 2026</button>
+                <button class="btn-action" style="margin:0; padding:0.45rem; background:rgba(250,204,21,0.12); border-color:var(--gold); color:var(--gold);" onclick="app.switchTab('sklep')">🔄 Wymień w Sklepie 2026</button>
               </div>
             </div>
           `;
@@ -1448,7 +1692,7 @@
         return `
           <section class="panel-3d" style="grid-column: span 2;">
             <h2>⚡ Skup TGN CPO (Certified Pre-Owned) – Gwarantowana Wycena</h2>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem;">Sprzedaj sprzęt ze swojej cyfrowej torby bez czekania na kupca. Pieniądze na koncie w 24h lub bonus +15% przy wymianie na kolekcję 2026.</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem;">Sprzedaj sprzęt ze swojej cyfrowej torby bez czekania na kupca. Pieniądze na koncie w 24h lub wymiana Trade-In w naszym Sklepie 2026.</p>
             <div class="cpo-grid">${itemsHTML}</div>
           </section>
         `;
@@ -1456,7 +1700,7 @@
     };
 
     /* =========================================================================
-       KOMPONENT 4: MARKETPLACE C2C (ZE ZDJĘCIAMI KIJÓW NA ŻYWO)
+       KOMPONENT 5: MARKETPLACE C2C (ZE ZDJĘCIAMI KIJÓW NA ŻYWO)
        ========================================================================= */
     const MarketplaceComponent = {
       render: () => {
@@ -1499,7 +1743,7 @@
     };
 
     /* =========================================================================
-       KOMPONENT 5: CZAT ZE SPRZEDAWCĄ
+       KOMPONENT 6: CZAT ZE SPRZEDAWCĄ
        ========================================================================= */
     const ChatComponent = {
       render: () => {
@@ -1539,7 +1783,8 @@
           ProfileAndBagComponent.afterRender();
         } else {
           container.style.gridTemplateColumns = "1fr";
-          if (tabName === 'forum') container.innerHTML = ForumComponent.render();
+          if (tabName === 'sklep') container.innerHTML = StoreComponent.render();
+          else if (tabName === 'forum') container.innerHTML = ForumComponent.render();
           else if (tabName === 'cpo') container.innerHTML = CpoComponent.render();
           else if (tabName === 'marketplace') container.innerHTML = MarketplaceComponent.render();
           else if (tabName === 'chat') {
@@ -1551,6 +1796,33 @@
         document.querySelectorAll('#mainNav button').forEach(btn => {
           btn.classList.toggle('active', btn.dataset.tab === tabName);
         });
+      },
+
+      filterStore: (cat) => {
+        AppData.activeStoreFilter = cat;
+        app.switchTab('sklep');
+      },
+
+      addToCart: (prodId, useTradeIn) => {
+        const prod = AppData.storeProducts.find(p => p.id === prodId);
+        if (!prod) return;
+
+        const finalPrice = useTradeIn ? prod.tradeInPrice : prod.price;
+        AppData.cart.push({
+          name: prod.name + (useTradeIn ? " (Trade-In)" : ""),
+          price: finalPrice
+        });
+
+        auth.updateHeaderBar();
+        app.switchTab('sklep');
+        app.showToast(`Dodano do koszyka: ${prod.name} (${finalPrice} PLN)`);
+      },
+
+      checkoutStore: () => {
+        AppData.cart = [];
+        auth.updateHeaderBar();
+        app.switchTab('sklep');
+        app.showToast('Zamówienie przyjęte! Konsultant TGN skontaktuje się w sprawie Fittingu.');
       },
 
       toggleAddClubLive: () => {
@@ -1570,7 +1842,7 @@
           return;
         }
 
-        const loft = (specInput && specInput.value.trim()) ? specInput.value.trim() : "Specyfikacja Standard फिट";
+        const loft = (specInput && specInput.value.trim()) ? specInput.value.trim() : "Specyfikacja Custom Fit";
         const val = (valInput && valInput.value.trim()) ? valInput.value.trim() : "1 950 PLN";
         const customUrl = (customImgInput && customImgInput.value.trim()) ? customImgInput.value.trim() : "";
 
