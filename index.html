@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#070f14">
-  <title>TGN Global Golf - Spatial 3D HUD</title>
+  <title>TGN Global Golf - Spatial 3D HUD Ultimate</title>
   <style>
     :root {
       --glass-bg: rgba(14, 26, 30, 0.90);
@@ -81,40 +81,22 @@
     nav button:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
     nav button.active { background: var(--accent); color: #052e16; font-weight: 700; }
 
-    /* Ekran Logowania 3D */
+    /* Ekran Logowania */
     .auth-wrapper {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
+      flex: 1; display: flex; align-items: center; justify-content: center; padding: 1.5rem;
     }
-
     .auth-panel {
-      width: 100%;
-      max-width: 440px;
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      border-radius: 22px;
-      padding: 2rem;
+      width: 100%; max-width: 440px; background: var(--glass-bg); backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border); border-radius: 22px; padding: 2rem;
       box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 25px var(--accent-glow);
     }
-
     .form-group { margin-bottom: 0.9rem; }
     .form-group label { display: block; font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.35rem; }
     .form-group input {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      padding: 0.65rem 0.85rem;
-      color: #fff;
-      font-size: 0.85rem;
-      outline: none;
+      width: 100%; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px; padding: 0.65rem 0.85rem; color: #fff; font-size: 0.85rem; outline: none;
     }
     .form-group input:focus { border-color: var(--accent); }
-
     .btn-primary {
       width: 100%; padding: 0.7rem; border-radius: 8px; border: none;
       background: var(--accent); color: #052e16; font-weight: 800; font-size: 0.85rem; cursor: pointer; margin-top: 0.4rem;
@@ -124,33 +106,17 @@
       background: rgba(250, 204, 21, 0.1); color: var(--gold); font-weight: 700; font-size: 0.78rem; cursor: pointer; margin-top: 0.75rem;
     }
 
-    /* Przestrzenna Scena 3D z wizualizacji */
+    /* Scena 3D */
     .spatial-stage {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 1.25fr;
-      gap: 2rem;
-      padding: 2.5rem 3rem;
-      perspective: 1800px;
-      align-items: center;
-      max-width: 1550px;
-      margin: 0 auto;
-      width: 100%;
+      flex: 1; display: grid; grid-template-columns: 1fr 1.25fr; gap: 2rem; padding: 2.5rem 3rem;
+      perspective: 1800px; align-items: start; max-width: 1550px; margin: 0 auto; width: 100%;
     }
-
     .panel-3d {
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      border-radius: 22px;
-      padding: 1.8rem;
+      background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border); border-radius: 22px; padding: 1.8rem;
       box-shadow: 0 35px 70px rgba(0, 0, 0, 0.75), inset 0 0 30px var(--accent-glow);
-      transition: transform 0.4s ease;
-      position: relative;
+      transition: transform 0.4s ease; position: relative;
     }
-
-    /* Lekkie pochylenie 3D paneli jak na renderze */
     .panel-left { transform: rotateY(8deg); }
     .panel-right { transform: rotateY(-8deg); }
     .panel-left:hover { transform: rotateY(2deg) translateZ(10px); }
@@ -158,164 +124,125 @@
 
     h2 { font-size: 0.92rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--accent); margin-bottom: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
 
-    /* Awatar i Profil 3D jak ze zdjęcia */
+    /* Profil ze zdjęciem */
     .profile-layout {
-      display: grid;
-      grid-template-columns: 130px 1fr;
-      gap: 1.2rem;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 1.2rem;
-      border-radius: 14px;
-      margin-bottom: 1rem;
+      display: grid; grid-template-columns: 130px 1fr; gap: 1.2rem; align-items: center;
+      background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.08); padding: 1.2rem; border-radius: 14px; margin-bottom: 1rem;
     }
     .avatar-box {
-      width: 120px;
-      height: 150px;
-      background: linear-gradient(135deg, rgba(74,222,128,0.25), rgba(6,78,59,0.8));
-      border: 1px solid var(--accent);
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+      width: 120px; height: 150px; background: linear-gradient(135deg, rgba(74,222,128,0.25), rgba(6,78,59,0.8));
+      border: 1px solid var(--accent); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
     }
-    /* Stylizowana ilustracja postury gracza w stylu renderu */
-    .avatar-box::before {
-      content: "🧑‍💼";
-      font-size: 4.5rem;
-      position: absolute;
-      top: 15px;
-    }
+    .avatar-box::before { content: "🧑‍💼"; font-size: 4.5rem; position: absolute; top: 15px; }
 
     .stat-card {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      padding: 0.75rem 1rem;
-      margin-bottom: 0.6rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px;
+      padding: 0.75rem 1rem; margin-bottom: 0.6rem; display: flex; justify-content: space-between; align-items: center;
     }
     .stat-card span { color: var(--text-muted); font-size: 0.8rem; }
     .stat-card strong { color: var(--text-main); font-size: 0.9rem; }
 
     .mini-chart {
-      height: 35px;
-      background: rgba(0,0,0,0.35);
-      border-radius: 6px;
-      border: 1px solid rgba(74,222,128,0.25);
-      margin-top: 0.4rem;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: flex-end;
+      height: 35px; background: rgba(0,0,0,0.35); border-radius: 6px; border: 1px solid rgba(74,222,128,0.25);
+      margin-top: 0.4rem; position: relative; overflow: hidden; display: flex; align-items: flex-end;
     }
     .chart-line { stroke: var(--accent); fill: rgba(74,222,128,0.12); }
 
-    /* Kafelki kijów w torbie ze zdjęciami/ikonami poglądowymi */
+    /* Kije w torbie */
     .club-hud-card {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      padding: 1rem;
-      margin-bottom: 0.8rem;
-      display: grid;
-      grid-template-columns: 70px 1fr;
-      gap: 1rem;
-      align-items: center;
-      transition: 0.2s;
+      background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px;
+      padding: 1rem; margin-bottom: 0.8rem; display: grid; grid-template-columns: 70px 1fr; gap: 1rem; align-items: center; transition: 0.2s;
     }
     .club-hud-card:hover { border-color: var(--accent); background: rgba(74, 222, 128, 0.05); }
-
     .club-thumb {
-      width: 70px;
-      height: 70px;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(114, 214, 150, 0.3);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      position: relative;
+      width: 70px; height: 70px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(114, 214, 150, 0.3);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; position: relative;
     }
-
     .club-metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.4rem;
-      margin-top: 0.6rem;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 0.5rem;
-      border-radius: 8px;
-      font-size: 0.72rem;
-      text-align: center;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin-top: 0.6rem;
+      background: rgba(0, 0, 0, 0.3); padding: 0.5rem; border-radius: 8px; font-size: 0.72rem; text-align: center;
     }
     .club-metrics-grid div span { display: block; color: var(--text-muted); font-size: 0.62rem; }
     .club-metrics-grid div strong { color: var(--accent); }
 
     .btn-action {
-      margin-top: 0.6rem;
-      width: 100%;
-      padding: 0.6rem;
-      border-radius: 8px;
-      border: 1px solid var(--accent);
-      background: rgba(74, 222, 128, 0.12);
-      color: var(--accent);
-      font-weight: 700;
-      font-size: 0.75rem;
-      cursor: pointer;
-      transition: 0.2s;
+      margin-top: 0.6rem; width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--accent);
+      background: rgba(74, 222, 128, 0.12); color: var(--accent); font-weight: 700; font-size: 0.75rem; cursor: pointer; transition: 0.2s;
     }
     .btn-action:hover { background: var(--accent); color: #052e16; }
 
-    /* Modal powiadomienia wyskakujący jak na wizualizacji (AI Gapping Assistant) */
+    /* Forum 5-letnie */
+    .forum-stats-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.9rem; margin-bottom: 1.2rem; text-align: center;
+    }
+    .forum-stat-num { font-size: 1.1rem; font-weight: 800; color: var(--accent); }
+    .forum-stat-lbl { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .forum-filters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+    .filter-pill {
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-muted);
+      padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.72rem; font-weight: 600; cursor: pointer;
+    }
+    .filter-pill.active, .filter-pill:hover { background: rgba(74, 222, 128, 0.18); border-color: var(--accent); color: var(--accent); }
+
+    .forum-post-card {
+      background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 1.2rem; margin-bottom: 1rem;
+    }
+    .forum-post-card.pinned { border-color: rgba(250, 204, 21, 0.45); background: linear-gradient(145deg, rgba(250, 204, 21, 0.05), rgba(255, 255, 255, 0.03)); }
+    .user-badge { font-size: 0.62rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase; margin-left: 4px; }
+    .badge-og { background: rgba(56, 189, 248, 0.15); color: var(--blue); border: 1px solid rgba(56, 189, 248, 0.4); }
+    .badge-pro { background: rgba(250, 204, 21, 0.15); color: var(--gold); border: 1px solid rgba(250, 204, 21, 0.4); }
+    .badge-vet { background: rgba(74, 222, 128, 0.15); color: var(--accent); border: 1px solid rgba(74, 222, 128, 0.4); }
+
+    .comment-box {
+      background: rgba(0, 0, 0, 0.32); border-left: 3px solid var(--accent); padding: 0.75rem 0.9rem;
+      border-radius: 0 8px 8px 0; margin-top: 0.55rem; font-size: 0.78rem; line-height: 1.4;
+    }
+    .new-thread-box {
+      display: none; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--accent); border-radius: 12px; padding: 1rem; margin-bottom: 1.2rem;
+    }
+    .new-thread-box input, .new-thread-box select, .new-thread-box textarea {
+      width: 100%; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px; padding: 0.55rem; color: #fff; font-size: 0.8rem; margin-bottom: 0.6rem; outline: none;
+    }
+
+    /* Skup, Marketplace, Czat */
+    .cpo-grid { display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
+    .cpo-item { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+    .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; }
+    .market-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 1.1rem; display: flex; flex-direction: column; justify-content: space-between; }
+    
+    .chat-container { display: flex; flex-direction: column; height: 400px; background: rgba(0, 0, 0, 0.25); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08); overflow: hidden; }
+    .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem; }
+    .msg { max-width: 80%; padding: 0.7rem 0.9rem; border-radius: 10px; font-size: 0.8rem; line-height: 1.4; }
+    .msg.incoming { background: rgba(255, 255, 255, 0.08); align-self: flex-start; }
+    .msg.outgoing { background: rgba(74, 222, 128, 0.2); border: 1px solid var(--glass-border); align-self: flex-end; color: var(--accent); }
+    .chat-input-area { display: flex; padding: 0.75rem; background: rgba(10, 20, 24, 0.8); border-top: 1px solid rgba(255, 255, 255, 0.08); gap: 0.5rem; }
+    .chat-input-area input { flex: 1; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; padding: 0.6rem 0.9rem; color: #fff; font-size: 0.8rem; outline: none; }
+    .chat-input-area button { background: var(--accent); color: #052e16; border: none; padding: 0 1.2rem; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+
+    /* Modal AI Gapping */
     #aiModalOverlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 300;
-      padding: 1rem;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px);
+      display: none; align-items: center; justify-content: center; z-index: 300; padding: 1rem;
     }
     .ai-popup-card {
-      width: 100%;
-      max-width: 520px;
-      background: rgba(16, 30, 34, 0.96);
-      border: 2px solid var(--gold);
-      border-radius: 20px;
-      padding: 1.8rem;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(250, 204, 21, 0.2);
-      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    @keyframes popIn {
-      from { transform: scale(0.9); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+      width: 100%; max-width: 520px; background: rgba(16, 30, 34, 0.96); border: 2px solid var(--gold);
+      border-radius: 20px; padding: 1.8rem; box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(250, 204, 21, 0.2);
     }
 
     #toast {
-      position: fixed;
-      bottom: 20px; left: 50%; transform: translateX(-50%);
-      background: var(--accent); color: #052e16;
-      padding: 0.6rem 1.2rem; border-radius: 20px;
-      font-size: 0.8rem; font-weight: 700;
-      display: none; z-index: 200;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: #052e16; padding: 0.6rem 1.2rem; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 700; display: none; z-index: 200; box-shadow: 0 10px 25px rgba(0,0,0,0.6);
     }
 
     @media (max-width: 1024px) {
       .spatial-stage { grid-template-columns: 1fr; padding: 1rem; perspective: none; }
       .panel-left, .panel-right { transform: none !important; }
-      .profile-layout { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+      .market-grid { grid-template-columns: 1fr; }
+      .forum-stats-bar { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -325,12 +252,12 @@
     <div class="header-top">
       <div class="logo" id="logoBtn"><span>TGN</span> GLOBAL GOLF</div>
       <div id="headerRightInfo" style="display:flex; align-items:center; gap:0.75rem;">
-        <span style="font-size: 0.7rem; color: var(--text-muted);">Spatial HUD v3.0</span>
+        <span style="font-size: 0.7rem; color: var(--text-muted);">Spatial HUD v3.5 Ultimate</span>
       </div>
     </div>
     <nav id="mainNav" style="display:none;">
-      <button class="active" data-tab="profile">👤 Koklik 3D & Torba</button>
-      <button data-tab="forum">💬 Forum & Poradniki</button>
+      <button class="active" data-tab="profile">👤 Kokpit 3D & Torba</button>
+      <button data-tab="forum">💬 Forum (5 lat)</button>
       <button data-tab="cpo">⚡ Skup TGN CPO</button>
       <button data-tab="marketplace">🤝 Marketplace</button>
       <button data-tab="chat">💬 Czat</button>
@@ -344,7 +271,7 @@
         <div style="font-size: 1.3rem; font-weight: 800; letter-spacing: 0.5px;">
           <span style="color: var(--accent); border: 1px solid var(--accent); padding: 2px 7px; border-radius: 5px; margin-right: 6px;">TGN</span>KOKPIT 3D
         </div>
-        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem;">Interfejs telemetrii i cyfrowej torby</p>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem;">Portal społeczności i telemetrii golfowej</p>
       </div>
       <div class="form-group">
         <label>E-mail / Identyfikator</label>
@@ -359,26 +286,25 @@
     </div>
   </div>
 
-  <!-- Główna Scena 3D z wizualizacji -->
+  <!-- Główna Scena 3D -->
   <main class="spatial-stage" id="appContainer" style="display:none;">
-    <!-- Dynamicznie ładowany lewy i prawy panel 3D -->
+    <!-- Dynamiczne panele -->
   </main>
 
-  <!-- Wyskakujące okienko AI Gapping Assistant (dokładnie jak na zdjęciu) -->
+  <!-- Wyskakujące okienko AI Gapping Assistant (jak na zdjęciu) -->
   <div id="aiModalOverlay">
     <div class="ai-popup-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.8rem;">
-        <h3 style="color: var(--gold); font-size: 0.95rem; text-transform:uppercase;">🌟 Wizyta w Nowej Kolekcji 2026 – Rekomendacja dla Ciebie</h3>
+        <h3 style="color: var(--gold); font-size: 0.95rem; text-transform:uppercase;">🌟 Wizyta w Nowej Kolekcji 2026 – Rekomendacja</h3>
         <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="app.closeAiModal()">✕</span>
       </div>
       <p style="font-size: 0.8rem; color: var(--text-main); line-height: 1.5; margin-bottom: 0.9rem;">
         Cześć, Marek! Twoja gra (HCP 12.4, Swing 96 mph) jest gotowa na kolejny poziom. Nowa Kolekcja TGN 2026 oferuje znaczące usprawnienia dopasowane do Twoich parametrów.<br><br>
-        Najważniejsze: Nowy <strong>Pro-Wedge 52°</strong> z serii 2026 idealnie wypełnia Twoją lukę dysansową, o której informuje nasza Gapping AI, dając precyzję wokół greenu.<br>
-        Ponadto, nowa seria <strong>TGN Evolution Series 2026</strong> (Driver i Irony) oferuje większe wybaczanie błędów i lepszą aerodynamikę.<br><br>
+        Najważniejsze: Nowy <strong>Pro-Wedge 52°</strong> z serii 2026 idealnie wypełnia Twoją lukę dysansową, o której informuje nasza Gapping AI.<br><br>
         Twoja obecna torba ma najwyższą wartość Trade-In. Zobacz spersonalizowaną ofertę z kalkulacją dla całej Twojej torby.
       </p>
       <button class="btn-action" style="background: rgba(250,204,21,0.15); border-color: var(--gold); color: var(--gold);" onclick="app.closeAiModal(); app.switchTab('cpo');">
-        [ ZOBACZ SPERSONALIZOWANĄ OFERTĘ KOLEKCJI 2026 I KALKULACJĘ UPGRADE'U ]
+        [ ZOBACZ SPERSONALIZOWANĄ OFERTĘ KOLEKCJI 2026 ]
       </button>
     </div>
   </div>
@@ -387,6 +313,7 @@
 
   <script>
     const AppData = {
+      activeForumFilter: "ALL",
       user: {
         name: "Marek Kowalski",
         hcp: 12.4,
@@ -413,8 +340,23 @@
           date: "Październik 2026",
           views: "48 920",
           likes: 312,
-          content: "Analiza ponad 3 000 raportów z TrackMana. Utrzymuj odstęp 12-15m między każdym kijem.",
+          content: "Analiza ponad 3 000 raportów z TrackMana. Utrzymuj odstęp 12-15m między każdym kijem w torbie.",
           comments: [{ author: "StaryWyga", badge: "TGN OG", badgeClass: "badge-og", date: "2021", text: "Świetna baza wiedzy!" }]
+        },
+        {
+          id: 102,
+          pinned: false,
+          catKey: "FITTING",
+          category: "⚙️ Custom Fitting & Telemetria",
+          title: "Shaft Stiff vs Regular przy swing speed 95-98 mph",
+          author: "Marek Kowalski",
+          badge: "TRUSTED SELLER",
+          badgeClass: "badge-vet",
+          date: "Wczoraj",
+          views: "1 240",
+          likes: 47,
+          content: "Czy przejście na Ventus Blue 6S (Stiff) w Wilsonie Dynapower ustabilizuje rozrzut?",
+          comments: [{ author: "Trener PGA Tomasz", badge: "FITTING MASTER", badgeClass: "badge-pro", date: "Wczoraj", text: "Przy 96 mph Stiff da lepszą kontrolę spinu." }]
         }
       ],
       marketplace: [
@@ -444,14 +386,13 @@
         document.getElementById('authScreen').style.display = 'flex';
         document.getElementById('mainNav').style.display = 'none';
         document.getElementById('appContainer').style.display = 'none';
-        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Spatial HUD v3.0</span>`;
+        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Spatial HUD v3.5</span>`;
         app.showToast('Wylogowano');
       }
     };
 
     const ProfileAndBagComponent = {
       render: () => {
-        // Lewy panel: Profil z awatarem jak ze zdjęcia
         const leftPanel = `
           <section class="panel-3d panel-left">
             <h2>Profil Gracza: ${AppData.user.name.toUpperCase()} <span style="font-size:1.1rem;">🇵🇱</span></h2>
@@ -495,7 +436,6 @@
           </section>
         `;
 
-        // Prawy panel: Cyfrowa torba z grafikami poglądowymi kijów i telemetrią ze zdjęcia
         let clubsHTML = AppData.bag.map(c => `
           <div class="club-hud-card">
             <div class="club-thumb">
@@ -535,6 +475,155 @@
       }
     };
 
+    const ForumComponent = {
+      render: () => {
+        const filteredPosts = AppData.activeForumFilter === "ALL"
+          ? AppData.forumPosts
+          : AppData.forumPosts.filter(p => p.catKey === AppData.activeForumFilter);
+
+        let postsHTML = filteredPosts.map(post => {
+          let commentsHTML = post.comments.map(comm => `
+            <div class="comment-box">
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.2rem;">
+                <strong style="color: var(--accent);">${comm.author} <span class="user-badge ${comm.badgeClass}">${comm.badge}</span></strong>
+                <span style="color: var(--text-muted); font-size: 0.68rem;">${comm.date}</span>
+              </div>
+              <div style="color: var(--text-main);">${comm.text}</div>
+            </div>
+          `).join('');
+
+          return `
+            <div class="forum-post-card ${post.pinned ? 'pinned' : ''}">
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+                <span style="font-size: 0.72rem; color: ${post.pinned ? 'var(--gold)' : 'var(--accent)'}; font-weight: 700;">${post.category}</span>
+                <span style="font-size: 0.7rem; color: var(--text-muted);">${post.date}</span>
+              </div>
+              <h3 style="font-size: 1rem; margin: 0.35rem 0; color: var(--text-main);">${post.title}</h3>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Autor: <strong style="color:var(--text-main);">${post.author}</strong></p>
+              
+              <div style="display: flex; gap: 1rem; font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.7rem; padding-bottom: 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                <span>👁️ ${post.views} wyświetleń</span>
+                <span>💬 ${post.comments.length} odpowiedzi</span>
+                <span style="cursor:pointer; color:var(--accent);" onclick="app.likePost(${post.id})">👍 ${post.likes} pomocne</span>
+              </div>
+
+              <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 0.9rem;">${post.content}</p>
+              <div>${commentsHTML}</div>
+
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.85rem;">
+                <input type="text" id="commInput_${post.id}" placeholder="Napisz odpowiedź..." style="flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.45rem 0.7rem; color:#fff; font-size:0.78rem; outline:none;" onkeypress="if(event.key==='Enter') app.addComment(${post.id})">
+                <button class="btn-action" style="width: auto; margin:0; padding: 0.45rem 0.9rem;" onclick="app.addComment(${post.id})">Odpowiedz</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <section class="panel-3d" style="grid-column: span 2;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <h2>💬 TGN Forum & Baza Wiedzy (2021–2026)</h2>
+              <button class="btn-action" style="width: auto; padding: 0.45rem 1rem; margin: 0;" onclick="app.toggleNewThread()">+ Nowy temat</button>
+            </div>
+
+            <div class="forum-stats-bar">
+              <div><div class="forum-stat-num">14 820</div><div class="forum-stat-lbl">Klubowiczów</div></div>
+              <div><div class="forum-stat-num">42 690</div><div class="forum-stat-lbl">Postów (od 2021)</div></div>
+              <div><div class="forum-stat-num">1 140</div><div class="forum-stat-lbl">Poradników Pro</div></div>
+              <div><div class="forum-stat-num" style="color:var(--gold);">318</div><div class="forum-stat-lbl">Online teraz</div></div>
+            </div>
+
+            <div id="newThreadBox" class="new-thread-box">
+              <h3 style="font-size: 0.85rem; color: var(--accent); margin-bottom: 0.6rem;">Utwórz nowy wątek</h3>
+              <select id="newThreadCat">
+                <option value="FITTING">⚙️ Custom Fitting & Telemetria</option>
+                <option value="SPRZET">🏌️ Sprzęt & Recenzje</option>
+                <option value="PORADNIKI">🎓 Porady PGA Pro</option>
+              </select>
+              <input type="text" id="newThreadTitle" placeholder="Tytuł wątku...">
+              <textarea id="newThreadContent" rows="3" placeholder="Treść pytania..."></textarea>
+              <button class="btn-action" style="margin:0; background:var(--accent); color:#052e16;" onclick="app.createThread()">Opublikuj</button>
+            </div>
+
+            <div class="forum-filters">
+              <button class="filter-pill ${AppData.activeForumFilter === 'ALL' ? 'active' : ''}" onclick="app.filterForum('ALL')">Wszystkie</button>
+              <button class="filter-pill ${AppData.activeForumFilter === 'PORADNIKI' ? 'active' : ''}" onclick="app.filterForum('PORADNIKI')">🎓 Poradniki</button>
+              <button class="filter-pill ${AppData.activeForumFilter === 'FITTING' ? 'active' : ''}" onclick="app.filterForum('FITTING')">⚙️ Fitting</button>
+            </div>
+
+            <div>${postsHTML}</div>
+          </section>
+        `;
+      }
+    };
+
+    const CpoComponent = {
+      render: () => {
+        let itemsHTML = AppData.bag.map(c => `
+          <div class="cpo-item">
+            <div>
+              <h3 style="font-size: 0.95rem; color: var(--text-main);">${c.name}</h3>
+              <p style="font-size: 0.75rem; color: var(--text-muted);">${c.loft} • Stan: ${c.cond}</p>
+              <p style="font-size: 0.75rem; color: var(--accent); margin-top: 0.3rem;">Wycena skupu: <strong style="color: var(--gold);">${c.cpoOffer}</strong></p>
+            </div>
+            <button class="btn-action" style="width: auto; padding: 0.5rem 1rem;" onclick="app.showToast('Zlecono skup CPO!')">Sprzedaj</button>
+          </div>
+        `).join('');
+
+        return `
+          <section class="panel-3d" style="grid-column: span 2;">
+            <h2>⚡ Skup TGN CPO (Certified Pre-Owned)</h2>
+            <div class="cpo-grid" style="margin-top: 1rem;">${itemsHTML}</div>
+          </section>
+        `;
+      }
+    };
+
+    const MarketplaceComponent = {
+      render: () => {
+        let itemsHTML = AppData.marketplace.map(item => `
+          <div class="market-card">
+            <div>
+              <span style="font-size: 0.7rem; color: var(--gold); font-weight: 700;">${item.cond}</span>
+              <h3 style="font-size: 0.95rem; margin: 0.3rem 0; color: var(--text-main);">${item.title}</h3>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.6rem;">${item.desc}</p>
+            </div>
+            <button class="btn-action" onclick="app.switchTab('chat')">Napisz do sprzedawcy</button>
+          </div>
+        `).join('');
+
+        return `
+          <section class="panel-3d" style="grid-column: span 2;">
+            <h2>🤝 TGN Marketplace (C2C)</h2>
+            <div class="market-grid" style="margin-top: 1rem;">${itemsHTML}</div>
+          </section>
+        `;
+      }
+    };
+
+    const ChatComponent = {
+      render: () => {
+        let msgsHTML = AppData.chatMessages.map(m => `
+          <div class="msg ${m.type}">
+            <div style="font-size: 0.65rem; opacity: 0.7; margin-bottom: 2px;">${m.sender}</div>
+            <div>${m.text}</div>
+          </div>
+        `).join('');
+
+        return `
+          <section class="panel-3d" style="grid-column: span 2;">
+            <h2>💬 Czat ze sprzedawcą</h2>
+            <div class="chat-container" style="margin-top: 1rem;">
+              <div class="chat-messages" id="chatMsgs">${msgsHTML}</div>
+              <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Napisz wiadomość..." onkeypress="if(event.key === 'Enter') app.sendChatMessage()">
+                <button onclick="app.sendChatMessage()">Wyślij</button>
+              </div>
+            </div>
+          </section>
+        `;
+      }
+    };
+
     const app = {
       switchTab: (tabName) => {
         const container = document.getElementById('appContainer');
@@ -545,14 +634,12 @@
           container.style.gridTemplateColumns = "1fr 1.25fr";
         } else {
           container.style.gridTemplateColumns = "1fr";
-          if (tabName === 'cpo') {
-            container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>⚡ Skup TGN CPO</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Natychmiastowa wycena skupu i Trade-In na rok 2026.</p></section>`;
-          } else if (tabName === 'marketplace') {
-            container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>🤝 Marketplace C2C</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Bezpieczna wymiana sprzętu między graczami.</p></section>`;
-          } else if (tabName === 'forum') {
-            container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>💬 Forum & Poradniki</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Baza wiedzy społeczności od 2021 roku.</p></section>`;
-          } else if (tabName === 'chat') {
-            container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>💬 Czat ze sprzedawcą</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Aktywne rozmowy C2C.</p></section>`;
+          if (tabName === 'forum') container.innerHTML = ForumComponent.render();
+          else if (tabName === 'cpo') container.innerHTML = CpoComponent.render();
+          else if (tabName === 'marketplace') container.innerHTML = MarketplaceComponent.render();
+          else if (tabName === 'chat') {
+            container.innerHTML = ChatComponent.render();
+            setTimeout(app.scrollChatToBottom, 50);
           }
         }
 
@@ -561,18 +648,39 @@
         });
       },
 
-      openAiModal: () => {
-        document.getElementById('aiModalOverlay').style.display = 'flex';
+      filterForum: (catKey) => { AppData.activeForumFilter = catKey; app.switchTab('forum'); },
+      toggleNewThread: () => { const box = document.getElementById('newThreadBox'); if(box) box.style.display = box.style.display === 'block' ? 'none' : 'block'; },
+      createThread: () => {
+        const title = document.getElementById('newThreadTitle').value.trim();
+        const content = document.getElementById('newThreadContent').value.trim();
+        if(!title || !content) return;
+        AppData.forumPosts.unshift({ id: Date.now(), pinned: false, catKey: "FITTING", category: "⚙️ Custom Fitting", title, author: AppData.user.name, badge: "HCP 12.4", badgeClass: "badge-vet", date: "Przed chwilą", views: "1", likes: 1, content, comments: [] });
+        app.switchTab('forum');
+        app.showToast('Opublikowano wątek!');
       },
-      closeAiModal: () => {
-        document.getElementById('aiModalOverlay').style.display = 'none';
+      likePost: (id) => { const p = AppData.forumPosts.find(x => x.id === id); if(p) { p.likes++; app.switchTab('forum'); } },
+      addComment: (id) => {
+        const input = document.getElementById('commInput_' + id);
+        const text = input ? input.value.trim() : '';
+        if(!text) return;
+        const p = AppData.forumPosts.find(x => x.id === id);
+        if(p) { p.comments.push({ author: AppData.user.name, badge: "HCP 12.4", badgeClass: "badge-vet", date: "Przed chwilą", text }); app.switchTab('forum'); }
       },
-
+      sendChatMessage: () => {
+        const input = document.getElementById('chatInput');
+        if(!input || !input.value.trim()) return;
+        AppData.chatMessages.push({ sender: AppData.user.name, text: input.value.trim(), type: "outgoing" });
+        input.value = '';
+        document.getElementById('appContainer').innerHTML = ChatComponent.render();
+        app.scrollChatToBottom();
+      },
+      scrollChatToBottom: () => { const box = document.getElementById('chatMsgs'); if (box) box.scrollTop = box.scrollHeight; },
+      openAiModal: () => { document.getElementById('aiModalOverlay').style.display = 'flex'; },
+      closeAiModal: () => { document.getElementById('aiModalOverlay').style.display = 'none'; },
       showToast: (msg) => {
         const toast = document.getElementById('toast');
-        if (!toast) return;
-        toast.textContent = msg;
-        toast.style.display = 'block';
+        if(!toast) return;
+        toast.textContent = msg; toast.style.display = 'block';
         setTimeout(() => { toast.style.display = 'none'; }, 2500);
       }
     };
