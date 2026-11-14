@@ -140,6 +140,22 @@
     }
     .btn-action:active { background: var(--accent); color: #052e16; }
 
+    /* Skup CPO Styles */
+    .cpo-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.8rem;
+    }
+    .cpo-item {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     /* Marketplace */
     .market-grid {
       display: grid;
@@ -155,11 +171,9 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: 0.2s;
     }
-    .market-card:hover { border-color: var(--accent); background: rgba(74, 222, 128, 0.05); }
 
-    /* Styl czatu */
+    /* Czat */
     .chat-container {
       display: flex;
       flex-direction: column;
@@ -184,18 +198,8 @@
       font-size: 0.8rem;
       line-height: 1.4;
     }
-    .msg.incoming {
-      background: rgba(255, 255, 255, 0.08);
-      align-self: flex-start;
-      border-bottom-left-radius: 2px;
-    }
-    .msg.outgoing {
-      background: rgba(74, 222, 128, 0.2);
-      border: 1px solid var(--glass-border);
-      align-self: flex-end;
-      border-bottom-right-radius: 2px;
-      color: var(--accent);
-    }
+    .msg.incoming { background: rgba(255, 255, 255, 0.08); align-self: flex-start; }
+    .msg.outgoing { background: rgba(74, 222, 128, 0.2); border: 1px solid var(--glass-border); align-self: flex-end; color: var(--accent); }
     .chat-input-area {
       display: flex;
       padding: 0.75rem;
@@ -213,7 +217,6 @@
       font-size: 0.8rem;
       outline: none;
     }
-    .chat-input-area input:focus { border-color: var(--accent); }
     .chat-input-area button {
       background: var(--accent);
       color: #052e16;
@@ -250,10 +253,10 @@
     </div>
     <nav id="mainNav">
       <button class="active" data-tab="profile" onclick="app.switchTab('profile')">👤 Profil 3D</button>
+      <button data-tab="cpo" onclick="app.switchTab('cpo')">⚡ Skup TGN CPO</button>
       <button data-tab="marketplace" onclick="app.switchTab('marketplace')">🤝 Marketplace C2C</button>
-      <button data-tab="chat" onclick="app.switchTab('chat')">💬 Czat ze sprzedawcą</button>
+      <button data-tab="chat" onclick="app.switchTab('chat')">💬 Czat</button>
       <button data-tab="forum" onclick="app.switchTab('forum')">💬 Forum</button>
-      <button data-tab="sklep" onclick="app.switchTab('sklep')">🛍️ Sklep</button>
     </nav>
   </header>
 
@@ -274,9 +277,9 @@
         swingSpeed: "96 mph"
       },
       bag: [
-        { name: "DRIVER: TAYLOR MADE Qi10", loft: "10.5°, Shaft: VENTUS Blue 6S", val: "1 800 PLN", speed: "145 mph", smash: "1.48", attack: "+3°", cond: "9/10" },
-        { name: "IRON: MIZUNO JPX 923", loft: "7-Iron, Steel Shaft DG 105 S", val: "3 400 PLN", speed: "118 mph", spin: "6500 RPM", cond: "9.5/10" },
-        { name: "PUTTER: ODYSSEY AI-ONE #7", loft: "34\", Grip: SUPERSTROKE", val: "1 200 PLN", cond: "Mint" }
+        { id: 1, name: "DRIVER: TAYLOR MADE Qi10", loft: "10.5°, Shaft: VENTUS Blue 6S", val: "1 800 PLN", cpoOffer: "1 450 PLN", cond: "9/10" },
+        { id: 2, name: "IRON: MIZUNO JPX 923", loft: "7-Iron, Steel Shaft DG 105 S", val: "3 400 PLN", cpoOffer: "2 700 PLN", cond: "9.5/10" },
+        { id: 3, name: "PUTTER: ODYSSEY AI-ONE #7", loft: "34\", Grip: SUPERSTROKE", val: "1 200 PLN", cpoOffer: "950 PLN", cond: "Mint" }
       ],
       marketplace: [
         { title: "Wilson Dynapower Driver", seller: "Janusz_G (HCP 14)", price: "1 150 PLN", cond: "Stan: 9/10", desc: "Znakomity driver, regular flex, mało używany." },
@@ -284,8 +287,7 @@
       ],
       chatMessages: [
         { sender: "Janusz_G", text: "Cześć! Czy oferta na Wilson Dynapower jest jeszcze aktualna?", type: "incoming" },
-        { sender: "Marek Kowalski", text: "Cześć! Tak, aktualna. Jaki stan Cię interesuje i skąd jesteś?", type: "outgoing" },
-        { sender: "Janusz_G", text: "Jestem z Warszawy, możemy się umówić na polu na testowy swing?", type: "incoming" }
+        { sender: "Marek Kowalski", text: "Cześć! Tak, aktualna. Jaki stan Cię interesuje i skąd jesteś?", type: "outgoing" }
       ]
     };
 
@@ -347,7 +349,7 @@
             </div>
             <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.4rem;">
               <span>Wartość: <strong>${c.val}</strong></span>
-              <span>Prędkość: <strong>${c.speed || 'N/A'}</strong></span>
+              <span>Oferta CPO: <strong style="color:var(--gold);">${c.cpoOffer}</strong></span>
             </div>
           </div>
         `).join('');
@@ -359,8 +361,37 @@
             <div style="background: rgba(0,0,0,0.3); padding: 0.9rem; border-radius: 12px; text-align: center; margin-top: 1rem;">
               <p style="font-size: 0.75rem; color: var(--text-muted);">CAŁKOWITA WARTOŚĆ TORBY</p>
               <strong style="font-size: 1.3rem; color: var(--accent);">14 200 PLN</strong>
-              <button class="btn-action" onclick="app.showToast('Przekierowanie do Skupu TGN CPO...')">⚡ SPRZEDAJ NATYCHMIAST DO SKUPU TGN CPO</button>
-              <button class="btn-action" style="background: rgba(250,204,21,0.1); border-color: var(--gold); color: var(--gold);" onclick="app.showToast('Trade-In wygenerowany!')">🔄 TRADE-IN NA NOWY MODEL 2026</button>
+              <button class="btn-action" onclick="app.switchTab('cpo')">⚡ SPRZEDAJ NATYCHMIAST DO SKUPU TGN CPO</button>
+              <button class="btn-action" style="background: rgba(250,204,21,0.1); border-color: var(--gold); color: var(--gold);" onclick="app.switchTab('cpo')">🔄 TRADE-IN NA NOWY MODEL 2026</button>
+            </div>
+          </section>
+        `;
+      }
+    };
+
+    // Nowy Komponent: Skup TGN CPO
+    const CpoComponent = {
+      render: () => {
+        let itemsHTML = AppData.bag.map(c => `
+          <div class="cpo-item">
+            <div>
+              <h3 style="font-size: 0.95rem; color: var(--text-main);">${c.name}</h3>
+              <p style="font-size: 0.75rem; color: var(--text-muted);">${c.loft} • Stan: ${c.cond}</p>
+              <p style="font-size: 0.75rem; color: var(--accent); margin-top: 0.3rem;">Gwarantowana wycena skupu: <strong style="color: var(--gold);">${c.cpoOffer}</strong></p>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.4rem; min-width: 140px;">
+              <button class="btn-action" style="margin:0; padding:0.4rem;" onclick="app.showToast('Zlecono skup CPO dla: ${c.name}')">Sprzedaj za gotówkę</button>
+              <button class="btn-action" style="margin:0; padding:0.4rem; background:rgba(250,204,21,0.1); border-color:var(--gold); color:var(--gold);" onclick="app.showToast('Wygenerowano Trade-In 2026!')">Trade-In na 2026</button>
+            </div>
+          </div>
+        `).join('');
+
+        return `
+          <section class="panel-3d" style="grid-column: span 2;">
+            <h2>⚡ Skup TGN CPO (Certified Pre-Owned) – Natychmiastowa Wycena</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem;">Wybierz sprzęt ze swojej cyfrowej torby i wymień go na gotówkę w 24h lub zrób Trade-In na najnowszą kolekcję 2026.</p>
+            <div class="cpo-grid">
+              ${itemsHTML}
             </div>
           </section>
         `;
@@ -388,7 +419,7 @@
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
-            <h2>🤝 TGN Marketplace (C2C – Oferty Społecznościowe)</h2>
+            <h2>🤝 TGN Marketplace (C2C)</h2>
             <div class="market-grid" style="margin-top: 1rem;">
               ${itemsHTML}
             </div>
@@ -414,7 +445,7 @@
                 ${msgsHTML}
               </div>
               <div class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="Napisz wiadomość do sprzedawcy..." onkeypress="if(event.key === 'Enter') app.sendChatMessage()">
+                <input type="text" id="chatInput" placeholder="Napisz wiadomość..." onkeypress="if(event.key === 'Enter') app.sendChatMessage()">
                 <button onclick="app.sendChatMessage()">Wyślij</button>
               </div>
             </div>
@@ -429,15 +460,15 @@
         
         if (tabName === 'profile') {
           container.innerHTML = ProfileComponent.render() + BagComponent.render();
+        } else if (tabName === 'cpo') {
+          container.innerHTML = CpoComponent.render();
         } else if (tabName === 'marketplace') {
           container.innerHTML = MarketplaceComponent.render();
         } else if (tabName === 'chat') {
           container.innerHTML = ChatComponent.render();
           app.scrollChatToBottom();
         } else if (tabName === 'forum') {
-          container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>Strefa Forum TGN</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Dyskusje, Custom Fitting i sekcje lokalne.</p></section>`;
-        } else if (tabName === 'sklep') {
-          container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>Sklep TGN & Sprzęt oficjalny</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Oficjalny sprzęt 2026 i gwarancja producenta.</p></section>`;
+          container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>Strefa Forum TGN</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Dyskusje i Custom Fitting.</p></section>`;
         }
 
         document.querySelectorAll('#mainNav button').forEach(btn => {
@@ -458,16 +489,13 @@
         AppData.chatMessages.push({ sender: "Marek Kowalski", text: text, type: "outgoing" });
         input.value = '';
         
-        // Odświeżenie widoku czatu
         document.getElementById('appContainer').innerHTML = ChatComponent.render();
         app.scrollChatToBottom();
 
-        // Symulacja automatycznej odpowiedzi sprzedawcy po 1.5 sekundy
         setTimeout(() => {
-          AppData.chatMessages.push({ sender: "Janusz_G", text: "Jasne, brzmi super! Daj znać kiedy pasuje Ci runda.", type: "incoming" });
-          const container = document.getElementById('appContainer');
+          AppData.chatMessages.push({ sender: "Janusz_G", text: "Brzmi super! Daj znać kiedy pasuje Ci runda.", type: "incoming" });
           if(document.querySelector('[data-tab="chat"]').classList.contains('active')) {
-            container.innerHTML = ChatComponent.render();
+            document.getElementById('appContainer').innerHTML = ChatComponent.render();
             app.scrollChatToBottom();
           }
         }, 1500);
