@@ -573,6 +573,75 @@
       gap: 0.8rem;
     }
 
+    /* Wydarzenia & Kalendarz 2027 */
+    .events-analysis-box {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(74, 222, 128, 0.12));
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 14px;
+      padding: 1.15rem 1.3rem;
+      margin-bottom: 1.2rem;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 1.2rem;
+      align-items: center;
+    }
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.1rem;
+      width: 100%;
+    }
+    .event-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 16px;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: 0.25s;
+      position: relative;
+    }
+    .event-card:hover {
+      border-color: var(--accent);
+      background: rgba(74, 222, 128, 0.05);
+    }
+    .event-card.registered {
+      border-color: var(--gold);
+      background: linear-gradient(145deg, rgba(250, 204, 21, 0.08), rgba(255, 255, 255, 0.03));
+    }
+    .event-date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--blue);
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .event-xp-badge {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--gold);
+      background: rgba(250, 204, 21, 0.14);
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .event-meta-list {
+      margin: 0.65rem 0;
+      padding: 0.6rem;
+      background: rgba(0, 0, 0, 0.32);
+      border-radius: 8px;
+      font-size: 0.74rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem;
+    }
+
     /* Forum 5-letniej społeczności */
     .forum-stats-bar {
       display: grid;
@@ -817,7 +886,7 @@
       .panel-left, .panel-right {
         transform: none !important;
       }
-      .profile-layout {
+      .profile-layout, .events-analysis-box {
         grid-template-columns: 1fr;
       }
       .golfer-3d-figure {
@@ -825,7 +894,7 @@
         max-width: 200px;
         margin: 0 auto;
       }
-      .market-grid, .store-grid {
+      .market-grid, .store-grid, .events-grid {
         grid-template-columns: 1fr;
       }
       .cpo-item {
@@ -849,11 +918,12 @@
         <span>TGN</span> GLOBAL GOLF
       </div>
       <div id="headerRightInfo" style="display:flex; align-items:center; gap:0.75rem;">
-        <span style="font-size: 0.7rem; color: var(--text-muted);">Live Club Image Engine v4.5</span>
+        <span style="font-size: 0.7rem; color: var(--text-muted);">Live Club Engine & 2027 Tour v5.0</span>
       </div>
     </div>
     <nav id="mainNav" style="display:none;">
       <button class="active" data-tab="profile">👤 Kokpit 3D & Torba</button>
+      <button data-tab="wydarzenia">📅 Wydarzenia 2027</button>
       <button data-tab="sklep">🛍️ Sklep TGN 2026</button>
       <button data-tab="forum">💬 Forum (2021–2026)</button>
       <button data-tab="cpo">⚡ Skup TGN CPO</button>
@@ -933,7 +1003,7 @@
         <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="app.closeAiModal()">✕</span>
       </div>
       <p style="font-size: 0.82rem; color: var(--text-main); line-height: 1.55; margin-bottom: 1rem;">
-        Cześć, <strong>Marek</strong>! Twoja gra (HCP 12.4, Swing 96 mph) jest gotowa na kolejny poziom. Nowa Kolekcja TGN 2026 oferuje znaczące usprawnienia dopasowane do Twoich parametrów.<br><br>
+        Cześć, <strong>Marek</strong>! Twoja gra (HCP 12.4, Swing 96 mph) jest gotowa na kolejny poziom przed otwarciem sezonu turniejowego <strong>TGN Tour 2027</strong>.<br><br>
         Najważniejsze: Nowy <strong>Pro-Wedge 52°</strong> z serii 2026 idealnie wypełnia Twoją lukę dystansową, o której informuje nasza Gapping AI, dając precyzję wokół greenu.<br>
         Ponadto, nowa seria <strong>TGN Evolution Series 2026</strong> (Driver i Irony) oferuje większe wybaczanie błędów i lepszą aerodynamikę.<br><br>
         Twoja obecna torba ma najwyższą wartość Trade-In (<strong>14 200 PLN</strong>). Zobacz spersonalizowaną ofertę w Oficjalnym Sklepie TGN 2026.
@@ -1035,7 +1105,7 @@
     };
 
     /* =========================================================================
-       BAZA DANYCH APLIKACJI (STAN, SKLEP 2026, TORBA, FORUM, MARKETPLACE, CZAT)
+       BAZA DANYCH APLIKACJI (STAN, WYDARZENIA 2027, SKLEP 2026, TORBA, FORUM, C2C)
        ========================================================================= */
     const DefaultUser = {
       name: "Marek Kowalski",
@@ -1050,6 +1120,7 @@
     const AppData = {
       activeForumFilter: "ALL",
       activeStoreFilter: "ALL",
+      activeEventFilter: "ALL",
       cart: [],
       user: { ...DefaultUser },
       bag: [
@@ -1088,6 +1159,98 @@
           attack: "+1.0°",
           cond: "Mint",
           imgUrl: "https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=85"
+        }
+      ],
+      events2027: [
+        {
+          id: 301,
+          cat: "SIM",
+          title: "🏆 Wielki Finał Zimowej Ligi Symulatorowej TGN 2027",
+          date: "23–24 Stycznia 2027",
+          location: "Warszawa / Szczecin / Kraków (TrackMan Live Link)",
+          format: "Stroke Play Netto + Gross (18 dołków)",
+          fee: "Bezpłatne dla TGN Level 10+",
+          xpReward: "+350 XP",
+          spotsLeft: 8,
+          maxSpots: 64,
+          aiFit: "98% dopasowania (Twój Swing 96 mph daje przewagę na długich Par 5)",
+          desc: "Zwieńczenie zimowego sezonu symulatorowego. Połączone studia TrackMan w całej Polsce w czasie rzeczywistym i transmisja tabeli wyników w kokpicie 3D.",
+          registered: true
+        },
+        {
+          id: 302,
+          cat: "FITTING",
+          title: "🎯 TGN National Demo & AI Gapping Day 2027",
+          date: "13 Marca 2027",
+          location: "Binowo Park Golf Club (Szczecin) & First Warsaw",
+          format: "Sesje indywidualne 45 min z certyfikowanym Fitterem PGA",
+          fee: "0 PLN (Kaucja zwrotna w Sklepie TGN)",
+          xpReward: "+200 XP",
+          spotsLeft: 5,
+          maxSpots: 30,
+          aiFit: "Kluczowe wydarzenie: Test nowego Gap Wedge 52° pod Twoją lukę 15m",
+          desc: "Oficjalne otwarcie wiosennych testów sprzętowych. Przetestuj pełną linię Wilson Dynapower, TaylorMade i Mizuno z pomiarem kątów natarcia i Smash Factor.",
+          registered: false
+        },
+        {
+          id: 303,
+          cat: "MAJOR",
+          title: "⛳ TGN Spring Open 2027 – Inauguracja Sezonu Polowego",
+          date: "17–18 Kwietnia 2027",
+          location: "Modry Las Golf Resort (Choszczno / Zachodniopomorskie)",
+          format: "Stableford Netto (Grupy HCP: 0–12, 12.1–20, 20.1–36)",
+          fee: "420 PLN (W cenie Green Fee, pakiet startowy Pro V1x i bankiet)",
+          xpReward: "+500 XP",
+          spotsLeft: 14,
+          maxSpots: 90,
+          aiFit: "Szansa na awans do grupy HCP Single Digit przed latem",
+          desc: "Pierwszy wielkoszlemowy turniej społeczności TGN w sezonie 2027 na mistrzowskim polu projektu Gary'ego Playera. Konkursy Longest Drive i Nearest to the Pin.",
+          registered: false
+        },
+        {
+          id: 304,
+          cat: "SIM",
+          title: "👻 TGN Ghost Match Europe Tour – Asynchroniczny Turniej Letni",
+          date: "1–30 Czerwca 2027",
+          location: "Dowolne pole w Polsce z rejestracją GPS / TGN Smart Tags",
+          format: "Asynchroniczny Match Play przeciwko duchowi rywala z tabeli",
+          fee: "50 PLN (Pula nagród w bonach Trade-In: 10 000 PLN)",
+          xpReward: "+300 XP",
+          spotsLeft: 42,
+          maxSpots: 200,
+          aiFit: "Zoptymalizowane pod Twoją częstotliwość gry w weekendy",
+          desc: "Rozegraj rundę w dowolny dzień czerwca i zmierz się dołek po dołku z zapisem telemetrii innego gracza o zbliżonym handicapie (HCP 11–14).",
+          registered: false
+        },
+        {
+          id: 305,
+          cat: "CAMP",
+          title: "☀️ Letnia Akademia Short Game & Bunkier Masterclass z PGA Pro",
+          date: "16–18 Lipca 2027",
+          location: " Rosa Private Golf Club (Częstochowa)",
+          format: "3-dniowy obóz treningowy + runda egzaminacyjna",
+          fee: "1 490 PLN",
+          xpReward: "+400 XP",
+          spotsLeft: 4,
+          maxSpots: 16,
+          aiFit: "Rekomendowane przez Gapping AI: redukcja liczby uderzeń poniżej 80 metra",
+          desc: "Intensywne zgrupowanie skupione na grze wedge'ami (50°–58°), kontroli spinu na szybkich greenach oraz strategii zarządzania polem (Course Management).",
+          registered: false
+        },
+        {
+          id: 306,
+          cat: "MAJOR",
+          title: "👑 TGN Polish Masters Championship – Finał Sezonu 2027",
+          date: "11–12 Września 2027",
+          location: "First Warsaw Golf & Country Club (Rajszew)",
+          format: "2-dniowy Finał Order of Merit (Stroke Play Netto / Gross)",
+          fee: "550 PLN (Dla Top 30 rankingu TGN – udział darmowy)",
+          xpReward: "+1 000 XP",
+          spotsLeft: 19,
+          maxSpots: 80,
+          aiFit: "Twoje domowe pole (Warszawa) – najwyższe prawdopodobieństwo podium!",
+          desc: "Najważniejsze wydarzenie roku 2027. Zwycięzca otrzymuje pełny zestaw kijów Kolekcji 2027 dopasowany podczas indywidualnego fittingu oraz tytuł Gracza Roku TGN.",
+          registered: false
         }
       ],
       storeProducts: [
@@ -1328,9 +1491,11 @@
 
       updateHeaderBar: () => {
         const cartCount = AppData.cart.length;
+        const regEventsCount = AppData.events2027.filter(e => e.registered).length;
         document.getElementById('headerRightInfo').innerHTML = `
-          <span style="font-size: 0.74rem; color: var(--gold); font-weight:700; cursor:pointer;" onclick="app.switchTab('sklep')">🛒 Koszyk (${cartCount})</span>
-          <span style="font-size: 0.74rem; color: var(--accent); font-weight:700;">● ${AppData.user.name}</span>
+          <span style="font-size: 0.72rem; color: var(--blue); font-weight:700; cursor:pointer;" onclick="app.switchTab('wydarzenia')">📅 Turnieje 2027 (${regEventsCount})</span>
+          <span style="font-size: 0.72rem; color: var(--gold); font-weight:700; cursor:pointer;" onclick="app.switchTab('sklep')">🛒 Koszyk (${cartCount})</span>
+          <span style="font-size: 0.72rem; color: var(--accent); font-weight:700;">● ${AppData.user.name}</span>
           <button class="btn-logout" onclick="auth.logout()">Wyloguj</button>
         `;
       },
@@ -1340,7 +1505,7 @@
         document.getElementById('authScreen').style.display = 'flex';
         document.getElementById('mainNav').style.display = 'none';
         document.getElementById('appContainer').style.display = 'none';
-        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Live Club Image Engine v4.5</span>`;
+        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Live Club Engine & 2027 Tour v5.0</span>`;
         app.showToast('Wylogowano z kokpitu 3D');
       }
     };
@@ -1484,6 +1649,90 @@
     };
 
     /* =========================================================================
+       NOWY KOMPONENT: KALENDARZ I ANALIZA WYDARZEŃ SEZONU 2027
+       ========================================================================= */
+    const Events2027Component = {
+      render: () => {
+        const filtered = AppData.activeEventFilter === "ALL"
+          ? AppData.events2027
+          : AppData.events2027.filter(e => e.cat === AppData.activeEventFilter);
+
+        const registeredCount = AppData.events2027.filter(e => e.registered).length;
+
+        let eventsHTML = filtered.map(ev => `
+          <div class="event-card ${ev.registered ? 'registered' : ''}">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:0.55rem;">
+                <span class="event-date-badge">🗓️ ${ev.date}</span>
+                <span class="event-xp-badge">⚡ Nagroda: ${ev.xpReward}</span>
+              </div>
+
+              <h3 style="font-size: 0.98rem; color: var(--text-main); margin-bottom: 0.35rem; line-height:1.35;">${ev.title}</h3>
+              <p style="font-size: 0.76rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 0.5rem;">${ev.desc}</p>
+
+              <div class="event-meta-list">
+                <div><span style="color:var(--text-muted);">📍 Lokalizacja:</span><br><strong style="color:var(--text-main);">${ev.location}</strong></div>
+                <div><span style="color:var(--text-muted);">🏆 Format gry:</span><br><strong style="color:var(--text-main);">${ev.format}</strong></div>
+                <div><span style="color:var(--text-muted);">💳 Wpisowe:</span><br><strong style="color:var(--accent);">${ev.fee}</strong></div>
+                <div><span style="color:var(--text-muted);">👥 Wolne miejsca:</span><br><strong style="color:${ev.spotsLeft <= 8 ? 'var(--gold)' : 'var(--text-main)'};">${ev.spotsLeft} z ${ev.maxSpots}</strong></div>
+              </div>
+
+              <div style="background:rgba(74, 222, 128, 0.08); border:1px solid rgba(74, 222, 128, 0.28); border-radius:8px; padding:0.45rem 0.65rem; font-size:0.72rem; color:var(--accent); margin-bottom:0.75rem;">
+                🤖 <strong>Analiza AI 2027:</strong> ${ev.aiFit}
+              </div>
+            </div>
+
+            <button class="btn-action" style="margin:0; ${ev.registered ? 'background:var(--gold); color:#052e16; border-color:var(--gold);' : ''}" onclick="app.toggleEventRegistration(${ev.id})">
+              ${ev.registered ? '✓ JESTEŚ ZAPISANY NA WYDARZENIE (KLIKNIJ, ABY WYPISAĆ)' : '+ ZAPISZ SIĘ NA WYDARZENIE 2027 I ODBIERZ XP'}
+            </button>
+          </div>
+        `).join('');
+
+        return `
+          <section class="panel-3d" style="grid-column: span 2;">
+            <h2>
+              <span>📅 Kalendarz & Analiza Sezonu Turniejowego TGN 2027</span>
+              <span style="font-size:0.76rem; color:var(--gold);">Twoje aktywne zapisy na 2027: ${registeredCount}/6</span>
+            </h2>
+
+            <!-- Panel Analityczny Sezonu 2027 -->
+            <div class="events-analysis-box">
+              <div>
+                <h3 style="font-size: 0.96rem; color: var(--blue); margin-bottom: 0.35rem;">📊 Raport Analityczny TGN AI na Sezon 2027 dla: ${AppData.user.name} (HCP ${AppData.user.hcp})</h3>
+                <p style="font-size: 0.78rem; color: var(--text-main); line-height: 1.5;">
+                  Na podstawie Twoich wyników z jesieni 2026 (ostatnia runda: 82 uderzenia, prędkość swingu: <strong>${AppData.user.swingSpeed}</strong>) przygotowaliśmy harmonogram startów na 2027 rok. Po uzupełnieniu luki gappingowej (Wedge 52°) oraz starcie w 3 turniejach rangi <strong>TGN Major</strong> prognozujemy spadek Twojego HCP do poziomu <strong>9.8 (Single Digit)</strong> do września 2027.
+                </p>
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.6rem; text-align:center;">
+                <div style="background:rgba(0,0,0,0.4); padding:0.75rem; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
+                  <span style="font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; display:block;">Prognoza HCP 2027</span>
+                  <strong style="font-size:1.35rem; color:var(--accent);">12.4 → 9.8</strong>
+                </div>
+                <div style="background:rgba(0,0,0,0.4); padding:0.75rem; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
+                  <span style="font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; display:block;">Pula XP w sezonie 2027</span>
+                  <strong style="font-size:1.35rem; color:var(--gold);">+2 750 XP</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Filtry kategorii wydarzeń 2027 -->
+            <div class="forum-filters">
+              <button class="filter-pill ${AppData.activeEventFilter === 'ALL' ? 'active' : ''}" onclick="app.filterEvents('ALL')">Wszystkie wydarzenia 2027 (6)</button>
+              <button class="filter-pill ${AppData.activeEventFilter === 'MAJOR' ? 'active' : ''}" onclick="app.filterEvents('MAJOR')">🏆 Turnieje Polowe (Majors)</button>
+              <button class="filter-pill ${AppData.activeEventFilter === 'SIM' ? 'active' : ''}" onclick="app.filterEvents('SIM')">👻 Ghost Match & Liga Sim</button>
+              <button class="filter-pill ${AppData.activeEventFilter === 'FITTING' ? 'active' : ''}" onclick="app.filterEvents('FITTING')">🎯 Dni Fittingu & Demo 2027</button>
+              <button class="filter-pill ${AppData.activeEventFilter === 'CAMP' ? 'active' : ''}" onclick="app.filterEvents('CAMP')">☀️ Zgrupowania PGA Pro</button>
+            </div>
+
+            <div class="events-grid">
+              ${eventsHTML}
+            </div>
+          </section>
+        `;
+      }
+    };
+
+    /* =========================================================================
        KOMPONENT 2: OFICJALNY SKLEP TGN (PRO SHOP & KOLEKCJA 2026)
        ========================================================================= */
     const StoreComponent = {
@@ -1548,7 +1797,7 @@
                 <h3 style="font-size: 0.95rem; color: var(--accent); margin-bottom: 0.25rem;">🎯 Spersonalizowany dobór pod Twoje parametry: HCP ${AppData.user.hcp} | Swing Speed ${AppData.user.swingSpeed}</h3>
                 <p style="font-size: 0.78rem; color: var(--text-muted);">Wszystkie kije w sklepie objęte są darmowym Custom Fittingiem na symulatorze TrackMan oraz 2-letnią gwarancją TGN.</p>
               </div>
-              <button class="btn-action" style="width:auto; margin:0; padding:0.5rem 1rem;" onclick="app.showToast('Zarezerwowano sesję Custom Fittingu z Pro!')">📅 Umów darmowy Fitting</button>
+              <button class="btn-action" style="width:auto; margin:0; padding:0.5rem 1rem;" onclick="app.switchTab('wydarzenia')">📅 Zobacz Demo Days 2027</button>
             </div>
 
             ${cartBarHTML}
@@ -1783,7 +2032,8 @@
           ProfileAndBagComponent.afterRender();
         } else {
           container.style.gridTemplateColumns = "1fr";
-          if (tabName === 'sklep') container.innerHTML = StoreComponent.render();
+          if (tabName === 'wydarzenia') container.innerHTML = Events2027Component.render();
+          else if (tabName === 'sklep') container.innerHTML = StoreComponent.render();
           else if (tabName === 'forum') container.innerHTML = ForumComponent.render();
           else if (tabName === 'cpo') container.innerHTML = CpoComponent.render();
           else if (tabName === 'marketplace') container.innerHTML = MarketplaceComponent.render();
@@ -1796,6 +2046,27 @@
         document.querySelectorAll('#mainNav button').forEach(btn => {
           btn.classList.toggle('active', btn.dataset.tab === tabName);
         });
+      },
+
+      filterEvents: (cat) => {
+        AppData.activeEventFilter = cat;
+        app.switchTab('wydarzenia');
+      },
+
+      toggleEventRegistration: (evId) => {
+        const ev = AppData.events2027.find(e => e.id === evId);
+        if (!ev) return;
+
+        ev.registered = !ev.registered;
+        ev.spotsLeft += ev.registered ? -1 : 1;
+
+        auth.updateHeaderBar();
+        app.switchTab('wydarzenia');
+        if (ev.registered) {
+          app.showToast(`Zapisano na: ${ev.title} (${ev.xpReward})`);
+        } else {
+          app.showToast(`Wypisano z wydarzenia: ${ev.title}`);
+        }
       },
 
       filterStore: (cat) => {
