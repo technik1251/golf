@@ -24,21 +24,26 @@
                   url('https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=1000&q=80') center/cover no-repeat fixed;
       display: flex;
       flex-direction: column;
+      padding-bottom: 2rem; /* Normalny margines na dole */
     }
 
-    /* Mobilny pasek górny */
+    /* Pasek górny (Header + Menu w jednym) */
     header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.75rem 1rem;
-      background: rgba(10, 20, 24, 0.9);
+      background: rgba(10, 20, 24, 0.92);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--glass-border);
       position: sticky;
       top: 0;
       z-index: 100;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .logo { font-weight: 800; font-size: 1rem; letter-spacing: 0.5px; }
@@ -56,7 +61,27 @@
       display: none;
     }
 
-    /* Główny kontener zoptymalizowany pod telefon */
+    /* Górne menu nawigacyjne */
+    nav {
+      display: flex;
+      justify-content: space-around;
+      padding: 0.5rem 0.2rem;
+      overflow-x: auto;
+    }
+    nav a { 
+      color: var(--text-muted); 
+      text-decoration: none; 
+      font-size: 0.7rem; 
+      font-weight: 600; 
+      text-align: center; 
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      white-space: nowrap;
+      transition: 0.15s;
+    }
+    nav a.active, nav a:hover { color: var(--accent); background: rgba(74, 222, 128, 0.1); }
+
+    /* Główny kontener */
     .spatial-stage {
       flex: 1;
       display: flex;
@@ -80,7 +105,6 @@
 
     h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.75rem; }
 
-    /* Kafelki do tapnięcia na telefonie */
     .card {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -107,40 +131,31 @@
       margin-right: 0.2rem;
     }
 
-    /* Mini profil na telefon */
     .profile-box { text-align: center; background: rgba(0, 0, 0, 0.2); padding: 0.8rem; border-radius: 10px; }
     .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: #052e16; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.4rem; font-size: 1.1rem; }
     .xp-bar { height: 5px; background: rgba(255,255,255,0.1); border-radius: 3px; margin: 0.5rem 0; overflow: hidden; }
     .xp-fill { width: 78%; height: 100%; background: var(--accent); }
-
-    /* Dolna nawigacja mobilna (tab bar) */
-    nav {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: rgba(10, 20, 24, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid var(--glass-border);
-      display: flex;
-      justify-content: space-around;
-      padding: 0.5rem 0;
-      z-index: 100;
-    }
-    nav a { color: var(--text-muted); text-decoration: none; font-size: 0.65rem; font-weight: 600; text-align: center; display: flex; flex-direction: column; gap: 2px; }
-    nav a.active, nav a:hover { color: var(--accent); }
-
-    body { padding-bottom: 60px; /* Miejsce na dolny pasek */ }
   </style>
 </head>
 <body>
 
+  <!-- Górny nagłówek z menu -->
   <header>
-    <div class="logo"><span>TGN</span> GOLF</div>
-    <button id="installBtn" class="btn-install">Zainstaluj PWA</button>
+    <div class="header-top">
+      <div class="logo"><span>TGN</span> GOLF</div>
+      <button id="installBtn" class="btn-install">Zainstaluj PWA</button>
+    </div>
+    <nav>
+      <a href="#" class="active">🏠 Start</a>
+      <a href="#">💬 Forum</a>
+      <a href="#">🛍️ Sklep</a>
+      <a href="#">📅 Wydarzenia</a>
+      <a href="#">🎒 Torba</a>
+    </nav>
   </header>
 
   <main class="spatial-stage">
-    <!-- Panel profilu i reputacji na górze dla wygody -->
+    <!-- Panel profilu i reputacji -->
     <section class="panel-3d">
       <h2>Moje Konto</h2>
       <div class="profile-box">
@@ -195,17 +210,7 @@
     </section>
   </main>
 
-  <!-- Mobilny Pasek Nawigacyjny -->
-  <nav>
-    <a href="#" class="active">🏠 Start</a>
-    <a href="#">💬 Forum</a>
-    <a href="#">🛍️ Sklep</a>
-    <a href="#">📅 Wydarzenia</a>
-    <a href="#">🎒 Torba</a>
-  </nav>
-
   <script>
-    // PWA Manifest i Service Worker w locie
     const manifest = {
       name: "TGN Global Golf Mobile",
       short_name: "TGN Golf",
