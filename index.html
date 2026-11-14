@@ -49,7 +49,7 @@
 
     nav {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.4rem;
       padding: 0.4rem 1rem;
       background: rgba(0,0,0,0.25);
       overflow-x: auto;
@@ -58,9 +58,9 @@
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
-      padding: 0.4rem 0.8rem;
+      padding: 0.4rem 0.7rem;
       border-radius: 6px;
       cursor: pointer;
       transition: 0.2s;
@@ -68,7 +68,6 @@
     }
     nav button.active { background: var(--accent); color: #052e16; font-weight: 700; }
 
-    /* Układ 3D kokpitu */
     .spatial-stage {
       flex: 1;
       display: grid;
@@ -140,12 +139,29 @@
     }
     .btn-action:active { background: var(--accent); color: #052e16; }
 
-    /* Skup CPO Styles */
-    .cpo-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.8rem;
+    /* Forum Styles */
+    .forum-post-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
     }
+    .forum-post-card:hover { border-color: var(--accent); background: rgba(74, 222, 128, 0.05); }
+    
+    .comment-box {
+      background: rgba(0, 0, 0, 0.3);
+      border-left: 3px solid var(--accent);
+      padding: 0.8rem;
+      border-radius: 0 8px 8px 0;
+      margin-top: 0.6rem;
+      font-size: 0.78rem;
+    }
+
+    /* Skup CPO */
+    .cpo-grid { display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
     .cpo-item {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -157,12 +173,7 @@
     }
 
     /* Marketplace */
-    .market-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      width: 100%;
-    }
+    .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; }
     .market-card {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -191,13 +202,7 @@
       flex-direction: column;
       gap: 0.8rem;
     }
-    .msg {
-      max-width: 80%;
-      padding: 0.7rem 0.9rem;
-      border-radius: 10px;
-      font-size: 0.8rem;
-      line-height: 1.4;
-    }
+    .msg { max-width: 80%; padding: 0.7rem 0.9rem; border-radius: 10px; font-size: 0.8rem; line-height: 1.4; }
     .msg.incoming { background: rgba(255, 255, 255, 0.08); align-self: flex-start; }
     .msg.outgoing { background: rgba(74, 222, 128, 0.2); border: 1px solid var(--glass-border); align-self: flex-end; color: var(--accent); }
     .chat-input-area {
@@ -208,25 +213,10 @@
       gap: 0.5rem;
     }
     .chat-input-area input {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      padding: 0.6rem 0.9rem;
-      color: #fff;
-      font-size: 0.8rem;
-      outline: none;
+      flex: 1; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px; padding: 0.6rem 0.9rem; color: #fff; font-size: 0.8rem; outline: none;
     }
-    .chat-input-area button {
-      background: var(--accent);
-      color: #052e16;
-      border: none;
-      padding: 0 1.2rem;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
+    .chat-input-area button { background: var(--accent); color: #052e16; border: none; padding: 0 1.2rem; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
 
     #toast {
       position: fixed;
@@ -253,10 +243,10 @@
     </div>
     <nav id="mainNav">
       <button class="active" data-tab="profile" onclick="app.switchTab('profile')">👤 Profil 3D</button>
+      <button data-tab="forum" onclick="app.switchTab('forum')">💬 Forum & Poradniki</button>
       <button data-tab="cpo" onclick="app.switchTab('cpo')">⚡ Skup TGN CPO</button>
-      <button data-tab="marketplace" onclick="app.switchTab('marketplace')">🤝 Marketplace C2C</button>
+      <button data-tab="marketplace" onclick="app.switchTab('marketplace')">🤝 Marketplace</button>
       <button data-tab="chat" onclick="app.switchTab('chat')">💬 Czat</button>
-      <button data-tab="forum" onclick="app.switchTab('forum')">💬 Forum</button>
     </nav>
   </header>
 
@@ -280,6 +270,43 @@
         { id: 1, name: "DRIVER: TAYLOR MADE Qi10", loft: "10.5°, Shaft: VENTUS Blue 6S", val: "1 800 PLN", cpoOffer: "1 450 PLN", cond: "9/10" },
         { id: 2, name: "IRON: MIZUNO JPX 923", loft: "7-Iron, Steel Shaft DG 105 S", val: "3 400 PLN", cpoOffer: "2 700 PLN", cond: "9.5/10" },
         { id: 3, name: "PUTTER: ODYSSEY AI-ONE #7", loft: "34\", Grip: SUPERSTROKE", val: "1 200 PLN", cpoOffer: "950 PLN", cond: "Mint" }
+      ],
+      forumPosts: [
+        {
+          id: 1,
+          category: "⚙️ Custom Fitting & Telemetria",
+          title: "Jak prawidłowo dobrać shaft (Stiff vs Regular) do prędkości swingu 96 mph?",
+          author: "Marek Kowalski (HCP 12.4)",
+          date: "Dzisiaj, 14:20",
+          content: "Cześć! Zauważyłem na TrackManie, że przy mojej średniej prędkości drivera 96 mph piłka czasem ucieka w prawo. Czy przejście z Regular na Stiff w nowym Wilsonie Dynapower rozwiąże problem?",
+          comments: [
+            Przykladowe komentarze graczy
+            { author: "Trener PGA Tomasz", text: "Przy 96 mph jesteś dokładnie na styku. Jeśli tempo swingu jest agresywne, Stiff da lepszą powtarzalność i mniejszy spin." },
+            { author: "Janusz_G (HCP 14)", text: "Potwierdzam, miałem to samo. Zmiana na Stiff dodała mi spokoju z tee." }
+          ]
+        },
+        {
+          id: 2,
+          category: "🎓 Porady Zawodowców (PGA Pro)",
+          title: "[PORADNIK] 3 złote zasady poprawy gappingu w dolnym zakresie torby",
+          author: "Pro Adam Szymański",
+          date: "Wczoraj",
+          content: "Wielu amatorów ma problem z lukami między Pitching Wedge a Sand Wedge. Oto krótki przewodnik, jak zmierzyć faktyczny carry na symulatorze i dobrać odpowiednie stopnie loftu (np. 50°, 54°, 58°).",
+          comments: [
+            { author: "Kamil_Golf", text: "Świetny artykuł! Właśnie miałem 15m dziury, dzięki za rozjaśnienie tematu." }
+          ]
+        },
+        {
+          id: 3,
+          category: "⛳ Strefa 'Sim & Arcade'",
+          title: "Wyzwanie Ghost Match: First Warsaw – Kto gra w ten weekend?",
+          author: "TGN Bot Turniejowy",
+          date: "3 dni temu",
+          content: "Ruszyły zapisy do asynchronicznego turnieju na wirtualnym polu First Warsaw. Format Stableford Netto. Podwójne punkty XP do poziomu w profilu!",
+          comments: [
+            { author: "Marek Kowalski", text: "Zapisany! Sobota rano w simie." }
+          ]
+        }
       ],
       marketplace: [
         { title: "Wilson Dynapower Driver", seller: "Janusz_G (HCP 14)", price: "1 150 PLN", cond: "Stan: 9/10", desc: "Znakomity driver, regular flex, mało używany." },
@@ -369,7 +396,51 @@
       }
     };
 
-    // Nowy Komponent: Skup TGN CPO
+    // Nowy komponent: Forum & Poradniki
+    const ForumComponent = {
+      render: () => {
+        let postsHTML = AppData.forumPosts.map(post => {
+          let commentsHTML = post.comments.map(comm => `
+            <div class="comment-box">
+              <strong style="color: var(--accent);">${comm.author}:</strong>
+              <span style="color: var(--text-main);">${comm.text}</span>
+            </div>
+          `).join('');
+
+          return `
+            <div class="forum-post-card">
+              <span style="font-size: 0.7rem; color: var(--gold); font-weight: 700;">${post.category}</span>
+              <h3 style="font-size: 0.95rem; margin: 0.3rem 0; color: var(--text-main);">${post.title}</h3>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Autor: ${post.author} • ${post.date}</p>
+              <p style="font-size: 0.8rem; color: #cbd5e1; line-height: 1.4; margin-bottom: 0.8rem;">${post.content}</p>
+              
+              <div style="margin-top: 0.6rem;">
+                <p style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.3rem;">Komentarze (${post.comments.length}):</p>
+                ${commentsHTML}
+              </div>
+
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.8rem;">
+                <input type="text" id="commInput_${post.id}" placeholder="Napisz komentarz..." style="flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.4rem 0.6rem; color:#fff; font-size:0.75rem;" onkeypress="if(event.key==='Enter') app.addComment(${post.id})">
+                <button class="btn-action" style="width: auto; margin:0; padding: 0.4rem 0.8rem;" onclick="app.addComment(${post.id})">Wyślij</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <section class="panel-3d" style="grid-column: span 2;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+              <h2>💬 TGN Forum & Poradniki PGA Pro</h2>
+              <button class="btn-action" style="width: auto; padding: 0.4rem 1rem; margin: 0;" onclick="app.showToast('Formularz nowego wątku...')">+ Utwórz nowy wątek</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              ${postsHTML}
+            </div>
+          </section>
+        `;
+      }
+    };
+
     const CpoComponent = {
       render: () => {
         let itemsHTML = AppData.bag.map(c => `
@@ -388,11 +459,9 @@
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
-            <h2>⚡ Skup TGN CPO (Certified Pre-Owned) – Natychmiastowa Wycena</h2>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem;">Wybierz sprzęt ze swojej cyfrowej torby i wymień go na gotówkę w 24h lub zrób Trade-In na najnowszą kolekcję 2026.</p>
-            <div class="cpo-grid">
-              ${itemsHTML}
-            </div>
+            <h2>⚡ Skup TGN CPO (Certified Pre-Owned)</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem;">Wybierz sprzęt ze swojej cyfrowej torby i wymień go na gotówkę w 24h.</p>
+            <div class="cpo-grid">${itemsHTML}</div>
           </section>
         `;
       }
@@ -420,9 +489,7 @@
         return `
           <section class="panel-3d" style="grid-column: span 2;">
             <h2>🤝 TGN Marketplace (C2C)</h2>
-            <div class="market-grid" style="margin-top: 1rem;">
-              ${itemsHTML}
-            </div>
+            <div class="market-grid" style="margin-top: 1rem;">${itemsHTML}</div>
           </section>
         `;
       }
@@ -441,9 +508,7 @@
           <section class="panel-3d" style="grid-column: span 2;">
             <h2>💬 Czat bezpośredni ze sprzedawcą</h2>
             <div class="chat-container" style="margin-top: 1rem;">
-              <div class="chat-messages" id="chatMsgs">
-                ${msgsHTML}
-              </div>
+              <div class="chat-messages" id="chatMsgs">${msgsHTML}</div>
               <div class="chat-input-area">
                 <input type="text" id="chatInput" placeholder="Napisz wiadomość..." onkeypress="if(event.key === 'Enter') app.sendChatMessage()">
                 <button onclick="app.sendChatMessage()">Wyślij</button>
@@ -460,6 +525,8 @@
         
         if (tabName === 'profile') {
           container.innerHTML = ProfileComponent.render() + BagComponent.render();
+        } else if (tabName === 'forum') {
+          container.innerHTML = ForumComponent.render();
         } else if (tabName === 'cpo') {
           container.innerHTML = CpoComponent.render();
         } else if (tabName === 'marketplace') {
@@ -467,13 +534,24 @@
         } else if (tabName === 'chat') {
           container.innerHTML = ChatComponent.render();
           app.scrollChatToBottom();
-        } else if (tabName === 'forum') {
-          container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>Strefa Forum TGN</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Dyskusje i Custom Fitting.</p></section>`;
         }
 
         document.querySelectorAll('#mainNav button').forEach(btn => {
           btn.classList.toggle('active', btn.dataset.tab === tabName);
         });
+      },
+
+      addComment: (postId) => {
+        const input = document.getElementById('commInput_' + postId);
+        const text = input ? input.value.trim() : '';
+        if (!text) return;
+
+        const post = AppData.forumPosts.find(p => p.id === postId);
+        if (post) {
+          post.comments.push({ author: AppData.user.name + " (Ty)", text: text });
+          app.switchTab('forum');
+          app.showToast('Dodano komentarz do wątku!');
+        }
       },
 
       openChat: (sellerName) => {
@@ -486,7 +564,7 @@
         const text = input.value.trim();
         if (!text) return;
 
-        AppData.chatMessages.push({ sender: "Marek Kowalski", text: text, type: "outgoing" });
+        AppData.chatMessages.push({ sender: AppData.user.name, text: text, type: "outgoing" });
         input.value = '';
         
         document.getElementById('appContainer').innerHTML = ChatComponent.render();
