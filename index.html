@@ -52,6 +52,7 @@
       gap: 0.5rem;
       padding: 0.4rem 1rem;
       background: rgba(0,0,0,0.25);
+      overflow-x: auto;
     }
     nav button {
       background: transparent;
@@ -63,6 +64,7 @@
       border-radius: 6px;
       cursor: pointer;
       transition: 0.2s;
+      white-space: nowrap;
     }
     nav button.active { background: var(--accent); color: #052e16; font-weight: 700; }
 
@@ -111,7 +113,6 @@
     .stat-card span { color: var(--text-muted); font-size: 0.8rem; }
     .stat-card strong { color: var(--text-main); font-size: 0.9rem; }
 
-    /* Mini wykresy telemetrii */
     .mini-chart {
       height: 35px;
       background: rgba(0,0,0,0.3);
@@ -139,6 +140,25 @@
     }
     .btn-action:active { background: var(--accent); color: #052e16; }
 
+    /* Style dla Marketplace */
+    .market-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      width: 100%;
+    }
+    .market-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: 0.2s;
+    }
+    .market-card:hover { border-color: var(--accent); background: rgba(74, 222, 128, 0.05); }
+
     #toast {
       position: fixed;
       bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -151,6 +171,7 @@
     @media (max-width: 1024px) {
       .spatial-stage { grid-template-columns: 1fr; padding: 1rem; perspective: none; }
       .panel-left, .panel-right { transform: none !important; }
+      .market-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -163,6 +184,7 @@
     </div>
     <nav id="mainNav">
       <button class="active" data-tab="profile" onclick="app.switchTab('profile')">👤 Profil 3D</button>
+      <button data-tab="marketplace" onclick="app.switchTab('marketplace')">🤝 Marketplace C2C</button>
       <button data-tab="forum" onclick="app.switchTab('forum')">💬 Forum</button>
       <button data-tab="sklep" onclick="app.switchTab('sklep')">🛍️ Sklep</button>
     </nav>
@@ -188,9 +210,16 @@
         { name: "DRIVER: TAYLOR MADE Qi10", loft: "10.5°, Shaft: VENTUS Blue 6S", val: "1 800 PLN", speed: "145 mph", smash: "1.48", attack: "+3°", cond: "9/10" },
         { name: "IRON: MIZUNO JPX 923", loft: "7-Iron, Steel Shaft DG 105 S", val: "3 400 PLN", speed: "118 mph", spin: "6500 RPM", cond: "9.5/10" },
         { name: "PUTTER: ODYSSEY AI-ONE #7", loft: "34\", Grip: SUPERSTROKE", val: "1 200 PLN", cond: "Mint" }
+      ],
+      marketplace: [
+        { title: "Wilson Dynapower Driver", seller: "Janusz_G (HCP 14)", price: "1 150 PLN", cond: "Stan: 9/10", desc: "Znakomity driver, regular flex, mało używany." },
+        { title: "Zestaw Ironów Titleist T200 (5-PW)", seller: "Kamil_Golf (HCP 8.2)", price: "3 890 PLN", cond: "Stan: 8.5/10", desc: "Shaft Project X IO Stiff. Kute, świetny czucie." },
+        { title: "Putter Scotty Cameron Special Select", seller: "Bartek_W (HCP 11)", price: "1 450 PLN", cond: "Stan: Mint", desc: "Model Newport 2, długość 34 cali z nowym gripem." },
+        { title: "Wedge Vokey SM9 (56° / 10S)", seller: "Piotr_T (HCP 15)", price: "450 PLN", cond: "Stan: 7.5/10", desc: "Bruzdy wciąż bardzo oczne, wykończenie Tour Chrome." }
       ]
     };
 
+    // Komponent profilu 3D
     const ProfileComponent = {
       render: () => `
         <section class="panel-3d panel-left">
@@ -236,6 +265,7 @@
       `
     };
 
+    // Komponent cyfrowej torby
     const BagComponent = {
       render: () => {
         let clubsHTML = AppData.bag.map(c => `
@@ -269,16 +299,53 @@
       }
     };
 
+    // Nowy Komponent: Marketplace C2C
+    const MarketplaceComponent = {
+      render: () => {
+        let itemsHTML = AppData.marketplace.map(item => `
+          <div class="market-card">
+            <div>
+              <span style="font-size: 0.7rem; color: var(--gold); font-weight: 700;">${item.cond}</span>
+              <h3 style="font-size: 0.95rem; margin: 0.3rem 0; color: var(--text-main);">${item.title}</h3>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.6rem;">${item.desc}</p>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.7rem; color: var(--text-muted);">Od: ${item.seller}</span>
+                <strong style="font-size: 1rem; color: var(--accent);">${item.price}</strong>
+              </div>
+              <button class="btn-action" onclick="app.showToast('Otwarto czat z graczem: ${item.seller}')">Napisz do sprzedawcy</button>
+            </div>
+          </div>
+        `).join('');
+
+        return `
+          <section class="panel-3d" style="grid-column: span 2;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+              <h2>🤝 TGN Marketplace (C2C – Oferty Społecznościowe)</h2>
+              <button class="btn-action" style="width: auto; padding: 0.4rem 1rem; margin: 0;" onclick="app.showToast('Formularz dodawania ogłoszenia...')">+ Wystaw swój sprzęt</button>
+            </div>
+            <div class="market-grid">
+              ${itemsHTML}
+            </div>
+          </section>
+        `;
+      }
+    };
+
+    // Główny router i aplikacja
     const app = {
       switchTab: (tabName) => {
         const container = document.getElementById('appContainer');
         
         if (tabName === 'profile') {
           container.innerHTML = ProfileComponent.render() + BagComponent.render();
+        } else if (tabName === 'marketplace') {
+          container.innerHTML = MarketplaceComponent.render();
         } else if (tabName === 'forum') {
           container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>Strefa Forum TGN</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Dyskusje, Custom Fitting i sekcje lokalne.</p></section>`;
         } else if (tabName === 'sklep') {
-          container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>Sklep TGN & Marketplace</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Oficjalny sprzęt 2026 i oferty C2C.</p></section>`;
+          container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>Sklep TGN & Sprzęt oficjalny</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Oficjalny sprzęt 2026 i gwarancja producenta.</p></section>`;
         }
 
         document.querySelectorAll('#mainNav button').forEach(btn => {
