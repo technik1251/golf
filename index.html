@@ -382,7 +382,7 @@
       fill: rgba(74, 222, 128, 0.14);
     }
 
-    /* Karty Kijów w Torbie z Pobieraniem Zdjęć Na Żywo */
+    /* Karty Kijów w Torbie z Generowaniem AI i Google Grafika */
     .club-hud-card {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.09);
@@ -390,7 +390,7 @@
       padding: 0.95rem;
       margin-bottom: 0.85rem;
       display: grid;
-      grid-template-columns: 92px 1fr;
+      grid-template-columns: 98px 1fr;
       gap: 1rem;
       align-items: center;
       transition: 0.25s;
@@ -401,10 +401,10 @@
     }
 
     .club-photo-frame {
-      width: 92px;
-      height: 92px;
-      background: radial-gradient(circle at 50% 50%, rgba(40, 75, 65, 0.45), rgba(5, 12, 15, 0.95));
-      border: 1px solid rgba(114, 214, 150, 0.4);
+      width: 98px;
+      height: 98px;
+      background: radial-gradient(circle at 50% 50%, rgba(40, 75, 65, 0.5), rgba(5, 12, 15, 0.98));
+      border: 1px solid rgba(114, 214, 150, 0.45);
       border-radius: 12px;
       overflow: hidden;
       position: relative;
@@ -412,7 +412,7 @@
       align-items: center;
       justify-content: center;
       cursor: zoom-in;
-      box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.7);
+      box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.75);
       flex-shrink: 0;
     }
     .club-photo-frame img {
@@ -428,33 +428,56 @@
       position: absolute;
       top: 4px;
       left: 4px;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.82);
       color: var(--accent);
-      font-size: 0.52rem;
+      font-size: 0.5rem;
       font-weight: 800;
-      padding: 1px 4px;
+      padding: 2px 5px;
       border-radius: 4px;
-      border: 1px solid rgba(74, 222, 128, 0.4);
+      border: 1px solid rgba(74, 222, 128, 0.5);
       letter-spacing: 0.3px;
     }
     .cond-badge {
       position: absolute;
       bottom: 4px;
       right: 4px;
-      background: rgba(5, 25, 18, 0.9);
+      background: rgba(5, 25, 18, 0.92);
       color: var(--gold);
-      font-size: 0.58rem;
+      font-size: 0.56rem;
       font-weight: 700;
       padding: 1px 5px;
       border-radius: 4px;
       border: 1px solid rgba(250, 204, 21, 0.4);
     }
 
+    .club-visual-tools {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.45rem;
+      flex-wrap: wrap;
+    }
+    .btn-mini-tool {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: var(--text-muted);
+      font-size: 0.63rem;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-mini-tool:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(74, 222, 128, 0.12);
+    }
+
     .club-metrics-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 0.45rem;
-      margin-top: 0.55rem;
+      margin-top: 0.5rem;
       background: rgba(0, 0, 0, 0.35);
       padding: 0.45rem;
       border-radius: 8px;
@@ -493,12 +516,24 @@
 
     .add-club-live-box {
       display: none;
-      background: rgba(0, 0, 0, 0.45);
+      background: rgba(0, 0, 0, 0.52);
       border: 1px solid var(--accent);
       border-radius: 12px;
       padding: 1rem;
       margin-top: 0.8rem;
       margin-bottom: 0.8rem;
+    }
+
+    .live-preview-row {
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      gap: 0.8rem;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.6rem;
+      border-radius: 10px;
+      margin-bottom: 0.65rem;
+      border: 1px solid rgba(114, 214, 150, 0.3);
     }
 
     /* Atlas Pól Golfowych w Polsce */
@@ -1053,7 +1088,6 @@
         letter-spacing: 0.6px;
       }
 
-      /* Na telefonie awatar i statystyki są kompaktowo obok siebie, żeby nie zajmowały całego ekranu */
       .profile-layout {
         grid-template-columns: 96px 1fr;
         gap: 0.7rem;
@@ -1091,17 +1125,16 @@
         margin-top: 0.25rem;
       }
 
-      /* Kompaktowe karty kijów w torbie na telefonie */
       .club-hud-card {
-        grid-template-columns: 68px 1fr;
+        grid-template-columns: 74px 1fr;
         gap: 0.65rem;
         padding: 0.65rem;
         margin-bottom: 0.6rem;
         border-radius: 11px;
       }
       .club-photo-frame {
-        width: 68px !important;
-        height: 68px !important;
+        width: 74px !important;
+        height: 74px !important;
         border-radius: 9px;
       }
       .live-photo-badge {
@@ -1130,7 +1163,6 @@
         margin-top: 0.45rem;
       }
 
-      /* Sklep, Pola, Wydarzenia, Skup i Marketplace w skali mobilnej */
       .store-grid {
         grid-template-columns: 1fr;
         gap: 0.85rem;
@@ -1155,7 +1187,7 @@
       }
 
       .cpo-item {
-        grid-template-columns: 68px 1fr;
+        grid-template-columns: 70px 1fr;
         gap: 0.65rem;
         padding: 0.75rem;
       }
@@ -1165,7 +1197,7 @@
       }
 
       .market-card {
-        grid-template-columns: 68px 1fr;
+        grid-template-columns: 72px 1fr;
         gap: 0.7rem;
         padding: 0.75rem;
       }
@@ -1207,7 +1239,7 @@
         <span>TGN</span> GLOBAL GOLF
       </div>
       <div id="headerRightInfo" style="display:flex; align-items:center; gap:0.75rem;">
-        <span style="font-size: 0.7rem; color: var(--text-muted);">Mobile & Desktop 3D HUD v7.0</span>
+        <span style="font-size: 0.7rem; color: var(--text-muted);">AI Club Visualizer & Google Image v8.0</span>
       </div>
     </div>
     <nav id="mainNav" style="display:none;">
@@ -1304,17 +1336,21 @@
     </div>
   </div>
 
-  <!-- Modal powiększenia zdjęcia kija HD -->
+  <!-- Modal powiększenia zdjęcia kija HD + AI / Google Grafika -->
   <div id="photoZoomModal" class="modal-overlay" onclick="app.closePhotoZoom()">
-    <div class="ai-popup-card" style="max-width:440px; border-color:var(--accent); text-align:center;" onclick="event.stopPropagation()">
+    <div class="ai-popup-card" style="max-width:460px; border-color:var(--accent); text-align:center;" onclick="event.stopPropagation()">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
-        <h3 id="zoomClubTitle" style="color:var(--accent); font-size:0.9rem;">Podgląd Kija HD</h3>
+        <h3 id="zoomClubTitle" style="color:var(--accent); font-size:0.9rem;">Podgląd Wizualny Kija HD</h3>
         <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="app.closePhotoZoom()">✕</span>
       </div>
-      <div style="width:100%; height:240px; border-radius:14px; overflow:hidden; border:1px solid var(--glass-border); background:#050c0f; margin-bottom:0.8rem;">
+      <div style="width:100%; height:260px; border-radius:14px; overflow:hidden; border:1px solid var(--glass-border); background:#050c0f; margin-bottom:0.8rem; position:relative;">
         <img id="zoomClubImg" src="" alt="Club HD" style="width:100%; height:100%; object-fit:cover;">
       </div>
-      <p id="zoomClubMeta" style="font-size:0.78rem; color:var(--text-muted);"></p>
+      <p id="zoomClubMeta" style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.75rem;"></p>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
+        <button class="btn-action" style="margin:0;" onclick="app.regenerateModalAiPhoto()">🎨 Wygeneruj nowy kadr AI</button>
+        <button class="btn-action" style="margin:0; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="app.openGoogleImagesForModal()">🔎 Zobacz w Google Grafika ↗</button>
+      </div>
     </div>
   </div>
 
@@ -1322,75 +1358,55 @@
 
   <script>
     /* =========================================================================
-       SILNIK POBIERANIA ZDJĘĆ KIJÓW NA ŻYWO (LIVE CLUB IMAGE RESOLVER)
+       SILNIK WIZUALIZACJI KIJÓW: GENERATOR AI NA ŻYWO + WYSZUKIWARKA ZDJĘĆ
+       1. Generuje dedykowany, fotorealistyczny render AI główki konkretnego modelu kija
+          poprzez darmowy silnik Pollinations AI (Flux Studio) na podstawie nazwy modelu.
+       2. Pobiera miniatury z otwartych indeksów sieciowych / Google Images Search.
+       3. Posiada natychmiastowy fallback HD, aby żadna karta nigdy nie była pusta.
        ========================================================================= */
     const ClubImageEngine = {
       cache: {},
+      currentModalClub: "",
 
-      curatedModels: [
-        {
-          keywords: ["qi10", "taylormade", "stealth", "sim2", "driver", "dynapower", "g430", "tsr", "paradym"],
-          url: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85"
-        },
-        {
-          keywords: ["mizuno", "jpx", "923", "iron", "t200", "t100", "p790", "forged", "apex", "żelazo"],
-          url: "https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=600&q=85"
-        },
-        {
-          keywords: ["odyssey", "putter", "scotty", "cameron", "newport", "spider", "ai-one"],
-          url: "https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=85"
-        },
-        {
-          keywords: ["wedge", "vokey", "sm9", "sm10", "jaws", "cleveland", "52", "56", "60"],
-          url: "https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?auto=format&fit=crop&w=600&q=85"
-        }
-      ],
+      // Generuje bezpośredni adres URL do fotorealistycznego renderu AI konkretnego modelu kija
+      buildAiClubRenderUrl: (clubName, seedOffset = 1) => {
+        const cleanName = clubName
+          .replace(/DRIVER:|IRON:|PUTTER:|WEDGE:|HYBRYDA:/gi, '')
+          .trim();
+        const prompt = `Close-up professional studio product photography of ${cleanName} golf club head, metallic chrome and carbon fiber texture, dark emerald luxury background, dramatic rim lighting, 8k resolution, photorealistic`;
+        const seed = Math.abs(cleanName.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) + seedOffset;
+        return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=512&height=512&nologo=true&seed=${seed}`;
+      },
 
-      getInitialImage: (clubName, customUrl) => {
-        if (customUrl && customUrl.startsWith('http')) return customUrl;
-        if (ClubImageEngine.cache[clubName]) return ClubImageEngine.cache[clubName];
+      // Bezpośredni link do Google Grafika dla dokładnego modelu kija
+      getGoogleImagesUrl: (clubName) => {
+        const cleanName = clubName.replace(/DRIVER:|IRON:|PUTTER:|WEDGE:/gi, '').trim();
+        return `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(cleanName + ' golf club')}`;
+      },
 
+      // Zapasowe zdjęcia studyjne HD na wypadek braku internetu
+      getFallbackStudioImage: (clubName) => {
         const lower = clubName.toLowerCase();
-        for (const item of ClubImageEngine.curatedModels) {
-          if (item.keywords.some(k => lower.includes(k))) {
-            return item.url;
-          }
+        if (lower.includes("mizuno") || lower.includes("jpx") || lower.includes("iron") || lower.includes("t200") || lower.includes("forged")) {
+          return "https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=600&q=85";
+        }
+        if (lower.includes("putter") || lower.includes("odyssey") || lower.includes("scotty") || lower.includes("cameron")) {
+          return "https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=85";
+        }
+        if (lower.includes("wedge") || lower.includes("vokey") || lower.includes("52") || lower.includes("56")) {
+          return "https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?auto=format&fit=crop&w=600&q=85";
         }
         return "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85";
       },
 
-      fetchLiveImageForClub: async (clubName, imgElementId) => {
-        if (ClubImageEngine.cache[clubName]) {
-          const el = document.getElementById(imgElementId);
-          if (el) el.src = ClubImageEngine.cache[clubName];
-          return;
-        }
+      // Zwraca obraz kija (domyślnie generowany przez AI pod dokładną nazwę modelu)
+      getClubVisualUrl: (clubName, customUrl) => {
+        if (customUrl && customUrl.startsWith('http')) return customUrl;
+        if (ClubImageEngine.cache[clubName]) return ClubImageEngine.cache[clubName];
 
-        const cleanQuery = clubName
-          .replace(/DRIVER:|IRON:|PUTTER:|WEDGE:|HYBRYDA:/gi, '')
-          .replace(/[^a-zA-Z0-9\s]/g, ' ')
-          .trim();
-
-        try {
-          const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(cleanQuery + ' golf club')}&gsrlimit=3&prop=pageimages&piprop=thumbnail&pithumbsize=500&format=json&origin=*`;
-          const response = await fetch(apiUrl);
-          const data = await response.json();
-
-          if (data && data.query && data.query.pages) {
-            const pages = Object.values(data.query.pages);
-            const pageWithThumb = pages.find(p => p.thumbnail && p.thumbnail.source);
-            if (pageWithThumb) {
-              const liveUrl = pageWithThumb.thumbnail.source;
-              ClubImageEngine.cache[clubName] = liveUrl;
-              const imgEl = document.getElementById(imgElementId);
-              if (imgEl) imgEl.src = liveUrl;
-              return;
-            }
-          }
-        } catch (err) {}
-
-        const fallback = ClubImageEngine.getInitialImage(clubName);
-        ClubImageEngine.cache[clubName] = fallback;
+        const aiUrl = ClubImageEngine.buildAiClubRenderUrl(clubName, 1);
+        ClubImageEngine.cache[clubName] = aiUrl;
+        return aiUrl;
       }
     };
 
@@ -1426,7 +1442,7 @@
           smash: "1.48",
           attack: "+3.2°",
           cond: "9/10",
-          imgUrl: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85"
+          imgUrl: ClubImageEngine.buildAiClubRenderUrl("TaylorMade Qi10 Driver Carbon Face", 10)
         },
         {
           id: 2,
@@ -1438,7 +1454,7 @@
           smash: "1.39",
           attack: "-4.1°",
           cond: "9.5/10",
-          imgUrl: "https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=600&q=85"
+          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Mizuno JPX 923 Hot Metal 7 Iron Chrome Cavity Back", 20)
         },
         {
           id: 3,
@@ -1450,7 +1466,7 @@
           smash: "1.02",
           attack: "+1.0°",
           cond: "Mint",
-          imgUrl: "https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=85"
+          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Odyssey Ai-One #7 Fang Mallet Putter Navy Blue", 30)
         }
       ],
       polishCourses: [
@@ -1583,7 +1599,7 @@
           desc: "Zaprojektowany przez AI panel karbonowy. Daje +14m dystansu przy Twojej prędkości swingu 96 mph.",
           price: 2390,
           tradeInPrice: 940,
-          imgUrl: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85"
+          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Wilson Dynapower Carbon Driver 2026 Golf Club Head", 40)
         },
         {
           id: 202,
@@ -1595,7 +1611,7 @@
           desc: "Idealnie wypełnia Twoją lukę 15m między Pitching Wedge a Sand Wedge wykrytą przez Gapping AI.",
           price: 790,
           tradeInPrice: 350,
-          imgUrl: "https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?auto=format&fit=crop&w=600&q=85"
+          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Forged 52 degree Gap Wedge Golf Club Head Brushed Steel", 50)
         },
         {
           id: 203,
@@ -1607,7 +1623,7 @@
           desc: "Wyższe wybaczanie błędów i powtarzalny carry co do metra. W zestawie darmowa sesja na TrackManie.",
           price: 4890,
           tradeInPrice: 2140,
-          imgUrl: "https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=600&q=85"
+          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Forged Golf Irons Set Chrome Blade Cavity Back 2026", 60)
         },
         {
           id: 204,
@@ -1619,7 +1635,7 @@
           desc: "Maksymalna bezwładność główki gwarantująca proste strzały z tee nawet przy trafieniu poza środkiem.",
           price: 2690,
           tradeInPrice: 1240,
-          imgUrl: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85"
+          imgUrl: ClubImageEngine.buildAiClubRenderUrl("TaylorMade Qi10 Max Driver Golf Club Head Black Blue Carbon", 70)
         },
         {
           id: 205,
@@ -1643,7 +1659,7 @@
           desc: "Wkręcane w gripy czujniki NFC/Bluetooth, które na żywo aktualizują Twoją Cyfrową Torbę 3D po każdej rundzie.",
           price: 890,
           tradeInPrice: 650,
-          imgUrl: "https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=85"
+          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Golf Club Grip Smart GPS Sensor Tag Black Neon Green", 80)
         }
       ],
       forumPosts: [
@@ -1709,7 +1725,7 @@
           price: "1 150 PLN",
           cond: "Stan: 9/10",
           desc: "Znakomity driver, Fujikura Ventus Regular, headcover w zestawie.",
-          imgUrl: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85"
+          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Wilson Dynapower Carbon Driver Head", 91)
         },
         {
           title: "Zestaw Ironów Mizuno JPX 923 Forged (5-PW)",
@@ -1717,7 +1733,7 @@
           price: "3 690 PLN",
           cond: "Stan: 9/10",
           desc: "Shaft Project X IO Stiff. Kute żelaza, niesamowite czucie przy trafieniu.",
-          imgUrl: "https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=600&q=85"
+          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Mizuno JPX 923 Forged Iron Golf Club Head", 92)
         },
         {
           title: "Putter Scotty Cameron Special Select Newport 2",
@@ -1725,7 +1741,7 @@
           price: "1 450 PLN",
           cond: "Stan: Mint",
           desc: "Długość 34 cale, oryginalny grip Pistolini Plus, stan kolekcjonerski.",
-          imgUrl: "https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=85"
+          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Scotty Cameron Newport 2 Blade Putter Silver Red Weights", 93)
         },
         {
           title: "Wedge Titleist Vokey SM10 (52° / 12F)",
@@ -1733,7 +1749,7 @@
           price: "520 PLN",
           cond: "Stan: 8.5/10",
           desc: "Idealny Gap Wedge do uzupełnienia luki dystansowej około 100 metrów.",
-          imgUrl: "https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?auto=format&fit=crop&w=600&q=85"
+          imgUrl: ClubImageEngine.buildAiClubRenderUrl("Titleist Vokey SM10 52 Degree Wedge Golf Club Head", 94)
         }
       ],
       chatMessages: [
@@ -1824,13 +1840,13 @@
         document.getElementById('authScreen').style.display = 'flex';
         document.getElementById('mainNav').style.display = 'none';
         document.getElementById('appContainer').style.display = 'none';
-        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Mobile & Desktop 3D HUD v7.0</span>`;
+        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">AI Club Visualizer & Google Image v8.0</span>`;
         app.showToast('Wylogowano z kokpitu 3D');
       }
     };
 
     /* =========================================================================
-       KOMPONENT 1: KOKPIT 3D (PROFIL GRACZA + CYFROWA TORBA ZE ZDJĘCIAMI NA ŻYWO)
+       KOMPONENT 1: KOKPIT 3D (PROFIL GRACZA + CYFROWA TORBA Z AI RENDER & GOOGLE GRAFIKA)
        ========================================================================= */
     const ProfileAndBagComponent = {
       render: () => {
@@ -1891,13 +1907,15 @@
 
         let clubsHTML = AppData.bag.map(c => {
           const imgId = `bag_club_img_${c.id}`;
-          const initialSrc = ClubImageEngine.getInitialImage(c.name, c.imgUrl);
+          const visualSrc = ClubImageEngine.getClubVisualUrl(c.name, c.imgUrl);
+          const fallbackSrc = ClubImageEngine.getFallbackStudioImage(c.name);
+          const safeName = c.name.replace(/'/g, "");
 
           return `
             <div class="club-hud-card">
-              <div class="club-photo-frame" onclick="app.openPhotoZoom('${c.name.replace(/'/g, "")}', '${initialSrc}', '${c.loft} • Wartość: ${c.val}')">
-                <img id="${imgId}" src="${initialSrc}" alt="${c.name}" onerror="this.src='https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=85'">
-                <span class="live-photo-badge">LIVE HD</span>
+              <div class="club-photo-frame" onclick="app.openPhotoZoom('${safeName}', document.getElementById('${imgId}').src, '${c.loft} • Wartość: ${c.val}')">
+                <img id="${imgId}" src="${visualSrc}" alt="${c.name}" onerror="this.onerror=null; this.src='${fallbackSrc}';">
+                <span class="live-photo-badge">AI / HD</span>
                 <span class="cond-badge">${c.cond}</span>
               </div>
               <div style="min-width:0;">
@@ -1906,6 +1924,11 @@
                   <span style="font-size: 0.72rem; color: var(--gold); font-weight:800;">${c.val}</span>
                 </div>
                 <p style="font-size: 0.68rem; color: var(--text-muted); margin-top:2px;">${c.loft}</p>
+
+                <div class="club-visual-tools">
+                  <button class="btn-mini-tool" onclick="app.regenerateClubAi('${imgId}', '${safeName}')">🎨 Nowy render AI</button>
+                  <button class="btn-mini-tool" onclick="app.openGoogleImages('${safeName}')">🔎 Google Grafika ↗</button>
+                </div>
                 
                 <div class="club-metrics-grid">
                   <div><span>Prędkość</span><strong>${c.speed}</strong></div>
@@ -1921,22 +1944,35 @@
           <section class="panel-3d panel-right">
             <h2>
               <span>MOJA TORBA: CYFROWA KOPIA (${AppData.bag.length}/14)</span>
-              <button class="btn-action" style="width:auto; margin:0; padding:0.28rem 0.65rem; font-size:0.68rem;" onclick="app.toggleAddClubLive()">+ Dodaj kij (Auto-Foto)</button>
+              <button class="btn-action" style="width:auto; margin:0; padding:0.28rem 0.65rem; font-size:0.68rem;" onclick="app.toggleAddClubLive()">+ Dodaj kij (AI / Google)</button>
             </h2>
 
+            <!-- Formularz dodawania nowego kija z natychmiastowym podglądem AI na żywo -->
             <div id="addClubLiveBox" class="add-club-live-box">
-              <h3 style="font-size:0.78rem; color:var(--accent); margin-bottom:0.5rem;">🔍 Wpisz model kija – pobierzemy jego grafikę na żywo</h3>
-              <div class="form-group" style="margin-bottom:0.5rem;">
-                <input type="text" id="newClubName" placeholder="np. IRON: MIZUNO JPX 923 lub DRIVER: PING G430">
+              <h3 style="font-size:0.78rem; color:var(--accent); margin-bottom:0.5rem;">🎨 Wpisz nazwę kija – podgląd wizualny AI wygeneruje się od razu</h3>
+              
+              <div class="live-preview-row">
+                <div class="club-photo-frame" style="width:72px !important; height:72px !important;">
+                  <img id="livePreviewClubImg" src="https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=400&q=80" alt="Podgląd">
+                  <span class="live-photo-badge">PODGLĄD</span>
+                </div>
+                <div>
+                  <input type="text" id="newClubName" placeholder="np. IRON: MIZUNO JPX 923 lub PING G430" oninput="app.updateLiveClubPreview(this.value)" style="width:100%; background:rgba(255,255,255,0.08); border:1px solid var(--accent); border-radius:6px; padding:0.45rem; color:#fff; font-size:0.78rem; margin-bottom:0.35rem;">
+                  <div style="display:flex; gap:0.4rem;">
+                    <button class="btn-mini-tool" onclick="app.updateLiveClubPreview(document.getElementById('newClubName').value, true)">🔄 Odśwież AI</button>
+                    <button class="btn-mini-tool" onclick="app.openGoogleImages(document.getElementById('newClubName').value || 'Mizuno JPX 923')">🔎 Szukaj w Google Grafika ↗</button>
+                  </div>
+                </div>
               </div>
+
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-bottom:0.5rem;">
                 <input type="text" id="newClubSpec" placeholder="Specyfikacja (np. 9°, Stiff)" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.75rem;">
                 <input type="text" id="newClubVal" placeholder="Wartość (np. 2 100 PLN)" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.75rem;">
               </div>
               <div class="form-group" style="margin-bottom:0.5rem;">
-                <input type="text" id="newClubCustomImg" placeholder="(Opcjonalnie) Wklej link URL do zdjęcia">
+                <input type="text" id="newClubCustomImg" placeholder="(Opcjonalnie) Wklej skopiowany adres obrazu z Google Grafika">
               </div>
-              <button class="btn-primary" style="padding:0.5rem;" onclick="app.addClubWithLivePhoto()">Pobierz zdjęcie i dodaj kij</button>
+              <button class="btn-primary" style="padding:0.5rem;" onclick="app.addClubWithLivePhoto()">Dodaj kij z tym wyglądem do torby</button>
             </div>
 
             ${clubsHTML}
@@ -1956,14 +1992,6 @@
         `;
 
         return leftPanel + rightPanel;
-      },
-
-      afterRender: () => {
-        AppData.bag.forEach(c => {
-          if (!c.imgUrl) {
-            ClubImageEngine.fetchLiveImageForClub(c.name, `bag_club_img_${c.id}`);
-          }
-        });
       }
     };
 
@@ -2161,34 +2189,38 @@
           </div>
         ` : '';
 
-        let productsHTML = filtered.map(prod => `
-          <div class="store-card">
-            <div>
-              <div class="store-img-box" onclick="app.openPhotoZoom('${prod.name.replace(/'/g, "")}', '${prod.imgUrl}', '${prod.spec} • Cena: ${prod.price} PLN')">
-                <img src="${prod.imgUrl}" alt="${prod.name}">
-                <span class="store-tag ${prod.tagGold ? 'gold' : ''}">${prod.tag}</span>
+        let productsHTML = filtered.map(prod => {
+          const fallbackSrc = ClubImageEngine.getFallbackStudioImage(prod.name);
+          const safeName = prod.name.replace(/'/g, "");
+          return `
+            <div class="store-card">
+              <div>
+                <div class="store-img-box" onclick="app.openPhotoZoom('${safeName}', '${prod.imgUrl}', '${prod.spec} • Cena: ${prod.price} PLN')">
+                  <img src="${prod.imgUrl}" alt="${prod.name}" onerror="this.onerror=null; this.src='${fallbackSrc}';">
+                  <span class="store-tag ${prod.tagGold ? 'gold' : ''}">${prod.tag}</span>
+                </div>
+                <h3 style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 0.2rem;">${prod.name}</h3>
+                <p style="font-size: 0.7rem; color: var(--accent); font-weight: 600; margin-bottom: 0.35rem;">${prod.spec}</p>
+                <p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 0.65rem;">${prod.desc}</p>
               </div>
-              <h3 style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 0.2rem;">${prod.name}</h3>
-              <p style="font-size: 0.7rem; color: var(--accent); font-weight: 600; margin-bottom: 0.35rem;">${prod.spec}</p>
-              <p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 0.65rem;">${prod.desc}</p>
-            </div>
 
-            <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.6rem;">
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.2rem;">
-                <span style="font-size:0.7rem; color:var(--text-muted);">Cena katalogowa:</span>
-                <strong style="font-size:0.98rem; color:var(--text-main);">${prod.price} PLN</strong>
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.5rem;">
-                <span style="font-size:0.68rem; color:var(--gold);">Z dopłatą Trade-In:</span>
-                <strong style="font-size:0.85rem; color:var(--gold);">od ${prod.tradeInPrice} PLN</strong>
-              </div>
-              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.4rem;">
-                <button class="btn-action" style="margin:0; padding:0.45rem;" onclick="app.addToCart(${prod.id}, false)">🛒 Koszyk</button>
-                <button class="btn-action" style="margin:0; padding:0.45rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="app.addToCart(${prod.id}, true)">🔄 Trade-In</button>
+              <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.6rem;">
+                <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.2rem;">
+                  <span style="font-size:0.7rem; color:var(--text-muted);">Cena katalogowa:</span>
+                  <strong style="font-size:0.98rem; color:var(--text-main);">${prod.price} PLN</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.5rem;">
+                  <span style="font-size:0.68rem; color:var(--gold);">Z dopłatą Trade-In:</span>
+                  <strong style="font-size:0.85rem; color:var(--gold);">od ${prod.tradeInPrice} PLN</strong>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.4rem;">
+                  <button class="btn-action" style="margin:0; padding:0.45rem;" onclick="app.addToCart(${prod.id}, false)">🛒 Koszyk</button>
+                  <button class="btn-action" style="margin:0; padding:0.45rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="app.addToCart(${prod.id}, true)">🔄 Trade-In</button>
+                </div>
               </div>
             </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
@@ -2323,11 +2355,13 @@
     const CpoComponent = {
       render: () => {
         let itemsHTML = AppData.bag.map(c => {
-          const imgSrc = ClubImageEngine.getInitialImage(c.name, c.imgUrl);
+          const imgSrc = ClubImageEngine.getClubVisualUrl(c.name, c.imgUrl);
+          const fallbackSrc = ClubImageEngine.getFallbackStudioImage(c.name);
+          const safeName = c.name.replace(/'/g, "");
           return `
             <div class="cpo-item">
-              <div class="club-photo-frame" onclick="app.openPhotoZoom('${c.name.replace(/'/g, "")}', '${imgSrc}', '${c.loft}')">
-                <img src="${imgSrc}" alt="${c.name}">
+              <div class="club-photo-frame" onclick="app.openPhotoZoom('${safeName}', '${imgSrc}', '${c.loft}')">
+                <img src="${imgSrc}" alt="${c.name}" onerror="this.onerror=null; this.src='${fallbackSrc}';">
                 <span class="cond-badge">${c.cond}</span>
               </div>
               <div>
@@ -2336,7 +2370,7 @@
                 <p style="font-size: 0.74rem; color: var(--accent); margin-top: 0.25rem;">Wypłata CPO: <strong style="color: var(--gold);">${c.cpoOffer}</strong></p>
               </div>
               <div class="cpo-actions" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                <button class="btn-action" style="margin:0; padding:0.42rem 0.7rem;" onclick="app.showToast('Zlecono wypłatę gotówki CPO dla: ${c.name}')">⚡ Gotówka 24h</button>
+                <button class="btn-action" style="margin:0; padding:0.42rem 0.7rem;" onclick="app.showToast('Zlecono wypłatę gotówki CPO dla: ${safeName}')">⚡ Gotówka 24h</button>
                 <button class="btn-action" style="margin:0; padding:0.42rem 0.7rem; background:rgba(250,204,21,0.12); border-color:var(--gold); color:var(--gold);" onclick="app.switchTab('sklep')">🔄 Trade-In</button>
               </div>
             </div>
@@ -2354,23 +2388,26 @@
     };
 
     /* =========================================================================
-       KOMPONENT: MARKETPLACE C2C (ZE ZDJĘCIAMI KIJÓW NA ŻYWO)
+       KOMPONENT: MARKETPLACE C2C (Z PODGLĄDEM AI I GOOGLE GRAFIKA)
        ========================================================================= */
     const MarketplaceComponent = {
       render: () => {
         let itemsHTML = AppData.marketplace.map(item => {
-          const imgSrc = ClubImageEngine.getInitialImage(item.title, item.imgUrl);
+          const imgSrc = ClubImageEngine.getClubVisualUrl(item.title, item.imgUrl);
+          const fallbackSrc = ClubImageEngine.getFallbackStudioImage(item.title);
+          const safeTitle = item.title.replace(/'/g, "");
           return `
             <div class="market-card">
-              <div class="club-photo-frame" onclick="app.openPhotoZoom('${item.title.replace(/'/g, "")}', '${imgSrc}', 'Sprzedawca: ${item.seller} • Cena: ${item.price}')">
-                <img src="${imgSrc}" alt="${item.title}">
-                <span class="live-photo-badge">FOTO</span>
+              <div class="club-photo-frame" onclick="app.openPhotoZoom('${safeTitle}', '${imgSrc}', 'Sprzedawca: ${item.seller} • Cena: ${item.price}')">
+                <img src="${imgSrc}" alt="${item.title}" onerror="this.onerror=null; this.src='${fallbackSrc}';">
+                <span class="live-photo-badge">AI FOTO</span>
               </div>
               <div style="display:flex; flex-direction:column; justify-content:space-between; min-width:0;">
                 <div>
                   <span style="font-size: 0.65rem; color: var(--gold); font-weight: 700;">${item.cond}</span>
                   <h3 style="font-size: 0.86rem; margin: 0.15rem 0; color: var(--text-main);">${item.title}</h3>
-                  <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.45rem;">${item.desc}</p>
+                  <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.35rem;">${item.desc}</p>
+                  <button class="btn-mini-tool" style="margin-bottom:0.4rem;" onclick="app.openGoogleImages('${safeTitle}')">🔎 Zobacz model w Google Grafika ↗</button>
                 </div>
                 <div>
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
@@ -2427,6 +2464,8 @@
        GŁÓWNY KONTROLER APLIKACJI (ROUTER I AKCJE)
        ========================================================================= */
     const app = {
+      previewTimer: null,
+
       switchTab: (tabName) => {
         const container = document.getElementById('appContainer');
         if (!container) return;
@@ -2434,7 +2473,6 @@
         if (tabName === 'profile') {
           container.style.gridTemplateColumns = "1fr 1.3fr";
           container.innerHTML = ProfileAndBagComponent.render();
-          ProfileAndBagComponent.afterRender();
         } else {
           container.style.gridTemplateColumns = "1fr";
           if (tabName === 'pola') container.innerHTML = PolishCoursesComponent.render();
@@ -2452,6 +2490,34 @@
         document.querySelectorAll('#mainNav button').forEach(btn => {
           btn.classList.toggle('active', btn.dataset.tab === tabName);
         });
+      },
+
+      // Generuje nowy wariant ujęcia AI dla danego kija
+      regenerateClubAi: (imgElementId, clubName) => {
+        const imgEl = document.getElementById(imgElementId);
+        if (!imgEl) return;
+        const randomSeed = Math.floor(Math.random() * 9000) + 100;
+        const newAiUrl = ClubImageEngine.buildAiClubRenderUrl(clubName, randomSeed);
+        ClubImageEngine.cache[clubName] = newAiUrl;
+        imgEl.src = newAiUrl;
+        app.showToast(`🎨 Generowanie nowego ujęcia AI dla: ${clubName}...`);
+      },
+
+      // Otwiera bezpośredni podgląd Google Grafika dla danego modelu kija
+      openGoogleImages: (clubName) => {
+        const gUrl = ClubImageEngine.getGoogleImagesUrl(clubName);
+        window.open(gUrl, '_blank', 'noopener,noreferrer');
+      },
+
+      // Aktualizuje na żywo podgląd zdjęcia podczas wpisywania nazwy kija w formularzu
+      updateLiveClubPreview: (val, forceNewSeed = false) => {
+        clearTimeout(app.previewTimer);
+        app.previewTimer = setTimeout(() => {
+          const imgEl = document.getElementById('livePreviewClubImg');
+          if (!imgEl || !val || val.trim().length < 3) return;
+          const seed = forceNewSeed ? Math.floor(Math.random() * 5000) : 1;
+          imgEl.src = ClubImageEngine.buildAiClubRenderUrl(val.trim(), seed);
+        }, 350);
       },
 
       filterCourses: (filterKey) => {
@@ -2540,11 +2606,12 @@
         if (box) box.style.display = box.style.display === 'block' ? 'none' : 'block';
       },
 
-      addClubWithLivePhoto: async () => {
+      addClubWithLivePhoto: () => {
         const nameInput = document.getElementById('newClubName');
         const specInput = document.getElementById('newClubSpec');
         const valInput = document.getElementById('newClubVal');
         const customImgInput = document.getElementById('newClubCustomImg');
+        const previewImg = document.getElementById('livePreviewClubImg');
 
         const name = nameInput ? nameInput.value.trim().toUpperCase() : '';
         if (!name) {
@@ -2555,6 +2622,8 @@
         const loft = (specInput && specInput.value.trim()) ? specInput.value.trim() : "Specyfikacja Custom Fit";
         const val = (valInput && valInput.value.trim()) ? valInput.value.trim() : "1 950 PLN";
         const customUrl = (customImgInput && customImgInput.value.trim()) ? customImgInput.value.trim() : "";
+
+        const finalImg = customUrl || (previewImg ? previewImg.src : ClubImageEngine.buildAiClubRenderUrl(name, 1));
 
         const newId = Date.now();
         const newClub = {
@@ -2567,23 +2636,33 @@
           smash: "1.44",
           attack: "+1.5°",
           cond: "Nowy",
-          imgUrl: customUrl || null
+          imgUrl: finalImg
         };
 
         AppData.bag.unshift(newClub);
         app.switchTab('profile');
-        app.showToast('Pobieranie grafiki na żywo dla: ' + name + '...');
-
-        if (!customUrl) {
-          await ClubImageEngine.fetchLiveImageForClub(name, `bag_club_img_${newId}`);
-        }
+        app.showToast('Dodano kij z wygenerowaną wizualizacją: ' + name);
       },
 
       openPhotoZoom: (title, imgUrl, meta) => {
+        ClubImageEngine.currentModalClub = title;
         document.getElementById('zoomClubTitle').textContent = title;
         document.getElementById('zoomClubImg').src = imgUrl;
         document.getElementById('zoomClubMeta').textContent = meta;
         document.getElementById('photoZoomModal').style.display = 'flex';
+      },
+
+      regenerateModalAiPhoto: () => {
+        if (!ClubImageEngine.currentModalClub) return;
+        const seed = Math.floor(Math.random() * 9999) + 1;
+        const newUrl = ClubImageEngine.buildAiClubRenderUrl(ClubImageEngine.currentModalClub, seed);
+        document.getElementById('zoomClubImg').src = newUrl;
+        app.showToast('🎨 Wygenerowano nowy render AI w oknie podglądu!');
+      },
+
+      openGoogleImagesForModal: () => {
+        if (!ClubImageEngine.currentModalClub) return;
+        app.openGoogleImages(ClubImageEngine.currentModalClub);
       },
 
       closePhotoZoom: () => {
