@@ -48,6 +48,18 @@
     .logo { font-weight: 800; font-size: 1rem; cursor: pointer; color: var(--text-main); }
     .logo span { color: var(--accent); border: 1px solid var(--accent); padding: 1px 5px; border-radius: 4px; margin-right: 5px; }
 
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #fca5a5;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-logout:hover { background: rgba(239, 68, 68, 0.3); color: #fff; }
+
     nav {
       display: flex;
       gap: 0.4rem;
@@ -70,6 +82,111 @@
     nav button:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
     nav button.active { background: var(--accent); color: #052e16; font-weight: 700; }
 
+    /* Ekran Logowania 3D */
+    .auth-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      perspective: 1400px;
+    }
+
+    .auth-panel {
+      width: 100%;
+      max-width: 440px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 22px;
+      padding: 2rem;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.75), inset 0 0 25px var(--accent-glow);
+      transform: rotateX(2deg);
+      transition: transform 0.3s ease;
+    }
+    .auth-panel:hover { transform: rotateX(0deg) translateZ(8px); }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 0.3rem;
+      border-radius: 10px;
+      margin-bottom: 1.4rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .auth-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .auth-tab-btn.active {
+      background: var(--accent);
+      color: #052e16;
+    }
+
+    .form-group { margin-bottom: 0.9rem; }
+    .form-group label {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 0.35rem;
+    }
+    .form-group input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .form-group input:focus {
+      border-color: var(--accent);
+      background: rgba(74, 222, 128, 0.06);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: none;
+      background: var(--accent);
+      color: #052e16;
+      font-weight: 800;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-top: 0.4rem;
+      transition: 0.2s;
+    }
+    .btn-primary:hover { filter: brightness(1.08); }
+
+    .btn-demo {
+      width: 100%;
+      padding: 0.65rem;
+      border-radius: 8px;
+      border: 1px solid var(--gold);
+      background: rgba(250, 204, 21, 0.1);
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: pointer;
+      margin-top: 0.75rem;
+    }
+    .btn-demo:hover { background: rgba(250, 204, 21, 0.2); }
+
+    /* Układ 3D kokpitu po zalogowaniu */
     .spatial-stage {
       flex: 1;
       display: grid;
@@ -141,7 +258,7 @@
     }
     .btn-action:active { background: var(--accent); color: #052e16; }
 
-    /* Rozbudowane Forum 5-letniej społeczności */
+    /* Forum */
     .forum-stats-bar {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -237,7 +354,6 @@
       font-size: 0.72rem;
     }
 
-    /* New thread modal/box */
     .new-thread-box {
       display: none;
       background: rgba(0, 0, 0, 0.4);
@@ -333,12 +449,15 @@
 </head>
 <body>
 
+  <!-- Pasek górny (widoczny zawsze, menu tylko po zalogowaniu) -->
   <header>
     <div class="header-top">
       <div class="logo" id="logoBtn"><span>TGN</span> GLOBAL GOLF</div>
-      <span style="font-size: 0.7rem; color: var(--text-muted);">Est. 2021 • Społeczność 14 820 graczy</span>
+      <div id="headerRightInfo" style="display:flex; align-items:center; gap:0.75rem;">
+        <span style="font-size: 0.7rem; color: var(--text-muted);">Est. 2021 • Spatial PWA</span>
+      </div>
     </div>
-    <nav id="mainNav">
+    <nav id="mainNav" style="display:none;">
       <button class="active" data-tab="profile">👤 Profil 3D</button>
       <button data-tab="forum">💬 Forum & Poradniki</button>
       <button data-tab="cpo">⚡ Skup TGN CPO</button>
@@ -347,23 +466,85 @@
     </nav>
   </header>
 
-  <main class="spatial-stage" id="appContainer">
+  <!-- Ekran Logowania / Rejestracji -->
+  <div id="authScreen" class="auth-wrapper">
+    <div class="auth-panel">
+      <div style="text-align: center; margin-bottom: 1.2rem;">
+        <div style="font-size: 1.3rem; font-weight: 800; letter-spacing: 0.5px;">
+          <span style="color: var(--accent); border: 1px solid var(--accent); padding: 2px 7px; border-radius: 5px; margin-right: 6px;">TGN</span>ID PORTAL
+        </div>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem;">Zaloguj się do swojego kokpitu golfowego 3D</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button id="tabLoginBtn" class="auth-tab-btn active" onclick="auth.switchAuthMode('login')">Logowanie</button>
+        <button id="tabRegisterBtn" class="auth-tab-btn" onclick="auth.switchAuthMode('register')">Rejestracja</button>
+      </div>
+
+      <!-- Formularz Logowania -->
+      <div id="loginForm">
+        <div class="form-group">
+          <label>Adres E-mail lub Login TGN</label>
+          <input type="email" id="loginEmail" placeholder="np. marek@tgngolf.pl" value="marek.kowalski@tgngolf.pl">
+        </div>
+        <div class="form-group">
+          <label>Hasło</label>
+          <input type="password" id="loginPass" placeholder="••••••••" value="********">
+        </div>
+        <button class="btn-primary" onclick="auth.handleLogin()">Zaloguj się do kokpitu 3D</button>
+        <button class="btn-demo" onclick="auth.loginDemo()">⚡ Szybkie logowanie Demo (Marek Kowalski • HCP 12.4)</button>
+      </div>
+
+      <!-- Formularz Rejestracji -->
+      <div id="registerForm" style="display:none;">
+        <div class="form-group">
+          <label>Imię i Nazwisko</label>
+          <input type="text" id="regName" placeholder="np. Jan Nowak">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;">
+          <div class="form-group">
+            <label>Aktualny HCP</label>
+            <input type="number" step="0.1" id="regHcp" placeholder="np. 18.5" value="24.0">
+          </div>
+          <div class="form-group">
+            <label>Miasto / Klub</label>
+            <input type="text" id="regCity" placeholder="np. Szczecin" value="Warszawa">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Adres E-mail</label>
+          <input type="email" id="regEmail" placeholder="twoj@email.pl">
+        </div>
+        <div class="form-group">
+          <label>Hasło</label>
+          <input type="password" id="regPass" placeholder="Minimum 6 znaków">
+        </div>
+        <button class="btn-primary" onclick="auth.handleRegister()">Utwórz Profil TGN & Cyfrową Torbę</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Główna scena aplikacji (ukryta przed zalogowaniem) -->
+  <main class="spatial-stage" id="appContainer" style="display:none;">
     <!-- Dynamiczny widok -->
   </main>
 
   <div id="toast">Powiadomienie</div>
 
   <script>
+    const DefaultUser = {
+      name: "Marek Kowalski",
+      email: "marek.kowalski@tgngolf.pl",
+      hcp: 12.4,
+      level: "Średniozaawansowany",
+      city: "Warszawa",
+      lastRound: "82 (Sobota)",
+      swingSpeed: "96 mph"
+    };
+
     const AppData = {
       activeForumFilter: "ALL",
-      user: {
-        name: "Marek Kowalski",
-        hcp: 12.4,
-        level: "Średniozaawansowany",
-        city: "Warszawa",
-        lastRound: "82 (Sobota)",
-        swingSpeed: "96 mph"
-      },
+      user: { ...DefaultUser },
       bag: [
         { id: 1, name: "DRIVER: TAYLOR MADE Qi10", loft: "10.5°, Shaft: VENTUS Blue 6S", val: "1 800 PLN", cpoOffer: "1 450 PLN", cond: "9/10" },
         { id: 2, name: "IRON: MIZUNO JPX 923", loft: "7-Iron, Steel Shaft DG 105 S", val: "3 400 PLN", cpoOffer: "2 700 PLN", cond: "9.5/10" },
@@ -385,8 +566,7 @@
           content: "Przez ostatnie 5 lat na forum TGN przeanalizowaliśmy ponad 3 000 raportów z TrackMana naszych klubowiczów. 80% graczy traci najwięcej uderzeń między 40 a 100 metrem oraz przez źle dobrany loft drivera. Poniżej zebraliśmy najważniejsze wnioski z 5 sezonów: 1) Testuj carry, nie total distance. 2) Utrzymuj odstęp 12-15m między każdym kijem w torbie. 3) Zapisuj statystyki putów po każdej rundzie.",
           comments: [
             { author: "StaryWyga_Golf", badge: "TGN OG • 2021", badgeClass: "badge-og", date: "14.06.2021", text: "Klasyk tego forum! W 2021 zaczynałem z HCP 28 czytając ten wątek, dzisiaj kończę sezon 2026 z 8.4." },
-            { author: "Kamil_Golf", badge: "WETERAN • 890 postów", badgeClass: "badge-vet", date: "03.09.2024", text: "Punkt o gappingu wedge'y zmienił u mnie wszystko. Dokupiłem 52° i od razu urwałem 4 uderzenia na rundę." },
-            { author: "Marek Kowalski", badge: "HCP 12.4", badgeClass: "badge-vet", date: "2 dni temu", text: "Właśnie algorytm TGN wykrył u mnie lukę 15m na Gap Wedge – wracam do tego poradnika przed fittingiem!" }
+            { author: "Kamil_Golf", badge: "WETERAN • 890 postów", badgeClass: "badge-vet", date: "03.09.2024", text: "Punkt o gappingu wedge'y zmienił u mnie wszystko. Dokupiłem 52° i od razu urwałem 4 uderzenia na rundę." }
           ]
         },
         {
@@ -404,8 +584,7 @@
           content: "Zauważyłem na symulatorze, że przy mojej średniej prędkości drivera 96 mph i dynamicznym przejściu z backswingu piłka ucieka w prawy push-fade. Czy przejście z Ventus Regular na Ventus Blue 6S (Stiff) w Wilsonie Dynapower ustabilizuje rozrzut?",
           comments: [
             { author: "Trener PGA Tomasz", badge: "FITTING MASTER", badgeClass: "badge-pro", date: "Wczoraj, 19:12", text: "Przy 96 mph jesteś dokładnie na granicy. Kluczowy jest tzw. transition (tempo). Jeśli agresywnie przyspieszasz z góry, 6S obniży spin o ok. 350 RPM i zacieśni dyspersję." },
-            { author: "Janusz_G", badge: "TGN OG • 2021", badgeClass: "badge-og", date: "Dzisiaj, 08:30", text: "Miałem identyczne liczby na TrackManie w 2023 roku. Zmiana na Stiff 65g dała mi +11 metrów carry i o połowę mniej piłek w lesie." },
-            { author: "Piotr_Szczecin", badge: "WETERAN", badgeClass: "badge-vet", date: "Dzisiaj, 11:05", text: "Potwierdzam, wpadnij na dzień fittingowy TGN, mają tam wszystkie shafty do przetestowania na miejscu." }
+            { author: "Janusz_G", badge: "TGN OG • 2021", badgeClass: "badge-og", date: "Dzisiaj, 08:30", text: "Miałem identyczne liczby na TrackManie w 2023 roku. Zmiana na Stiff 65g dała mi +11 metrów carry i o połowę mniej piłek w lesie." }
           ]
         },
         {
@@ -422,8 +601,7 @@
           likes: 89,
           content: "Od 2022 roku gram na Mizuno JPX 923 Hot Metal i zastanawiam się nad przesiadką na coś bardziej kompaktowego (np. Titleist T200 lub JPX Forged). Kto z Was robił taki przeskok przy HCP w okolicach 10-13?",
           comments: [
-            { author: "Michał_Kraków", badge: "HCP 7.1", badgeClass: "badge-vet", date: "2 dni temu", text: "Zrobiłem ten ruch rok temu. Na początku straciłem ok. 5m na 7-ironie, ale kontrola odległości i brak tzw. 'hot flyerów' ze średniego roughu są bezcenne." },
-            { author: "Admin_TGN", badge: "MODERATOR", badgeClass: "badge-pro", date: "Wczoraj", text: "Pamiętaj, że swoje stare JPX-y możesz wrzucić w rozliczeniu w zakładce Skup TGN CPO – teraz jest bonus +10% przy wymianie na kolekcję 2026/2027!" }
+            { author: "Michał_Kraków", badge: "HCP 7.1", badgeClass: "badge-vet", date: "2 dni temu", text: "Zrobiłem ten ruch rok temu. Na początku straciłem ok. 5m na 7-ironie, ale kontrola odległości i brak tzw. 'hot flyerów' ze średniego roughu są bezcenne." }
           ]
         },
         {
@@ -440,8 +618,7 @@
           likes: 154,
           content: "Startuje 5. edycja naszej kultowej ligi zimowej! Gramy co tydzień inne pole mistrzowskie w formacie Stableford Netto. Wyniki z TrackMan, Foresight i Uneekor synchronizują się automatycznie z Waszym profilem 3D.",
           comments: [
-            { author: "Grzegorz_Sim", badge: "MISTRZ LIGI 2024", badgeClass: "badge-og", date: "4 dni temu", text: "W końcu! W zeszłym roku zabrakło mi 2 punktów do podium. W tym roku celuję w finał." },
-            { author: "Marek Kowalski", badge: "HCP 12.4", badgeClass: "badge-vet", date: "2 dni temu", text: "Runda na First Warsaw zagrana (82 uderzenia). Czekam na aktualizację rankingu!" }
+            { author: "Grzegorz_Sim", badge: "MISTRZ LIGI 2024", badgeClass: "badge-og", date: "4 dni temu", text: "W końcu! W zeszłym roku zabrakło mi 2 punktów do podium. W tym roku celuję w finał." }
           ]
         }
       ],
@@ -455,6 +632,105 @@
       ]
     };
 
+    // Moduł Autoryzacji (Logowanie / Rejestracja / Sesja)
+    const auth = {
+      switchAuthMode: (mode) => {
+        document.getElementById('tabLoginBtn').classList.toggle('active', mode === 'login');
+        document.getElementById('tabRegisterBtn').classList.toggle('active', mode === 'register');
+        document.getElementById('loginForm').style.display = mode === 'login' ? 'block' : 'none';
+        document.getElementById('registerForm').style.display = mode === 'register' ? 'block' : 'none';
+      },
+
+      loginDemo: () => {
+        AppData.user = { ...DefaultUser };
+        localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
+        auth.enterApp('Zalogowano na konto Demo: ' + AppData.user.name);
+      },
+
+      handleLogin: () => {
+        const email = document.getElementById('loginEmail').value.trim();
+        const pass = document.getElementById('loginPass').value.trim();
+        if (!email || !pass) {
+          app.showToast('Wpisz adres e-mail i hasło!');
+          return;
+        }
+
+        // Sprawdź czy jest zapisane konto w pamięci lub użyj domyślnego
+        const saved = localStorage.getItem('tgn_registered_user');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.email.toLowerCase() === email.toLowerCase()) {
+            AppData.user = parsed;
+          } else {
+            const nameFromEmail = email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase());
+            AppData.user = { ...DefaultUser, name: nameFromEmail, email: email };
+          }
+        } else {
+          const nameFromEmail = email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase());
+          AppData.user = { ...DefaultUser, name: nameFromEmail, email: email };
+        }
+
+        localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
+        auth.enterApp('Witaj z powrotem, ' + AppData.user.name + '!');
+      },
+
+      handleRegister: () => {
+        const name = document.getElementById('regName').value.trim();
+        const hcp = parseFloat(document.getElementById('regHcp').value) || 24.0;
+        const city = document.getElementById('regCity').value.trim() || 'Warszawa';
+        const email = document.getElementById('regEmail').value.trim();
+        const pass = document.getElementById('regPass').value.trim();
+
+        if (!name || !email || !pass) {
+          app.showToast('Uzupełnij imię, e-mail oraz hasło!');
+          return;
+        }
+
+        const level = hcp <= 10 ? 'Zaawansowany' : (hcp <= 20 ? 'Średniozaawansowany' : 'Początkujący');
+        AppData.user = {
+          name: name,
+          email: email,
+          hcp: hcp,
+          level: level,
+          city: city,
+          lastRound: 'Brak zapisanej rundy',
+          swingSpeed: hcp <= 15 ? '95 mph' : '86 mph'
+        };
+
+        localStorage.setItem('tgn_registered_user', JSON.stringify(AppData.user));
+        localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
+        auth.enterApp('Utworzono profil TGN: ' + name);
+      },
+
+      enterApp: (welcomeMsg) => {
+        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('mainNav').style.display = 'flex';
+        document.getElementById('appContainer').style.display = 'grid';
+
+        const headerRight = document.getElementById('headerRightInfo');
+        headerRight.innerHTML = `
+          <span style="font-size: 0.72rem; color: var(--accent); font-weight:700;">● ${AppData.user.name}</span>
+          <button class="btn-logout" onclick="auth.logout()">Wyloguj</button>
+        `;
+
+        app.switchTab('profile');
+        if (welcomeMsg) app.showToast(welcomeMsg);
+      },
+
+      logout: () => {
+        localStorage.removeItem('tgn_user');
+        document.getElementById('authScreen').style.display = 'flex';
+        document.getElementById('mainNav').style.display = 'none';
+        document.getElementById('appContainer').style.display = 'none';
+        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Est. 2021 • Spatial PWA</span>`;
+        app.showToast('Wylogowano z portalu TGN');
+      }
+    };
+
+    const getInitials = (fullName) => {
+      return fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'TG';
+    };
+
     const ProfileComponent = {
       render: () => `
         <section class="panel-3d panel-left">
@@ -462,7 +738,7 @@
           
           <div style="display: flex; gap: 1.2rem; align-items: center; margin-bottom: 1.2rem; background: rgba(0,0,0,0.25); padding: 1rem; border-radius: 12px;">
             <div style="width: 85px; height: 110px; background: linear-gradient(135deg, #4ade80, #064e3b); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #052e16; font-size: 1.5rem; border: 1px solid var(--accent);">
-              MK
+              ${getInitials(AppData.user.name)}
             </div>
             <div>
               <p style="font-size: 0.8rem; color: var(--text-muted);">Handicap Index</p>
@@ -595,7 +871,6 @@
               <button class="btn-action" style="width: auto; padding: 0.45rem 1rem; margin: 0;" onclick="app.toggleNewThread()">+ Nowy temat</button>
             </div>
 
-            <!-- Statystyki 5-letniego forum -->
             <div class="forum-stats-bar">
               <div><div class="forum-stat-num">14 820</div><div class="forum-stat-lbl">Klubowiczów</div></div>
               <div><div class="forum-stat-num">42 690</div><div class="forum-stat-lbl">Postów (od 2021)</div></div>
@@ -603,7 +878,6 @@
               <div><div class="forum-stat-num" style="color:var(--gold);">318</div><div class="forum-stat-lbl">Online teraz</div></div>
             </div>
 
-            <!-- Formularz nowego wątku -->
             <div id="newThreadBox" class="new-thread-box">
               <h3 style="font-size: 0.85rem; color: var(--accent); margin-bottom: 0.6rem;">Utwórz nowy wątek na forum</h3>
               <select id="newThreadCat">
@@ -617,7 +891,6 @@
               <button class="btn-action" style="margin:0; background:var(--accent); color:#052e16;" onclick="app.createThread()">Opublikuj wątek</button>
             </div>
 
-            <!-- Filtry kategorii -->
             <div class="forum-filters">
               <button class="filter-pill ${AppData.activeForumFilter === 'ALL' ? 'active' : ''}" onclick="app.filterForum('ALL')">Wszystkie (42.6k)</button>
               <button class="filter-pill ${AppData.activeForumFilter === 'PORADNIKI' ? 'active' : ''}" onclick="app.filterForum('PORADNIKI')">🎓 Poradniki PGA Pro</button>
@@ -853,10 +1126,19 @@
 
       const logoBtn = document.getElementById('logoBtn');
       if (logoBtn) {
-        logoBtn.addEventListener('click', () => app.switchTab('profile'));
+        logoBtn.addEventListener('click', () => {
+          if (localStorage.getItem('tgn_user')) {
+            app.switchTab('profile');
+          }
+        });
       }
 
-      app.switchTab('profile');
+      // Sprawdź czy użytkownik był już zalogowany
+      const savedSession = localStorage.getItem('tgn_user');
+      if (savedSession) {
+        AppData.user = JSON.parse(savedSession);
+        auth.enterApp();
+      }
     });
   </script>
 </body>
