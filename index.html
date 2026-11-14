@@ -5,16 +5,147 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#070f14">
   <title>TGN Global Golf - Spatial 3D PWA</title>
-  <link rel="stylesheet" href="./css/main.css">
-  <link rel="stylesheet" href="./css/spatial-3d.css">
+  <style>
+    :root {
+      --glass-bg: rgba(18, 32, 36, 0.88);
+      --glass-border: rgba(114, 214, 150, 0.35);
+      --accent: #4ade80;
+      --accent-glow: rgba(74, 222, 128, 0.2);
+      --gold: #facc15;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      min-height: 100vh;
+      color: var(--text-main);
+      background: radial-gradient(circle at 50% 40%, rgba(20, 60, 40, 0.55), rgba(7, 15, 20, 0.96)),
+                  url('https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat fixed;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(10, 20, 24, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+    }
+
+    .logo { font-weight: 800; font-size: 1rem; cursor: pointer; color: var(--text-main); }
+    .logo span { color: var(--accent); border: 1px solid var(--accent); padding: 1px 5px; border-radius: 4px; margin-right: 5px; }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: rgba(0,0,0,0.25);
+    }
+    nav button {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    nav button.active { background: var(--accent); color: #052e16; font-weight: 700; }
+
+    /* Przestrzenna scena 3D (dwa panele obok siebie) */
+    .spatial-stage {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.1fr 1.3fr;
+      gap: 2rem;
+      padding: 2rem 3rem;
+      perspective: 1600px;
+      align-items: center;
+      max-width: 1600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .panel-3d {
+      background: var(--glass-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 1.8rem;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), inset 0 0 25px var(--accent-glow);
+      transition: transform 0.4s ease;
+    }
+
+    .panel-left { transform: rotateY(10deg); }
+    .panel-right { transform: rotateY(-10deg); }
+    .panel-left:hover { transform: rotateY(3deg) translateZ(10px); }
+    .panel-right:hover { transform: rotateY(-3deg) translateZ(10px); }
+
+    h2 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--accent); margin-bottom: 1rem; }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stat-card span { color: var(--text-muted); font-size: 0.8rem; }
+    .stat-card strong { color: var(--text-main); font-size: 0.9rem; }
+
+    .btn-action {
+      margin-top: 0.6rem;
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid var(--accent);
+      background: rgba(74, 222, 128, 0.12);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .btn-action:active { background: var(--accent); color: #052e16; }
+
+    #toast {
+      position: fixed;
+      bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: #052e16;
+      padding: 0.6rem 1.2rem; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 700;
+      display: none; z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .spatial-stage { grid-template-columns: 1fr; padding: 1rem; perspective: none; }
+      .panel-left, .panel-right { transform: none !important; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Górna nawigacja -->
   <header>
     <div class="header-top">
       <div class="logo" onclick="app.switchTab('profile')"><span>TGN</span> GLOBAL GOLF</div>
-      <button id="installBtn" class="btn-install" style="display:none;">Zainstaluj PWA</button>
+      <button id="installBtn" class="btn-action" style="display:none; width:auto; margin:0;">Zainstaluj PWA</button>
     </div>
     <nav id="mainNav">
       <button class="active" data-tab="profile" onclick="app.switchTab('profile')">👤 Profil 3D</button>
@@ -23,17 +154,5 @@
     </nav>
   </header>
 
-  <!-- Dynamiczna scena 3D / kontener widoków -->
   <main class="spatial-stage" id="appContainer">
-    <!-- Komponenty ładują się dynamicznie przez JS -->
-  </main>
-
-  <div id="toast">Powiadomienie</div>
-
-  <!-- Modułowe skrypty -->
-  <script src="./js/data.js"></script>
-  <script src="./components/profile.js"></script>
-  <script src="./components/bag.js"></script>
-  <script src="./js/app.js"></script>
-</body>
-</html>
+    <!--
