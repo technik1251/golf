@@ -140,7 +140,7 @@
     }
     .btn-action:active { background: var(--accent); color: #052e16; }
 
-    /* Style dla Marketplace */
+    /* Marketplace */
     .market-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -158,6 +158,72 @@
       transition: 0.2s;
     }
     .market-card:hover { border-color: var(--accent); background: rgba(74, 222, 128, 0.05); }
+
+    /* Styl czatu */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 400px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .msg {
+      max-width: 80%;
+      padding: 0.7rem 0.9rem;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+    .msg.incoming {
+      background: rgba(255, 255, 255, 0.08);
+      align-self: flex-start;
+      border-bottom-left-radius: 2px;
+    }
+    .msg.outgoing {
+      background: rgba(74, 222, 128, 0.2);
+      border: 1px solid var(--glass-border);
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+      color: var(--accent);
+    }
+    .chat-input-area {
+      display: flex;
+      padding: 0.75rem;
+      background: rgba(10, 20, 24, 0.8);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      gap: 0.5rem;
+    }
+    .chat-input-area input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 0.6rem 0.9rem;
+      color: #fff;
+      font-size: 0.8rem;
+      outline: none;
+    }
+    .chat-input-area input:focus { border-color: var(--accent); }
+    .chat-input-area button {
+      background: var(--accent);
+      color: #052e16;
+      border: none;
+      padding: 0 1.2rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
 
     #toast {
       position: fixed;
@@ -185,6 +251,7 @@
     <nav id="mainNav">
       <button class="active" data-tab="profile" onclick="app.switchTab('profile')">👤 Profil 3D</button>
       <button data-tab="marketplace" onclick="app.switchTab('marketplace')">🤝 Marketplace C2C</button>
+      <button data-tab="chat" onclick="app.switchTab('chat')">💬 Czat ze sprzedawcą</button>
       <button data-tab="forum" onclick="app.switchTab('forum')">💬 Forum</button>
       <button data-tab="sklep" onclick="app.switchTab('sklep')">🛍️ Sklep</button>
     </nav>
@@ -213,13 +280,15 @@
       ],
       marketplace: [
         { title: "Wilson Dynapower Driver", seller: "Janusz_G (HCP 14)", price: "1 150 PLN", cond: "Stan: 9/10", desc: "Znakomity driver, regular flex, mało używany." },
-        { title: "Zestaw Ironów Titleist T200 (5-PW)", seller: "Kamil_Golf (HCP 8.2)", price: "3 890 PLN", cond: "Stan: 8.5/10", desc: "Shaft Project X IO Stiff. Kute, świetny czucie." },
-        { title: "Putter Scotty Cameron Special Select", seller: "Bartek_W (HCP 11)", price: "1 450 PLN", cond: "Stan: Mint", desc: "Model Newport 2, długość 34 cali z nowym gripem." },
-        { title: "Wedge Vokey SM9 (56° / 10S)", seller: "Piotr_T (HCP 15)", price: "450 PLN", cond: "Stan: 7.5/10", desc: "Bruzdy wciąż bardzo oczne, wykończenie Tour Chrome." }
+        { title: "Zestaw Ironów Titleist T200 (5-PW)", seller: "Kamil_Golf (HCP 8.2)", price: "3 890 PLN", cond: "Stan: 8.5/10", desc: "Shaft Project X IO Stiff. Kute, świetny czucie." }
+      ],
+      chatMessages: [
+        { sender: "Janusz_G", text: "Cześć! Czy oferta na Wilson Dynapower jest jeszcze aktualna?", type: "incoming" },
+        { sender: "Marek Kowalski", text: "Cześć! Tak, aktualna. Jaki stan Cię interesuje i skąd jesteś?", type: "outgoing" },
+        { sender: "Janusz_G", text: "Jestem z Warszawy, możemy się umówić na polu na testowy swing?", type: "incoming" }
       ]
     };
 
-    // Komponent profilu 3D
     const ProfileComponent = {
       render: () => `
         <section class="panel-3d panel-left">
@@ -265,7 +334,6 @@
       `
     };
 
-    // Komponent cyfrowej torby
     const BagComponent = {
       render: () => {
         let clubsHTML = AppData.bag.map(c => `
@@ -299,7 +367,6 @@
       }
     };
 
-    // Nowy Komponent: Marketplace C2C
     const MarketplaceComponent = {
       render: () => {
         let itemsHTML = AppData.marketplace.map(item => `
@@ -314,18 +381,15 @@
                 <span style="font-size: 0.7rem; color: var(--text-muted);">Od: ${item.seller}</span>
                 <strong style="font-size: 1rem; color: var(--accent);">${item.price}</strong>
               </div>
-              <button class="btn-action" onclick="app.showToast('Otwarto czat z graczem: ${item.seller}')">Napisz do sprzedawcy</button>
+              <button class="btn-action" onclick="app.openChat('${item.seller}')">Napisz do sprzedawcy</button>
             </div>
           </div>
         `).join('');
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
-              <h2>🤝 TGN Marketplace (C2C – Oferty Społecznościowe)</h2>
-              <button class="btn-action" style="width: auto; padding: 0.4rem 1rem; margin: 0;" onclick="app.showToast('Formularz dodawania ogłoszenia...')">+ Wystaw swój sprzęt</button>
-            </div>
-            <div class="market-grid">
+            <h2>🤝 TGN Marketplace (C2C – Oferty Społecznościowe)</h2>
+            <div class="market-grid" style="margin-top: 1rem;">
               ${itemsHTML}
             </div>
           </section>
@@ -333,7 +397,32 @@
       }
     };
 
-    // Główny router i aplikacja
+    const ChatComponent = {
+      render: () => {
+        let msgsHTML = AppData.chatMessages.map(m => `
+          <div class="msg ${m.type}">
+            <div style="font-size: 0.65rem; opacity: 0.7; margin-bottom: 2px;">${m.sender}</div>
+            <div>${m.text}</div>
+          </div>
+        `).join('');
+
+        return `
+          <section class="panel-3d" style="grid-column: span 2;">
+            <h2>💬 Czat bezpośredni ze sprzedawcą</h2>
+            <div class="chat-container" style="margin-top: 1rem;">
+              <div class="chat-messages" id="chatMsgs">
+                ${msgsHTML}
+              </div>
+              <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Napisz wiadomość do sprzedawcy..." onkeypress="if(event.key === 'Enter') app.sendChatMessage()">
+                <button onclick="app.sendChatMessage()">Wyślij</button>
+              </div>
+            </div>
+          </section>
+        `;
+      }
+    };
+
     const app = {
       switchTab: (tabName) => {
         const container = document.getElementById('appContainer');
@@ -342,6 +431,9 @@
           container.innerHTML = ProfileComponent.render() + BagComponent.render();
         } else if (tabName === 'marketplace') {
           container.innerHTML = MarketplaceComponent.render();
+        } else if (tabName === 'chat') {
+          container.innerHTML = ChatComponent.render();
+          app.scrollChatToBottom();
         } else if (tabName === 'forum') {
           container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>Strefa Forum TGN</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Dyskusje, Custom Fitting i sekcje lokalne.</p></section>`;
         } else if (tabName === 'sklep') {
@@ -351,6 +443,39 @@
         document.querySelectorAll('#mainNav button').forEach(btn => {
           btn.classList.toggle('active', btn.dataset.tab === tabName);
         });
+      },
+
+      openChat: (sellerName) => {
+        app.switchTab('chat');
+        app.showToast('Otwarto czat z: ' + sellerName);
+      },
+
+      sendChatMessage: () => {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        AppData.chatMessages.push({ sender: "Marek Kowalski", text: text, type: "outgoing" });
+        input.value = '';
+        
+        // Odświeżenie widoku czatu
+        document.getElementById('appContainer').innerHTML = ChatComponent.render();
+        app.scrollChatToBottom();
+
+        // Symulacja automatycznej odpowiedzi sprzedawcy po 1.5 sekundy
+        setTimeout(() => {
+          AppData.chatMessages.push({ sender: "Janusz_G", text: "Jasne, brzmi super! Daj znać kiedy pasuje Ci runda.", type: "incoming" });
+          const container = document.getElementById('appContainer');
+          if(document.querySelector('[data-tab="chat"]').classList.contains('active')) {
+            container.innerHTML = ChatComponent.render();
+            app.scrollChatToBottom();
+          }
+        }, 1500);
+      },
+
+      scrollChatToBottom: () => {
+        const box = document.getElementById('chatMsgs');
+        if (box) box.scrollTop = box.scrollHeight;
       },
 
       showToast: (msg) => {
