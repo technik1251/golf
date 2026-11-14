@@ -139,18 +139,13 @@
     }
     .btn-action:active { background: var(--accent); color: #052e16; }
 
-    /* Forum Styles */
     .forum-post-card {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
       padding: 1rem;
       margin-bottom: 0.8rem;
-      cursor: pointer;
-      transition: 0.2s;
     }
-    .forum-post-card:hover { border-color: var(--accent); background: rgba(74, 222, 128, 0.05); }
-    
     .comment-box {
       background: rgba(0, 0, 0, 0.3);
       border-left: 3px solid var(--accent);
@@ -160,7 +155,6 @@
       font-size: 0.78rem;
     }
 
-    /* Skup CPO */
     .cpo-grid { display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
     .cpo-item {
       background: rgba(255, 255, 255, 0.04);
@@ -172,7 +166,6 @@
       align-items: center;
     }
 
-    /* Marketplace */
     .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; }
     .market-card {
       background: rgba(255, 255, 255, 0.04);
@@ -184,7 +177,6 @@
       justify-content: space-between;
     }
 
-    /* Czat */
     .chat-container {
       display: flex;
       flex-direction: column;
@@ -243,15 +235,15 @@
     </div>
     <nav id="mainNav">
       <button class="active" data-tab="profile" onclick="app.switchTab('profile')">👤 Profil 3D</button>
-      <button data-tab="forum" onclick="app.switchTab('forum')">💬 Forum & Poradniki</button>
-      <button data-tab="cpo" onclick="app.switchTab('cpo')">⚡ Skup TGN CPO</button>
+      <button data-tab="forum" onclick="app.switchTab('forum')">💬 Forum</button>
+      <button data-tab="cpo" onclick="app.switchTab('cpo')">⚡ Skup CPO</button>
       <button data-tab="marketplace" onclick="app.switchTab('marketplace')">🤝 Marketplace</button>
       <button data-tab="chat" onclick="app.switchTab('chat')">💬 Czat</button>
     </nav>
   </header>
 
   <main class="spatial-stage" id="appContainer">
-    <!-- Dynamiczny widok 3D -->
+    <!-- Dynamiczny widok -->
   </main>
 
   <div id="toast">Powiadomienie</div>
@@ -274,47 +266,22 @@
       forumPosts: [
         {
           id: 1,
-          category: "⚙️ Custom Fitting & Telemetria",
-          title: "Jak prawidłowo dobrać shaft (Stiff vs Regular) do prędkości swingu 96 mph?",
-          author: "Marek Kowalski (HCP 12.4)",
-          date: "Dzisiaj, 14:20",
-          content: "Cześć! Zauważyłem na TrackManie, że przy mojej średniej prędkości drivera 96 mph piłka czasem ucieka w prawo. Czy przejście z Regular na Stiff w nowym Wilsonie Dynapower rozwiąże problem?",
+          category: "⚙️ Custom Fitting",
+          title: "Jak dobrać shaft do prędkości swingu 96 mph?",
+          author: "Marek Kowalski",
+          date: "Dzisiaj",
+          content: "Czy przejście na Stiff w nowym Wilsonie Dynapower poprawi powtarzalność?",
           comments: [
-            Przykladowe komentarze graczy
-            { author: "Trener PGA Tomasz", text: "Przy 96 mph jesteś dokładnie na styku. Jeśli tempo swingu jest agresywne, Stiff da lepszą powtarzalność i mniejszy spin." },
-            { author: "Janusz_G (HCP 14)", text: "Potwierdzam, miałem to samo. Zmiana na Stiff dodała mi spokoju z tee." }
-          ]
-        },
-        {
-          id: 2,
-          category: "🎓 Porady Zawodowców (PGA Pro)",
-          title: "[PORADNIK] 3 złote zasady poprawy gappingu w dolnym zakresie torby",
-          author: "Pro Adam Szymański",
-          date: "Wczoraj",
-          content: "Wielu amatorów ma problem z lukami między Pitching Wedge a Sand Wedge. Oto krótki przewodnik, jak zmierzyć faktyczny carry na symulatorze i dobrać odpowiednie stopnie loftu (np. 50°, 54°, 58°).",
-          comments: [
-            { author: "Kamil_Golf", text: "Świetny artykuł! Właśnie miałem 15m dziury, dzięki za rozjaśnienie tematu." }
-          ]
-        },
-        {
-          id: 3,
-          category: "⛳ Strefa 'Sim & Arcade'",
-          title: "Wyzwanie Ghost Match: First Warsaw – Kto gra w ten weekend?",
-          author: "TGN Bot Turniejowy",
-          date: "3 dni temu",
-          content: "Ruszyły zapisy do asynchronicznego turnieju na wirtualnym polu First Warsaw. Format Stableford Netto. Podwójne punkty XP do poziomu w profilu!",
-          comments: [
-            { author: "Marek Kowalski", text: "Zapisany! Sobota rano w simie." }
+            { author: "Trener PGA Tomasz", text: "Przy 96 mph Stiff da lepszą kontrolę spinu." }
           ]
         }
       ],
       marketplace: [
-        { title: "Wilson Dynapower Driver", seller: "Janusz_G (HCP 14)", price: "1 150 PLN", cond: "Stan: 9/10", desc: "Znakomity driver, regular flex, mało używany." },
-        { title: "Zestaw Ironów Titleist T200 (5-PW)", seller: "Kamil_Golf (HCP 8.2)", price: "3 890 PLN", cond: "Stan: 8.5/10", desc: "Shaft Project X IO Stiff. Kute, świetny czucie." }
+        { title: "Wilson Dynapower Driver", seller: "Janusz_G", price: "1 150 PLN", cond: "9/10", desc: "Znakomity driver, regular flex." }
       ],
       chatMessages: [
-        { sender: "Janusz_G", text: "Cześć! Czy oferta na Wilson Dynapower jest jeszcze aktualna?", type: "incoming" },
-        { sender: "Marek Kowalski", text: "Cześć! Tak, aktualna. Jaki stan Cię interesuje i skąd jesteś?", type: "outgoing" }
+        { sender: "Janusz_G", text: "Cześć! Oferta na driver aktualna?", type: "incoming" },
+        { sender: "Marek Kowalski", text: "Tak, zapraszam do kontaktu.", type: "outgoing" }
       ]
     };
 
@@ -351,14 +318,6 @@
               </svg>
             </div>
           </div>
-
-          <div class="stat-card" style="border-color: var(--gold);">
-            <div>
-              <span style="color: var(--gold); font-weight: 700;">⚠️ Gapping AI: Sprawdź Gap Wedge</span>
-              <p style="font-size: 0.7rem; color: var(--text-muted);">Wykryto lukę 15m między Pitchingiem a Sand Wedge.</p>
-            </div>
-            <button class="btn-action" style="width: auto; padding: 0.3rem 0.8rem;" onclick="app.showToast('Optymalizacja Gap Wedge w toku...')">Analizuj</button>
-          </div>
         </section>
       `
     };
@@ -389,14 +348,12 @@
               <p style="font-size: 0.75rem; color: var(--text-muted);">CAŁKOWITA WARTOŚĆ TORBY</p>
               <strong style="font-size: 1.3rem; color: var(--accent);">14 200 PLN</strong>
               <button class="btn-action" onclick="app.switchTab('cpo')">⚡ SPRZEDAJ NATYCHMIAST DO SKUPU TGN CPO</button>
-              <button class="btn-action" style="background: rgba(250,204,21,0.1); border-color: var(--gold); color: var(--gold);" onclick="app.switchTab('cpo')">🔄 TRADE-IN NA NOWY MODEL 2026</button>
             </div>
           </section>
         `;
       }
     };
 
-    // Nowy komponent: Forum & Poradniki
     const ForumComponent = {
       render: () => {
         let postsHTML = AppData.forumPosts.map(post => {
@@ -413,29 +370,15 @@
               <h3 style="font-size: 0.95rem; margin: 0.3rem 0; color: var(--text-main);">${post.title}</h3>
               <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Autor: ${post.author} • ${post.date}</p>
               <p style="font-size: 0.8rem; color: #cbd5e1; line-height: 1.4; margin-bottom: 0.8rem;">${post.content}</p>
-              
-              <div style="margin-top: 0.6rem;">
-                <p style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.3rem;">Komentarze (${post.comments.length}):</p>
-                ${commentsHTML}
-              </div>
-
-              <div style="display: flex; gap: 0.5rem; margin-top: 0.8rem;">
-                <input type="text" id="commInput_${post.id}" placeholder="Napisz komentarz..." style="flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.4rem 0.6rem; color:#fff; font-size:0.75rem;" onkeypress="if(event.key==='Enter') app.addComment(${post.id})">
-                <button class="btn-action" style="width: auto; margin:0; padding: 0.4rem 0.8rem;" onclick="app.addComment(${post.id})">Wyślij</button>
-              </div>
+              ${commentsHTML}
             </div>
           `;
         }).join('');
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
-              <h2>💬 TGN Forum & Poradniki PGA Pro</h2>
-              <button class="btn-action" style="width: auto; padding: 0.4rem 1rem; margin: 0;" onclick="app.showToast('Formularz nowego wątku...')">+ Utwórz nowy wątek</button>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-              ${postsHTML}
-            </div>
+            <h2>💬 TGN Forum & Poradniki</h2>
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">${postsHTML}</div>
           </section>
         `;
       }
@@ -448,20 +391,16 @@
             <div>
               <h3 style="font-size: 0.95rem; color: var(--text-main);">${c.name}</h3>
               <p style="font-size: 0.75rem; color: var(--text-muted);">${c.loft} • Stan: ${c.cond}</p>
-              <p style="font-size: 0.75rem; color: var(--accent); margin-top: 0.3rem;">Gwarantowana wycena skupu: <strong style="color: var(--gold);">${c.cpoOffer}</strong></p>
+              <p style="font-size: 0.75rem; color: var(--accent); margin-top: 0.3rem;">Wycena skupu: <strong style="color: var(--gold);">${c.cpoOffer}</strong></p>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 0.4rem; min-width: 140px;">
-              <button class="btn-action" style="margin:0; padding:0.4rem;" onclick="app.showToast('Zlecono skup CPO dla: ${c.name}')">Sprzedaj za gotówkę</button>
-              <button class="btn-action" style="margin:0; padding:0.4rem; background:rgba(250,204,21,0.1); border-color:var(--gold); color:var(--gold);" onclick="app.showToast('Wygenerowano Trade-In 2026!')">Trade-In na 2026</button>
-            </div>
+            <button class="btn-action" style="width: auto; padding: 0.5rem 1rem;" onclick="app.showToast('Zlecono skup CPO!')">Sprzedaj</button>
           </div>
         `).join('');
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
             <h2>⚡ Skup TGN CPO (Certified Pre-Owned)</h2>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem;">Wybierz sprzęt ze swojej cyfrowej torby i wymień go na gotówkę w 24h.</p>
-            <div class="cpo-grid">${itemsHTML}</div>
+            <div class="cpo-grid" style="margin-top: 1rem;">${itemsHTML}</div>
           </section>
         `;
       }
@@ -476,13 +415,7 @@
               <h3 style="font-size: 0.95rem; margin: 0.3rem 0; color: var(--text-main);">${item.title}</h3>
               <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.6rem;">${item.desc}</p>
             </div>
-            <div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <span style="font-size: 0.7rem; color: var(--text-muted);">Od: ${item.seller}</span>
-                <strong style="font-size: 1rem; color: var(--accent);">${item.price}</strong>
-              </div>
-              <button class="btn-action" onclick="app.openChat('${item.seller}')">Napisz do sprzedawcy</button>
-            </div>
+            <button class="btn-action" onclick="app.switchTab('chat')">Napisz do sprzedawcy</button>
           </div>
         `).join('');
 
@@ -506,7 +439,7 @@
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
-            <h2>💬 Czat bezpośredni ze sprzedawcą</h2>
+            <h2>💬 Czat ze sprzedawcą</h2>
             <div class="chat-container" style="margin-top: 1rem;">
               <div class="chat-messages" id="chatMsgs">${msgsHTML}</div>
               <div class="chat-input-area">
@@ -525,7 +458,7 @@
         
         if (tabName === 'profile') {
           container.innerHTML = ProfileComponent.render() + BagComponent.render();
-        } else if (tabName === 'forum') {
+        } else if (tabname === 'forum' || tabName === 'forum') {
           container.innerHTML = ForumComponent.render();
         } else if (tabName === 'cpo') {
           container.innerHTML = CpoComponent.render();
@@ -533,7 +466,7 @@
           container.innerHTML = MarketplaceComponent.render();
         } else if (tabName === 'chat') {
           container.innerHTML = ChatComponent.render();
-          app.scrollChatToBottom();
+          setTimeout(app.scrollChatToBottom, 50);
         }
 
         document.querySelectorAll('#mainNav button').forEach(btn => {
@@ -541,42 +474,15 @@
         });
       },
 
-      addComment: (postId) => {
-        const input = document.getElementById('commInput_' + postId);
-        const text = input ? input.value.trim() : '';
-        if (!text) return;
-
-        const post = AppData.forumPosts.find(p => p.id === postId);
-        if (post) {
-          post.comments.push({ author: AppData.user.name + " (Ty)", text: text });
-          app.switchTab('forum');
-          app.showToast('Dodano komentarz do wątku!');
-        }
-      },
-
-      openChat: (sellerName) => {
-        app.switchTab('chat');
-        app.showToast('Otwarto czat z: ' + sellerName);
-      },
-
       sendChatMessage: () => {
         const input = document.getElementById('chatInput');
-        const text = input.value.trim();
-        if (!text) return;
+        if (!input || !input.value.trim()) return;
 
-        AppData.chatMessages.push({ sender: AppData.user.name, text: text, type: "outgoing" });
+        AppData.chatMessages.push({ sender: AppData.user.name, text: input.value.trim(), type: "outgoing" });
         input.value = '';
         
         document.getElementById('appContainer').innerHTML = ChatComponent.render();
         app.scrollChatToBottom();
-
-        setTimeout(() => {
-          AppData.chatMessages.push({ sender: "Janusz_G", text: "Brzmi super! Daj znać kiedy pasuje Ci runda.", type: "incoming" });
-          if(document.querySelector('[data-tab="chat"]').classList.contains('active')) {
-            document.getElementById('appContainer').innerHTML = ChatComponent.render();
-            app.scrollChatToBottom();
-          }
-        }, 1500);
       },
 
       scrollChatToBottom: () => {
