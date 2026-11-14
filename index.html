@@ -60,12 +60,13 @@
       color: var(--text-muted);
       font-size: 0.78rem;
       font-weight: 600;
-      padding: 0.4rem 0.7rem;
+      padding: 0.45rem 0.85rem;
       border-radius: 6px;
       cursor: pointer;
       transition: 0.2s;
       white-space: nowrap;
     }
+    nav button:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
     nav button.active { background: var(--accent); color: #052e16; font-weight: 700; }
 
     .spatial-stage {
@@ -230,15 +231,15 @@
 
   <header>
     <div class="header-top">
-      <div class="logo" onclick="app.switchTab('profile')"><span>TGN</span> GLOBAL GOLF</div>
+      <div class="logo" id="logoBtn"><span>TGN</span> GLOBAL GOLF</div>
       <button id="installBtn" class="btn-action" style="display:none; width:auto; margin:0;">Zainstaluj PWA</button>
     </div>
     <nav id="mainNav">
-      <button class="active" data-tab="profile" onclick="app.switchTab('profile')">👤 Profil 3D</button>
-      <button data-tab="forum" onclick="app.switchTab('forum')">💬 Forum</button>
-      <button data-tab="cpo" onclick="app.switchTab('cpo')">⚡ Skup CPO</button>
-      <button data-tab="marketplace" onclick="app.switchTab('marketplace')">🤝 Marketplace</button>
-      <button data-tab="chat" onclick="app.switchTab('chat')">💬 Czat</button>
+      <button class="active" data-tab="profile">👤 Profil 3D</button>
+      <button data-tab="forum">💬 Forum & Poradniki</button>
+      <button data-tab="cpo">⚡ Skup TGN CPO</button>
+      <button data-tab="marketplace">🤝 Marketplace</button>
+      <button data-tab="chat">💬 Czat</button>
     </nav>
   </header>
 
@@ -266,22 +267,35 @@
       forumPosts: [
         {
           id: 1,
-          category: "⚙️ Custom Fitting",
-          title: "Jak dobrać shaft do prędkości swingu 96 mph?",
-          author: "Marek Kowalski",
-          date: "Dzisiaj",
-          content: "Czy przejście na Stiff w nowym Wilsonie Dynapower poprawi powtarzalność?",
+          category: "⚙️ Custom Fitting & Telemetria",
+          title: "Jak prawidłowo dobrać shaft (Stiff vs Regular) do prędkości swingu 96 mph?",
+          author: "Marek Kowalski (HCP 12.4)",
+          date: "Dzisiaj, 14:20",
+          content: "Cześć! Zauważyłem na TrackManie, że przy mojej średniej prędkości drivera 96 mph piłka czasem ucieka w prawo. Czy przejście z Regular na Stiff w nowym Wilsonie Dynapower rozwiąże problem?",
           comments: [
-            { author: "Trener PGA Tomasz", text: "Przy 96 mph Stiff da lepszą kontrolę spinu." }
+            { author: "Trener PGA Tomasz", text: "Przy 96 mph jesteś dokładnie na styku. Jeśli tempo swingu jest agresywne, Stiff da lepszą powtarzalność i mniejszy spin." },
+            { author: "Janusz_G (HCP 14)", text: "Potwierdzam, miałem to samo. Zmiana na Stiff dodała mi spokoju z tee." }
+          ]
+        },
+        {
+          id: 2,
+          category: "🎓 Porady Zawodowców (PGA Pro)",
+          title: "[PORADNIK] 3 złote zasady poprawy gappingu w dolnym zakresie torby",
+          author: "Pro Adam Szymański",
+          date: "Wczoraj",
+          content: "Wielu amatorów ma problem z lukami między Pitching Wedge a Sand Wedge. Oto krótki przewodnik, jak zmierzyć faktyczny carry na symulatorze i dobrać odpowiednie stopnie loftu (np. 50°, 54°, 58°).",
+          comments: [
+            { author: "Kamil_Golf", text: "Świetny artykuł! Właśnie miałem 15m dziury, dzięki za rozjaśnienie tematu." }
           ]
         }
       ],
       marketplace: [
-        { title: "Wilson Dynapower Driver", seller: "Janusz_G", price: "1 150 PLN", cond: "9/10", desc: "Znakomity driver, regular flex." }
+        { title: "Wilson Dynapower Driver", seller: "Janusz_G (HCP 14)", price: "1 150 PLN", cond: "Stan: 9/10", desc: "Znakomity driver, regular flex, mało używany." },
+        { title: "Zestaw Ironów Titleist T200 (5-PW)", seller: "Kamil_Golf (HCP 8.2)", price: "3 890 PLN", cond: "Stan: 8.5/10", desc: "Shaft Project X IO Stiff. Kute, świetne czucie." }
       ],
       chatMessages: [
-        { sender: "Janusz_G", text: "Cześć! Oferta na driver aktualna?", type: "incoming" },
-        { sender: "Marek Kowalski", text: "Tak, zapraszam do kontaktu.", type: "outgoing" }
+        { sender: "Janusz_G", text: "Cześć! Czy oferta na Wilson Dynapower jest jeszcze aktualna?", type: "incoming" },
+        { sender: "Marek Kowalski", text: "Cześć! Tak, aktualna. Jaki stan Cię interesuje i skąd jesteś?", type: "outgoing" }
       ]
     };
 
@@ -318,6 +332,14 @@
               </svg>
             </div>
           </div>
+
+          <div class="stat-card" style="border-color: var(--gold);">
+            <div>
+              <span style="color: var(--gold); font-weight: 700;">⚠️ Gapping AI: Sprawdź Gap Wedge</span>
+              <p style="font-size: 0.7rem; color: var(--text-muted);">Wykryto lukę 15m między Pitchingiem a Sand Wedge.</p>
+            </div>
+            <button class="btn-action" style="width: auto; padding: 0.3rem 0.8rem;" onclick="app.showToast('Optymalizacja Gap Wedge w toku...')">Analizuj</button>
+          </div>
         </section>
       `
     };
@@ -348,6 +370,7 @@
               <p style="font-size: 0.75rem; color: var(--text-muted);">CAŁKOWITA WARTOŚĆ TORBY</p>
               <strong style="font-size: 1.3rem; color: var(--accent);">14 200 PLN</strong>
               <button class="btn-action" onclick="app.switchTab('cpo')">⚡ SPRZEDAJ NATYCHMIAST DO SKUPU TGN CPO</button>
+              <button class="btn-action" style="background: rgba(250,204,21,0.1); border-color: var(--gold); color: var(--gold);" onclick="app.switchTab('cpo')">🔄 TRADE-IN NA NOWY MODEL 2026</button>
             </div>
           </section>
         `;
@@ -370,15 +393,29 @@
               <h3 style="font-size: 0.95rem; margin: 0.3rem 0; color: var(--text-main);">${post.title}</h3>
               <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Autor: ${post.author} • ${post.date}</p>
               <p style="font-size: 0.8rem; color: #cbd5e1; line-height: 1.4; margin-bottom: 0.8rem;">${post.content}</p>
-              ${commentsHTML}
+              
+              <div style="margin-top: 0.6rem;">
+                <p style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.3rem;">Komentarze (${post.comments.length}):</p>
+                ${commentsHTML}
+              </div>
+
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.8rem;">
+                <input type="text" id="commInput_${post.id}" placeholder="Napisz komentarz..." style="flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.4rem 0.6rem; color:#fff; font-size:0.75rem;" onkeypress="if(event.key==='Enter') app.addComment(${post.id})">
+                <button class="btn-action" style="width: auto; margin:0; padding: 0.4rem 0.8rem;" onclick="app.addComment(${post.id})">Wyślij</button>
+              </div>
             </div>
           `;
         }).join('');
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
-            <h2>💬 TGN Forum & Poradniki</h2>
-            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">${postsHTML}</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+              <h2>💬 TGN Forum & Poradniki PGA Pro</h2>
+              <button class="btn-action" style="width: auto; padding: 0.4rem 1rem; margin: 0;" onclick="app.showToast('Formularz nowego wątku...')">+ Utwórz nowy wątek</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              ${postsHTML}
+            </div>
           </section>
         `;
       }
@@ -391,16 +428,20 @@
             <div>
               <h3 style="font-size: 0.95rem; color: var(--text-main);">${c.name}</h3>
               <p style="font-size: 0.75rem; color: var(--text-muted);">${c.loft} • Stan: ${c.cond}</p>
-              <p style="font-size: 0.75rem; color: var(--accent); margin-top: 0.3rem;">Wycena skupu: <strong style="color: var(--gold);">${c.cpoOffer}</strong></p>
+              <p style="font-size: 0.75rem; color: var(--accent); margin-top: 0.3rem;">Gwarantowana wycena skupu: <strong style="color: var(--gold);">${c.cpoOffer}</strong></p>
             </div>
-            <button class="btn-action" style="width: auto; padding: 0.5rem 1rem;" onclick="app.showToast('Zlecono skup CPO!')">Sprzedaj</button>
+            <div style="display: flex; flex-direction: column; gap: 0.4rem; min-width: 140px;">
+              <button class="btn-action" style="margin:0; padding:0.4rem;" onclick="app.showToast('Zlecono skup CPO dla: ${c.name}')">Sprzedaj za gotówkę</button>
+              <button class="btn-action" style="margin:0; padding:0.4rem; background:rgba(250,204,21,0.1); border-color:var(--gold); color:var(--gold);" onclick="app.showToast('Wygenerowano Trade-In 2026!')">Trade-In na 2026</button>
+            </div>
           </div>
         `).join('');
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
             <h2>⚡ Skup TGN CPO (Certified Pre-Owned)</h2>
-            <div class="cpo-grid" style="margin-top: 1rem;">${itemsHTML}</div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem;">Wybierz sprzęt ze swojej cyfrowej torby i wymień go na gotówkę w 24h.</p>
+            <div class="cpo-grid">${itemsHTML}</div>
           </section>
         `;
       }
@@ -415,7 +456,13 @@
               <h3 style="font-size: 0.95rem; margin: 0.3rem 0; color: var(--text-main);">${item.title}</h3>
               <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.6rem;">${item.desc}</p>
             </div>
-            <button class="btn-action" onclick="app.switchTab('chat')">Napisz do sprzedawcy</button>
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.7rem; color: var(--text-muted);">Od: ${item.seller}</span>
+                <strong style="font-size: 1rem; color: var(--accent);">${item.price}</strong>
+              </div>
+              <button class="btn-action" onclick="app.openChat('${item.seller}')">Napisz do sprzedawcy</button>
+            </div>
           </div>
         `).join('');
 
@@ -439,7 +486,7 @@
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
-            <h2>💬 Czat ze sprzedawcą</h2>
+            <h2>💬 Czat bezpośredni ze sprzedawcą</h2>
             <div class="chat-container" style="margin-top: 1rem;">
               <div class="chat-messages" id="chatMsgs">${msgsHTML}</div>
               <div class="chat-input-area">
@@ -455,10 +502,11 @@
     const app = {
       switchTab: (tabName) => {
         const container = document.getElementById('appContainer');
+        if (!container) return;
         
         if (tabName === 'profile') {
           container.innerHTML = ProfileComponent.render() + BagComponent.render();
-        } else if (tabname === 'forum' || tabName === 'forum') {
+        } else if (tabName === 'forum') {
           container.innerHTML = ForumComponent.render();
         } else if (tabName === 'cpo') {
           container.innerHTML = CpoComponent.render();
@@ -474,6 +522,24 @@
         });
       },
 
+      addComment: (postId) => {
+        const input = document.getElementById('commInput_' + postId);
+        const text = input ? input.value.trim() : '';
+        if (!text) return;
+
+        const post = AppData.forumPosts.find(p => p.id === postId);
+        if (post) {
+          post.comments.push({ author: AppData.user.name + " (Ty)", text: text });
+          app.switchTab('forum');
+          app.showToast('Dodano komentarz do wątku!');
+        }
+      },
+
+      openChat: (sellerName) => {
+        app.switchTab('chat');
+        app.showToast('Otwarto czat z: ' + sellerName);
+      },
+
       sendChatMessage: () => {
         const input = document.getElementById('chatInput');
         if (!input || !input.value.trim()) return;
@@ -483,6 +549,15 @@
         
         document.getElementById('appContainer').innerHTML = ChatComponent.render();
         app.scrollChatToBottom();
+
+        setTimeout(() => {
+          AppData.chatMessages.push({ sender: "Janusz_G", text: "Brzmi super! Daj znać kiedy pasuje Ci runda.", type: "incoming" });
+          const activeBtn = document.querySelector('#mainNav button.active');
+          if (activeBtn && activeBtn.dataset.tab === 'chat') {
+            document.getElementById('appContainer').innerHTML = ChatComponent.render();
+            app.scrollChatToBottom();
+          }
+        }, 1200);
       },
 
       scrollChatToBottom: () => {
@@ -492,13 +567,25 @@
 
       showToast: (msg) => {
         const toast = document.getElementById('toast');
+        if (!toast) return;
         toast.textContent = msg;
         toast.style.display = 'block';
         setTimeout(() => { toast.style.display = 'none'; }, 2500);
       }
     };
 
-    window.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('#mainNav button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          app.switchTab(btn.dataset.tab);
+        });
+      });
+
+      const logoBtn = document.getElementById('logoBtn');
+      if (logoBtn) {
+        logoBtn.addEventListener('click', () => app.switchTab('profile'));
+      }
+
       app.switchTab('profile');
     });
   </script>
