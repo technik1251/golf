@@ -488,6 +488,85 @@
       margin-bottom: 0.8rem;
     }
 
+    /* Atlas Pól Golfowych w Polsce */
+    .courses-search-bar {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .courses-search-bar input {
+      flex: 1;
+      min-width: 240px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 0.65rem 1rem;
+      color: #fff;
+      font-size: 0.82rem;
+      outline: none;
+    }
+    .courses-search-bar input:focus {
+      border-color: var(--accent);
+    }
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.1rem;
+      width: 100%;
+    }
+    .course-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 16px;
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: 0.25s;
+    }
+    .course-card:hover {
+      border-color: var(--accent);
+      background: rgba(74, 222, 128, 0.05);
+      transform: translateY(-2px);
+    }
+    .course-holes-badge {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+    .holes-18 {
+      background: rgba(74, 222, 128, 0.16);
+      color: var(--accent);
+      border: 1px solid rgba(74, 222, 128, 0.4);
+    }
+    .holes-9 {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--blue);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+    .course-specs-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.4rem;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 0.55rem;
+      border-radius: 8px;
+      margin: 0.65rem 0;
+      text-align: center;
+      font-size: 0.72rem;
+    }
+    .course-specs-bar span {
+      display: block;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+    }
+    .course-specs-bar strong {
+      color: var(--text-main);
+    }
+
     /* Oficjalny Sklep TGN (Store) */
     .store-banner {
       background: linear-gradient(135deg, rgba(74, 222, 128, 0.16), rgba(250, 204, 21, 0.1));
@@ -894,7 +973,7 @@
         max-width: 200px;
         margin: 0 auto;
       }
-      .market-grid, .store-grid, .events-grid {
+      .market-grid, .store-grid, .events-grid, .courses-grid {
         grid-template-columns: 1fr;
       }
       .cpo-item {
@@ -918,11 +997,12 @@
         <span>TGN</span> GLOBAL GOLF
       </div>
       <div id="headerRightInfo" style="display:flex; align-items:center; gap:0.75rem;">
-        <span style="font-size: 0.7rem; color: var(--text-muted);">Live Club Engine & 2027 Tour v5.0</span>
+        <span style="font-size: 0.7rem; color: var(--text-muted);">Polish Golf Courses Atlas v6.0</span>
       </div>
     </div>
     <nav id="mainNav" style="display:none;">
       <button class="active" data-tab="profile">👤 Kokpit 3D & Torba</button>
+      <button data-tab="pola">⛳ Pola w Polsce (Atlas)</button>
       <button data-tab="wydarzenia">📅 Wydarzenia 2027</button>
       <button data-tab="sklep">🛍️ Sklep TGN 2026</button>
       <button data-tab="forum">💬 Forum (2021–2026)</button>
@@ -1105,7 +1185,7 @@
     };
 
     /* =========================================================================
-       BAZA DANYCH APLIKACJI (STAN, WYDARZENIA 2027, SKLEP 2026, TORBA, FORUM, C2C)
+       BAZA DANYCH APLIKACJI (WSZYSTKIE POLA W POLSCE, WYDARZENIA 2027, SKLEP, TORBA)
        ========================================================================= */
     const DefaultUser = {
       name: "Marek Kowalski",
@@ -1113,7 +1193,7 @@
       hcp: 12.4,
       level: "Średniozaawansowany",
       city: "Warszawa",
-      lastRound: "82 (Sobota)",
+      lastRound: "82 (Sobota • First Warsaw)",
       swingSpeed: "96 mph"
     };
 
@@ -1121,6 +1201,8 @@
       activeForumFilter: "ALL",
       activeStoreFilter: "ALL",
       activeEventFilter: "ALL",
+      activeCourseFilter: "ALL",
+      courseSearchQuery: "",
       cart: [],
       user: { ...DefaultUser },
       bag: [
@@ -1160,6 +1242,34 @@
           cond: "Mint",
           imgUrl: "https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=85"
         }
+      ],
+      /* KOMPLETNY ATLAS PÓL GOLFOWYCH W POLSCE (MISTRZOWSKIE 18+ ORAZ 9-DOŁKOWE) */
+      polishCourses: [
+        { id: 1, name: "Modry Las Golf Resort (PGA National Poland)", city: "Choszczno", voivodeship: "Zachodniopomorskie", region: "POLNOC", holes: 18, holesLabel: "18 + 9 dołków", par: 72, cr: 72.8, slope: 136, length: "6 350 m", greenFee: "360 PLN", desc: "Projekt Gary'ego Playera. Jedno z najwyżej ocenianych pól mistrzowskich w Europie Środkowej.", aiTip: "Wymaga kontrolowanego fade'u z tee na dołkach wzdłuż jeziora." },
+        { id: 2, name: "Binowo Park Golf Club", city: "Szczecin / Binowo", voivodeship: "Zachodniopomorskie", region: "POLNOC", holes: 18, holesLabel: "18 + 9 dołków", par: 72, cr: 71.5, slope: 131, length: "6 014 m", greenFee: "290 PLN", desc: "Położone w Szczecińskim Parku Krajobrazowym Puszcza Bukowa, niezwykle malownicze i pagórkowate.", aiTip: "Duże przewyższenia – używaj dalmierza z kompensacją nachylenia (Slope)." },
+        { id: 3, name: "Amber Baltic Golf Club", city: "Kołczewo (Wolin)", voivodeship: "Zachodniopomorskie", region: "POLNOC", holes: 18, holesLabel: "18 + 9 dołków", par: 72, cr: 71.2, slope: 128, length: "5 960 m", greenFee: "280 PLN", desc: "Najstarsze pole na Pomorzu Zachodnim tuż obok Międzyzdrojów i Bałtyku, gospodarz turniejów międzynarodowych.", aiTip: "Silny wiatr od morza – trzymaj niski kąt startu piłki (low punch)." },
+        { id: 4, name: "Kamień Country Club", city: "Grębowo k. Kamienia Pom.", voivodeship: "Zachodniopomorskie", region: "POLNOC", holes: 18, holesLabel: "18 dołków", par: 72, cr: 71.8, slope: 129, length: "6 095 m", greenFee: "250 PLN", desc: "Szerokie fairwaye i nowoczesny układ łączący cechy pola parkowego i otwartego.", aiTip: "Świetne pole na atakowanie driverem Qi10 na pełnej prędkości 96 mph." },
+        { id: 5, name: "First Warsaw Golf & Country Club", city: "Rajszew k. Warszawy", voivodeship: "Mazowieckie", region: "CENTRUM", holes: 18, holesLabel: "18 dołków", par: 72, cr: 73.4, slope: 140, length: "6 265 m", greenFee: "380 PLN", desc: "Pierwsze pole w Polsce (zał. 1991), położone w starorzeczu Wisły, bardzo techniczne z wąskimi przesmykami.", aiTip: "Wysoki Slope (140) – na dołkach 11–16 lepsza hybryda lub 3-wood niż driver." },
+        { id: 6, name: "Sobienie Królewskie Golf & Country Club", city: "Sobienie Jeziory", voivodeship: "Mazowieckie", region: "CENTRUM", holes: 18, holesLabel: "18 dołków", par: 71, cr: 71.6, slope: 132, length: "6 042 m", greenFee: "320 PLN", desc: "Pole w stylu brytyjskiego heathland/links na piaszczystym podłożu, grywalne niemal cały rok.", aiTip: "Twarde fairwaye dają duży roll – celuj przed bunkry." },
+        { id: 7, name: "Pole Golfowe Lisia Polana", city: "Pomocnia k. Warszawy", voivodeship: "Mazowieckie", region: "CENTRUM", holes: 18, holesLabel: "18 dołków", par: 72, cr: 72.1, slope: 130, length: "6 150 m", greenFee: "290 PLN", desc: "Mistrzowskie pole nad Wkrą z szerokimi fairwayami i pofałdowanymi greenami.", aiTip: "Kluczowe podejścia z 90–110m – idealne pod Twój nowy Gap Wedge 52°." },
+        { id: 8, name: "Sierra Golf Resort", city: "Pętkowice k. Wejherowa", voivodeship: "Pomorskie", region: "POLNOC", holes: 18, holesLabel: "18 + 9 dołków", par: 72, cr: 72.4, slope: 135, length: "6 210 m", greenFee: "350 PLN", desc: "Perfekcyjnie utrzymany obiekt parkowy z ponad 11 tysiącami drzew i szybkimi greenami.", aiTip: "Szybkość greenów powyżej 10.5 ft – uważaj na puty z góry." },
+        { id: 9, name: "Postołowo Golf Club", city: "Postołowo k. Gdańska", voivodeship: "Pomorskie", region: "POLNOC", holes: 18, holesLabel: "18 dołków", par: 72, cr: 75.5, slope: 141, length: "7 113 m (Back Tee)", greenFee: "340 PLN", desc: "Drugie najdłuższe pole w Europie z białych/czarnych tee, otoczone kaszubskimi jeziorami.", aiTip: "Najtrudniejszy test dystansu w Polsce – maksymalizuj Smash Factor." },
+        { id: 10, name: "Tokary Golf Club", city: "Przodkowo (Trójmiasto)", voivodeship: "Pomorskie", region: "POLNOC", holes: 18, holesLabel: "18 dołków", par: 72, cr: 70.1, slope: 126, length: "5 650 m", greenFee: "260 PLN", desc: "Kaszubska Szwajcaria – duże różnice wzniesień i techniczne dołki leśne.", aiTip: "Gra na precyzję ironami Mizuno JPX ważniejsza niż dystans z tee." },
+        { id: 11, name: "Sand Valley Golf Resort", city: "Pasłęk k. Elbląga", voivodeship: "Warmińsko-Mazurskie", region: "POLNOC", holes: 18, holesLabel: "18 + 6 dołków", par: 72, cr: 73.1, slope: 135, length: "6 285 m", greenFee: "360 PLN", desc: "Polski desert/links zaprojektowany przez Tilandera i Rauhala, rozległe waste bunkers.", aiTip: "Unikaj piaszczystych stref waste – celuj w środek szerokich greenów." },
+        { id: 12, name: "Mazury Golf & Country Club", city: "Naterki k. Olsztyna", voivodeship: "Warmińsko-Mazurskie", region: "POLNOC", holes: 18, holesLabel: "18 dołków", par: 72, cr: 72.6, slope: 134, length: "6 231 m", greenFee: "280 PLN", desc: "Dzieło Martina Hawtree w sercu Warmii i Mazur, naturalne przeszkody wodne i lasy.", aiTip: "Uważaj na ślepe uderzenia na drugiej dziewiątce." },
+        { id: 13, name: "Rosa Private Golf Club", city: "Konopiska k. Częstochowy", voivodeship: "Śląskie", region: "POLUDNIE", holes: 18, holesLabel: "18 dołków", par: 72, cr: 73.8, slope: 138, length: "6 410 m", greenFee: "420 PLN", desc: "Luksusowe pole mistrzowskie, wielokrotny gospodarz turniejów zawodowych Challenge Tour.", aiTip: "Woda w grze na 14 z 18 dołków – zachowaj konserwatywny Course Management." },
+        { id: 14, name: "Krakow Valley Golf & Country Club", city: "Paczółtowice", voivodeship: "Małopolskie", region: "POLUDNIE", holes: 18, holesLabel: "18 + 9 dołków", par: 72, cr: 73.9, slope: 137, length: "6 518 m", greenFee: "300 PLN", desc: "Zaprojektowane przez Ronalda Freama na Jurze Krakowsko-Częstochowskiej, głębokie bunkry.", aiTip: "Długie Par 4 pod wiatr – przygotuj dobrą grę hybrydą." },
+        { id: 15, name: "Royal Kraków Golf & Country Club", city: "Ochmanów k. Wieliczki", voivodeship: "Małopolskie", region: "POLUDNIE", holes: 18, holesLabel: "18 dołków", par: 72, cr: 70.8, slope: 127, length: "5 890 m", greenFee: "260 PLN", desc: "Malownicze pole na wzgórzach pod Krakowem z piękną panoramą Pogórza Wielickiego.", aiTip: "Świetne pole na pobicie życiówki poniżej 80 uderzeń." },
+        { id: 16, name: "Toya Golf & Country Club Wrocław", city: "Kryniczno k. Wrocławia", voivodeship: "Dolnośląskie", region: "POLUDNIE", holes: 18, holesLabel: "18 dołków", par: 72, cr: 72.3, slope: 133, length: "6 215 m", greenFee: "320 PLN", desc: "Pole zbudowane na dawnym poligonie, liczne stawy i perfekcyjny drenaż.", aiTip: "Zwróć uwagę na pozycję flagi na wielopoziomowych greenach." },
+        { id: 17, name: "Gradi Golf Club", city: "Brzeźno k. Wrocławia", voivodeship: "Dolnośląskie", region: "POLUDNIE", holes: 18, holesLabel: "18 dołków", par: 71, cr: 70.4, slope: 128, length: "5 780 m", greenFee: "270 PLN", desc: "Pole przy Pałacu Brzeźno, gospodarz turniejów Pro Golf Tour, słynie z dołka nr 15 z wyspowym greenem.", aiTip: "Na 15. dołku (Par 3 na wyspę) dobierz kij o pół numeru większy przy wietrze." },
+        { id: 18, name: "Śląski Klub Golfowy", city: "Siemianowice Śląskie", voivodeship: "Śląskie", region: "POLUDNIE", holes: 18, holesLabel: "18 dołków", par: 72, cr: 71.4, slope: 130, length: "6 010 m", greenFee: "260 PLN", desc: "Klasyczne pole parkowe w sercu aglomeracji śląskiej z dojrzałym drzewostanem.", aiTip: "Wąskie wyjścia z tee na pierwszej dziewiątce." },
+        { id: 19, name: "Kalinowe Pola Golf Village", city: "Niesulice k. Świebodzina", voivodeship: "Lubuskie", region: "POLUDNIE", holes: 18, holesLabel: "18 + 9 dołków", par: 72, cr: 72.2, slope: 131, length: "6 180 m", greenFee: "290 PLN", desc: "Kompleks golfowy nad jeziorem Niesłysz, znany z fantastycznej atmosfery turniejowej.", aiTip: "Idealne pod dwudniowe turnieje społeczności TGN." },
+        { id: 20, name: "Black Water Links", city: "Tarnowo Podgórne k. Poznania", voivodeship: "Wielkopolskie", region: "CENTRUM", holes: 18, holesLabel: "18 + 6 dołków", par: 72, cr: 72.9, slope: 134, length: "6 390 m", greenFee: "310 PLN", desc: "Najnowsze pełnowymiarowe pole mistrzowskie w Wielkopolsce w czystym stylu szkockiego links.", aiTip: "Wietrzny, otwarty teren – prowadź piłkę nisko nad ziemią." },
+        { id: 21, name: "A&A Arkadia Golf Club", city: "Pabianice k. Łodzi", voivodeship: "Łódzkie", region: "CENTRUM", holes: 18, holesLabel: "18 dołków", par: 72, cr: 70.9, slope: 125, length: "5 850 m", greenFee: "220 PLN", desc: "Centralnie położone pole w Polsce, świetne do szybkich rund treningowych.", aiTip: "Przyjazny Slope (125) – świetne miejsce na testowanie nowych kijów." },
+        { id: 22, name: "Gorzowski Klub Golfowy Zawarcie", city: "Gorzów Wielkopolski", voivodeship: "Lubuskie", region: "POLNOC", holes: 9, holesLabel: "9 dołków", par: 72, cr: 70.2, slope: 124, length: "2 822 m (9d)", greenFee: "150 PLN", desc: "Miejskie 9-dołkowe pole nad Wartą skalibrowane do ciekawej 18-dołkowej rundy.", aiTip: "Szybki trening dokładności żelaz i krótkiej gry." },
+        { id: 23, name: "Tatfort Golf Club", city: "Toruń", voivodeship: "Kujawsko-Pomorskie", region: "CENTRUM", holes: 9, holesLabel: "9 dołków", par: 70, cr: 68.5, slope: 119, length: "2 650 m (9d)", greenFee: "140 PLN", desc: "Pole zlokalizowane w granicach administracyjnych Torunia z rozbudowanym driving range.", aiTip: "Idealne na trening wedge'y 50°–58°." },
+        { id: 24, name: "Golf Park Lipowy Most", city: "Supraśl k. Białegostoku", voivodeship: "Podlaskie", region: "POLNOC", holes: 9, holesLabel: "9 dołków", par: 70, cr: 69.1, slope: 123, length: "2 710 m (9d)", greenFee: "150 PLN", desc: "Kameralne pole w sercu Puszczy Knyszyńskiej.", aiTip: "Wąskie leśne korytarze wymagają prostej gry z tee." },
+        { id: 25, name: "Karolinka Golf Park & Armada Golf", city: "Kamień Śląski / Bytom", voivodeship: "Opolskie / Śląskie", region: "POLUDNIE", holes: 9, holesLabel: "9 dołków", par: 72, cr: 69.8, slope: 125, length: "2 910 m (9d)", greenFee: "160 PLN", desc: "Nowoczesne obiekty 9-dołkowe na południu Polski z doskonałą infrastrukturą treningową.", aiTip: "Świetne na 2-godzinną rundę po pracy." }
       ],
       events2027: [
         {
@@ -1227,7 +1337,7 @@
           cat: "CAMP",
           title: "☀️ Letnia Akademia Short Game & Bunkier Masterclass z PGA Pro",
           date: "16–18 Lipca 2027",
-          location: " Rosa Private Golf Club (Częstochowa)",
+          location: "Rosa Private Golf Club (Częstochowa)",
           format: "3-dniowy obóz treningowy + runda egzaminacyjna",
           fee: "1 490 PLN",
           xpReward: "+400 XP",
@@ -1505,7 +1615,7 @@
         document.getElementById('authScreen').style.display = 'flex';
         document.getElementById('mainNav').style.display = 'none';
         document.getElementById('appContainer').style.display = 'none';
-        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Live Club Engine & 2027 Tour v5.0</span>`;
+        document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Polish Golf Courses Atlas v6.0</span>`;
         app.showToast('Wylogowano z kokpitu 3D');
       }
     };
@@ -1649,7 +1759,97 @@
     };
 
     /* =========================================================================
-       NOWY KOMPONENT: KALENDARZ I ANALIZA WYDARZEŃ SEZONU 2027
+       NOWY KOMPONENT: ATLAS I ANALIZA WSZYSTKICH PÓL GOLFOWYCH W POLSCE
+       ========================================================================= */
+    const PolishCoursesComponent = {
+      render: () => {
+        const q = AppData.courseSearchQuery.toLowerCase();
+        const filtered = AppData.polishCourses.filter(c => {
+          const matchesQuery = !q || c.name.toLowerCase().includes(q) || c.city.toLowerCase().includes(q) || c.voivodeship.toLowerCase().includes(q);
+          if (!matchesQuery) return false;
+          if (AppData.activeCourseFilter === "18") return c.holes === 18;
+          if (AppData.activeCourseFilter === "9") return c.holes === 9;
+          if (AppData.activeCourseFilter === "POLNOC") return c.region === "POLNOC";
+          if (AppData.activeCourseFilter === "CENTRUM") return c.region === "CENTRUM";
+          if (AppData.activeCourseFilter === "POLUDNIE") return c.region === "POLUDNIE";
+          return true;
+        });
+
+        let coursesHTML = filtered.map(c => {
+          // Automatyczne wyliczenie Playing HCP dla aktualnego gracza ze wzoru WHS: HCP * (Slope / 113) + (CR - Par)
+          const playingHcp = Math.round(AppData.user.hcp * (c.slope / 113) + (c.cr - c.par));
+
+          return `
+            <div class="course-card">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:0.45rem;">
+                  <span class="course-holes-badge ${c.holes === 18 ? 'holes-18' : 'holes-9'}">⛳ ${c.holesLabel} • PAR ${c.par}</span>
+                  <span style="font-size:0.72rem; color:var(--gold); font-weight:700;">Green Fee: ~${c.greenFee}</span>
+                </div>
+
+                <h3 style="font-size: 0.98rem; color: var(--text-main); margin-bottom: 0.2rem;">${c.name}</h3>
+                <p style="font-size: 0.74rem; color: var(--accent); font-weight:600; margin-bottom: 0.45rem;">📍 ${c.city} (woj. ${c.voivodeship})</p>
+                <p style="font-size: 0.76rem; color: var(--text-muted); line-height: 1.4;">${c.desc}</p>
+
+                <div class="course-specs-bar">
+                  <div><span>Długość</span><strong>${c.length}</strong></div>
+                  <div><span>Course Rating</span><strong>${c.cr}</strong></div>
+                  <div><span>Slope Rating</span><strong>${c.slope}</strong></div>
+                  <div><span>Twój Course HCP</span><strong style="color:var(--accent);">+${playingHcp} ud.</strong></div>
+                </div>
+
+                <div style="background:rgba(74, 222, 128, 0.08); border:1px solid rgba(74, 222, 128, 0.25); border-radius:8px; padding:0.45rem 0.65rem; font-size:0.72rem; color:#cbd5e1; margin-bottom:0.65rem;">
+                  🎯 <strong style="color:var(--accent);">Wskazówka TGN Caddy AI:</strong> ${c.aiTip}
+                </div>
+              </div>
+
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
+                <button class="btn-action" style="margin:0; padding:0.45rem;" onclick="app.logRoundOnCourse('${c.name.replace(/'/g, "")}')">📝 Zapisz rundę tutaj</button>
+                <button class="btn-action" style="margin:0; padding:0.45rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="app.showToast('Zarezerwowano Tee Time na: ${c.name.replace(/'/g, "")}')">🕒 Rezerwuj Tee Time</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <section class="panel-3d" style="grid-column: span 2;">
+            <h2>
+              <span>⛳ Atlas & Analiza Wszystkich Pól Golfowych w Polsce (${filtered.length} obiektów)</span>
+              <span style="font-size:0.75rem; color:var(--gold);">Automatyczny przelicznik WHS Course Handicap dla HCP ${AppData.user.hcp}</span>
+            </h2>
+
+            <!-- Statystyki polskiego golfa -->
+            <div class="forum-stats-bar">
+              <div><div class="forum-stat-num">21+</div><div class="forum-stat-lbl">Pól Mistrzowskich 18d</div></div>
+              <div><div class="forum-stat-num">35+</div><div class="forum-stat-lbl">Pól 9-dołkowych & Akademii</div></div>
+              <div><div class="forum-stat-num">141</div><div class="forum-stat-lbl">Najwyższy Slope (Postołowo)</div></div>
+              <div><div class="forum-stat-num" style="color:var(--gold);">HCP ${AppData.user.hcp}</div><div class="forum-stat-lbl">Twoja baza WHS</div></div>
+            </div>
+
+            <!-- Wyszukiwarka i filtry -->
+            <div class="courses-search-bar">
+              <input type="text" id="courseSearchInput" placeholder="🔍 Szukaj pola po nazwie, mieście lub województwie (np. Szczecin, Binowo, Modry Las, Warszawa)..." value="${AppData.courseSearchQuery}" oninput="app.searchCourses(this.value)">
+            </div>
+
+            <div class="forum-filters">
+              <button class="filter-pill ${AppData.activeCourseFilter === 'ALL' ? 'active' : ''}" onclick="app.filterCourses('ALL')">Wszystkie w atlasie (${AppData.polishCourses.length})</button>
+              <button class="filter-pill ${AppData.activeCourseFilter === '18' ? 'active' : ''}" onclick="app.filterCourses('18')">🏆 Mistrzowskie 18-dołkowe</button>
+              <button class="filter-pill ${AppData.activeCourseFilter === '9' ? 'active' : ''}" onclick="app.filterCourses('9')">⛳ Pola 9-dołkowe & Miejskie</button>
+              <button class="filter-pill ${AppData.activeCourseFilter === 'POLNOC' ? 'active' : ''}" onclick="app.filterCourses('POLNOC')">🌊 Północ (Zachodniopomorskie / Pomorze / Mazury)</button>
+              <button class="filter-pill ${AppData.activeCourseFilter === 'CENTRUM' ? 'active' : ''}" onclick="app.filterCourses('CENTRUM')">🏙️ Centrum (Mazowsze / Wielkopolska / Łódzkie)</button>
+              <button class="filter-pill ${AppData.activeCourseFilter === 'POLUDNIE' ? 'active' : ''}" onclick="app.filterCourses('POLUDNIE')">⛰️ Południe i Zachód (Śląsk / Małopolska / Dolny Śląsk)</button>
+            </div>
+
+            <div class="courses-grid">
+              ${coursesHTML}
+            </div>
+          </section>
+        `;
+      }
+    };
+
+    /* =========================================================================
+       KOMPONENT: KALENDARZ I ANALIZA WYDARZEŃ SEZONU 2027
        ========================================================================= */
     const Events2027Component = {
       render: () => {
@@ -1695,12 +1895,11 @@
               <span style="font-size:0.76rem; color:var(--gold);">Twoje aktywne zapisy na 2027: ${registeredCount}/6</span>
             </h2>
 
-            <!-- Panel Analityczny Sezonu 2027 -->
             <div class="events-analysis-box">
               <div>
                 <h3 style="font-size: 0.96rem; color: var(--blue); margin-bottom: 0.35rem;">📊 Raport Analityczny TGN AI na Sezon 2027 dla: ${AppData.user.name} (HCP ${AppData.user.hcp})</h3>
                 <p style="font-size: 0.78rem; color: var(--text-main); line-height: 1.5;">
-                  Na podstawie Twoich wyników z jesieni 2026 (ostatnia runda: 82 uderzenia, prędkość swingu: <strong>${AppData.user.swingSpeed}</strong>) przygotowaliśmy harmonogram startów na 2027 rok. Po uzupełnieniu luki gappingowej (Wedge 52°) oraz starcie w 3 turniejach rangi <strong>TGN Major</strong> prognozujemy spadek Twojego HCP do poziomu <strong>9.8 (Single Digit)</strong> do września 2027.
+                  Na podstawie Twoich wyników z jesieni 2026 (ostatnia runda: ${AppData.user.lastRound}, prędkość swingu: <strong>${AppData.user.swingSpeed}</strong>) przygotowaliśmy harmonogram startów na 2027 rok. Po uzupełnieniu luki gappingowej (Wedge 52°) oraz starcie w 3 turniejach rangi <strong>TGN Major</strong> prognozujemy spadek Twojego HCP do poziomu <strong>9.8 (Single Digit)</strong> do września 2027.
                 </p>
               </div>
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.6rem; text-align:center;">
@@ -1715,7 +1914,6 @@
               </div>
             </div>
 
-            <!-- Filtry kategorii wydarzeń 2027 -->
             <div class="forum-filters">
               <button class="filter-pill ${AppData.activeEventFilter === 'ALL' ? 'active' : ''}" onclick="app.filterEvents('ALL')">Wszystkie wydarzenia 2027 (6)</button>
               <button class="filter-pill ${AppData.activeEventFilter === 'MAJOR' ? 'active' : ''}" onclick="app.filterEvents('MAJOR')">🏆 Turnieje Polowe (Majors)</button>
@@ -1733,7 +1931,7 @@
     };
 
     /* =========================================================================
-       KOMPONENT 2: OFICJALNY SKLEP TGN (PRO SHOP & KOLEKCJA 2026)
+       KOMPONENT: OFICJALNY SKLEP TGN (PRO SHOP & KOLEKCJA 2026)
        ========================================================================= */
     const StoreComponent = {
       render: () => {
@@ -1819,7 +2017,7 @@
     };
 
     /* =========================================================================
-       KOMPONENT 3: ROZBUDOWANE 5-LETNIE FORUM (2021–2026)
+       KOMPONENT: ROZBUDOWANE 5-LETNIE FORUM (2021–2026)
        ========================================================================= */
     const ForumComponent = {
       render: () => {
@@ -1913,7 +2111,7 @@
     };
 
     /* =========================================================================
-       KOMPONENT 4: SKUP TGN CPO (ZE ZDJĘCIAMI KIJÓW Z TORBY)
+       KOMPONENT: SKUP TGN CPO (ZE ZDJĘCIAMI KIJÓW Z TORBY)
        ========================================================================= */
     const CpoComponent = {
       render: () => {
@@ -1949,7 +2147,7 @@
     };
 
     /* =========================================================================
-       KOMPONENT 5: MARKETPLACE C2C (ZE ZDJĘCIAMI KIJÓW NA ŻYWO)
+       KOMPONENT: MARKETPLACE C2C (ZE ZDJĘCIAMI KIJÓW NA ŻYWO)
        ========================================================================= */
     const MarketplaceComponent = {
       render: () => {
@@ -1992,7 +2190,7 @@
     };
 
     /* =========================================================================
-       KOMPONENT 6: CZAT ZE SPRZEDAWCĄ
+       KOMPONENT: CZAT ZE SPRZEDAWCĄ
        ========================================================================= */
     const ChatComponent = {
       render: () => {
@@ -2032,7 +2230,8 @@
           ProfileAndBagComponent.afterRender();
         } else {
           container.style.gridTemplateColumns = "1fr";
-          if (tabName === 'wydarzenia') container.innerHTML = Events2027Component.render();
+          if (tabName === 'pola') container.innerHTML = PolishCoursesComponent.render();
+          else if (tabName === 'wydarzenia') container.innerHTML = Events2027Component.render();
           else if (tabName === 'sklep') container.innerHTML = StoreComponent.render();
           else if (tabName === 'forum') container.innerHTML = ForumComponent.render();
           else if (tabName === 'cpo') container.innerHTML = CpoComponent.render();
@@ -2046,6 +2245,28 @@
         document.querySelectorAll('#mainNav button').forEach(btn => {
           btn.classList.toggle('active', btn.dataset.tab === tabName);
         });
+      },
+
+      filterCourses: (filterKey) => {
+        AppData.activeCourseFilter = filterKey;
+        app.switchTab('pola');
+      },
+
+      searchCourses: (val) => {
+        AppData.courseSearchQuery = val;
+        app.switchTab('pola');
+        const input = document.getElementById('courseSearchInput');
+        if (input) {
+          input.focus();
+          input.setSelectionRange(input.value.length, input.value.length);
+        }
+      },
+
+      logRoundOnCourse: (courseName) => {
+        const score = Math.floor(Math.random() * 6) + 79; // Symulacja dobrego wyniku 79-84
+        AppData.user.lastRound = `${score} (${courseName})`;
+        localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
+        app.showToast(`Zapisano nową rundę: ${score} uderzeń na polu ${courseName}!`);
       },
 
       filterEvents: (cat) => {
