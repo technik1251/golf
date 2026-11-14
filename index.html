@@ -12,6 +12,7 @@
       --accent: #4ade80;
       --accent-glow: rgba(74, 222, 128, 0.2);
       --gold: #facc15;
+      --blue: #38bdf8;
       --text-main: #f1f5f9;
       --text-muted: #94a3b8;
     }
@@ -76,7 +77,7 @@
       gap: 2rem;
       padding: 2rem 3rem;
       perspective: 1600px;
-      align-items: center;
+      align-items: start;
       max-width: 1600px;
       margin: 0 auto;
       width: 100%;
@@ -140,22 +141,124 @@
     }
     .btn-action:active { background: var(--accent); color: #052e16; }
 
-    .forum-post-card {
-      background: rgba(255, 255, 255, 0.04);
+    /* Rozbudowane Forum 5-letniej społeczności */
+    .forum-stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.8rem;
+      background: rgba(0, 0, 0, 0.35);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 0.8rem;
+      padding: 0.9rem;
+      margin-bottom: 1.2rem;
+      text-align: center;
     }
-    .comment-box {
-      background: rgba(0, 0, 0, 0.3);
-      border-left: 3px solid var(--accent);
-      padding: 0.8rem;
-      border-radius: 0 8px 8px 0;
-      margin-top: 0.6rem;
-      font-size: 0.78rem;
+    .forum-stat-num { font-size: 1.1rem; font-weight: 800; color: var(--accent); }
+    .forum-stat-lbl { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .forum-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+    }
+    .filter-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .filter-pill.active, .filter-pill:hover {
+      background: rgba(74, 222, 128, 0.18);
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
+    .forum-post-card {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .forum-post-card.pinned {
+      border-color: rgba(250, 204, 21, 0.45);
+      background: linear-gradient(145deg, rgba(250, 204, 21, 0.05), rgba(255, 255, 255, 0.03));
+    }
+
+    .post-meta-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
+    .user-badge {
+      font-size: 0.62rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-left: 4px;
+    }
+    .badge-og { background: rgba(56, 189, 248, 0.15); color: var(--blue); border: 1px solid rgba(56, 189, 248, 0.4); }
+    .badge-pro { background: rgba(250, 204, 21, 0.15); color: var(--gold); border: 1px solid rgba(250, 204, 21, 0.4); }
+    .badge-vet { background: rgba(74, 222, 128, 0.15); color: var(--accent); border: 1px solid rgba(74, 222, 128, 0.4); }
+
+    .post-metrics {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 0.7rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .comment-box {
+      background: rgba(0, 0, 0, 0.32);
+      border-left: 3px solid var(--accent);
+      padding: 0.75rem 0.9rem;
+      border-radius: 0 8px 8px 0;
+      margin-top: 0.55rem;
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.25rem;
+      font-size: 0.72rem;
+    }
+
+    /* New thread modal/box */
+    .new-thread-box {
+      display: none;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.2rem;
+    }
+    .new-thread-box input, .new-thread-box select, .new-thread-box textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      padding: 0.55rem;
+      color: #fff;
+      font-size: 0.8rem;
+      margin-bottom: 0.6rem;
+      outline: none;
+    }
+
+    /* Skup CPO & Marketplace & Czat */
     .cpo-grid { display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
     .cpo-item {
       background: rgba(255, 255, 255, 0.04);
@@ -224,6 +327,7 @@
       .spatial-stage { grid-template-columns: 1fr; padding: 1rem; perspective: none; }
       .panel-left, .panel-right { transform: none !important; }
       .market-grid { grid-template-columns: 1fr; }
+      .forum-stats-bar { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -232,7 +336,7 @@
   <header>
     <div class="header-top">
       <div class="logo" id="logoBtn"><span>TGN</span> GLOBAL GOLF</div>
-      <button id="installBtn" class="btn-action" style="display:none; width:auto; margin:0;">Zainstaluj PWA</button>
+      <span style="font-size: 0.7rem; color: var(--text-muted);">Est. 2021 • Społeczność 14 820 graczy</span>
     </div>
     <nav id="mainNav">
       <button class="active" data-tab="profile">👤 Profil 3D</button>
@@ -251,6 +355,7 @@
 
   <script>
     const AppData = {
+      activeForumFilter: "ALL",
       user: {
         name: "Marek Kowalski",
         hcp: 12.4,
@@ -266,26 +371,77 @@
       ],
       forumPosts: [
         {
-          id: 1,
-          category: "⚙️ Custom Fitting & Telemetria",
-          title: "Jak prawidłowo dobrać shaft (Stiff vs Regular) do prędkości swingu 96 mph?",
-          author: "Marek Kowalski (HCP 12.4)",
-          date: "Dzisiaj, 14:20",
-          content: "Cześć! Zauważyłem na TrackManie, że przy mojej średniej prędkości drivera 96 mph piłka czasem ucieka w prawo. Czy przejście z Regular na Stiff w nowym Wilsonie Dynapower rozwiąże problem?",
+          id: 101,
+          pinned: true,
+          catKey: "PORADNIKI",
+          category: "📌 PRZYPIĘTY PORADNIK • PGA PRO",
+          title: "[KOMPENDIUM 2021–2026] Jak zejść z HCP 36 do jednocyfrowego – mapa drogowa treningu i gappingu",
+          author: "Pro Adam Szymański",
+          badge: "PGA PRO • 1 420 postów",
+          badgeClass: "badge-pro",
+          date: "Zaktualizowano: Październik 2026 (Oryginał: Maj 2021)",
+          views: "48 920",
+          likes: 312,
+          content: "Przez ostatnie 5 lat na forum TGN przeanalizowaliśmy ponad 3 000 raportów z TrackMana naszych klubowiczów. 80% graczy traci najwięcej uderzeń między 40 a 100 metrem oraz przez źle dobrany loft drivera. Poniżej zebraliśmy najważniejsze wnioski z 5 sezonów: 1) Testuj carry, nie total distance. 2) Utrzymuj odstęp 12-15m między każdym kijem w torbie. 3) Zapisuj statystyki putów po każdej rundzie.",
           comments: [
-            { author: "Trener PGA Tomasz", text: "Przy 96 mph jesteś dokładnie na styku. Jeśli tempo swingu jest agresywne, Stiff da lepszą powtarzalność i mniejszy spin." },
-            { author: "Janusz_G (HCP 14)", text: "Potwierdzam, miałem to samo. Zmiana na Stiff dodała mi spokoju z tee." }
+            { author: "StaryWyga_Golf", badge: "TGN OG • 2021", badgeClass: "badge-og", date: "14.06.2021", text: "Klasyk tego forum! W 2021 zaczynałem z HCP 28 czytając ten wątek, dzisiaj kończę sezon 2026 z 8.4." },
+            { author: "Kamil_Golf", badge: "WETERAN • 890 postów", badgeClass: "badge-vet", date: "03.09.2024", text: "Punkt o gappingu wedge'y zmienił u mnie wszystko. Dokupiłem 52° i od razu urwałem 4 uderzenia na rundę." },
+            { author: "Marek Kowalski", badge: "HCP 12.4", badgeClass: "badge-vet", date: "2 dni temu", text: "Właśnie algorytm TGN wykrył u mnie lukę 15m na Gap Wedge – wracam do tego poradnika przed fittingiem!" }
           ]
         },
         {
-          id: 2,
-          category: "🎓 Porady Zawodowców (PGA Pro)",
-          title: "[PORADNIK] 3 złote zasady poprawy gappingu w dolnym zakresie torby",
-          author: "Pro Adam Szymański",
-          date: "Wczoraj",
-          content: "Wielu amatorów ma problem z lukami między Pitching Wedge a Sand Wedge. Oto krótki przewodnik, jak zmierzyć faktyczny carry na symulatorze i dobrać odpowiednie stopnie loftu (np. 50°, 54°, 58°).",
+          id: 102,
+          pinned: false,
+          catKey: "FITTING",
+          category: "⚙️ Custom Fitting & Telemetria",
+          title: "Shaft Stiff vs Regular przy swing speed 95-98 mph – wielki test społeczności TGN",
+          author: "Marek Kowalski (HCP 12.4)",
+          badge: "TRUSTED SELLER",
+          badgeClass: "badge-vet",
+          date: "Wczoraj, 18:45",
+          views: "1 240",
+          likes: 47,
+          content: "Zauważyłem na symulatorze, że przy mojej średniej prędkości drivera 96 mph i dynamicznym przejściu z backswingu piłka ucieka w prawy push-fade. Czy przejście z Ventus Regular na Ventus Blue 6S (Stiff) w Wilsonie Dynapower ustabilizuje rozrzut?",
           comments: [
-            { author: "Kamil_Golf", text: "Świetny artykuł! Właśnie miałem 15m dziury, dzięki za rozjaśnienie tematu." }
+            { author: "Trener PGA Tomasz", badge: "FITTING MASTER", badgeClass: "badge-pro", date: "Wczoraj, 19:12", text: "Przy 96 mph jesteś dokładnie na granicy. Kluczowy jest tzw. transition (tempo). Jeśli agresywnie przyspieszasz z góry, 6S obniży spin o ok. 350 RPM i zacieśni dyspersję." },
+            { author: "Janusz_G", badge: "TGN OG • 2021", badgeClass: "badge-og", date: "Dzisiaj, 08:30", text: "Miałem identyczne liczby na TrackManie w 2023 roku. Zmiana na Stiff 65g dała mi +11 metrów carry i o połowę mniej piłek w lesie." },
+            { author: "Piotr_Szczecin", badge: "WETERAN", badgeClass: "badge-vet", date: "Dzisiaj, 11:05", text: "Potwierdzam, wpadnij na dzień fittingowy TGN, mają tam wszystkie shafty do przetestowania na miejscu." }
+          ]
+        },
+        {
+          id: 103,
+          pinned: false,
+          catKey: "SPRZET",
+          category: "🏌️ Sprzęt & Recenzje Graczy",
+          title: "Kute irony (Forged) vs Players Distance po 3 sezonach gry – co wybrać na sezon 2027?",
+          author: "Bartek_W",
+          badge: "TGN OG • 2021",
+          badgeClass: "badge-og",
+          date: "3 dni temu",
+          views: "3 410",
+          likes: 89,
+          content: "Od 2022 roku gram na Mizuno JPX 923 Hot Metal i zastanawiam się nad przesiadką na coś bardziej kompaktowego (np. Titleist T200 lub JPX Forged). Kto z Was robił taki przeskok przy HCP w okolicach 10-13?",
+          comments: [
+            { author: "Michał_Kraków", badge: "HCP 7.1", badgeClass: "badge-vet", date: "2 dni temu", text: "Zrobiłem ten ruch rok temu. Na początku straciłem ok. 5m na 7-ironie, ale kontrola odległości i brak tzw. 'hot flyerów' ze średniego roughu są bezcenne." },
+            { author: "Admin_TGN", badge: "MODERATOR", badgeClass: "badge-pro", date: "Wczoraj", text: "Pamiętaj, że swoje stare JPX-y możesz wrzucić w rozliczeniu w zakładce Skup TGN CPO – teraz jest bonus +10% przy wymianie na kolekcję 2026/2027!" }
+          ]
+        },
+        {
+          id: 104,
+          pinned: false,
+          catKey: "SIM",
+          category: "⛳ Strefa 'Sim & Arcade' • Liga Zimowa",
+          title: "[SEZON 5] Zimowa Liga Symulatorowa TGN 2026/2027 – tabela wyników i Ghost Match",
+          author: "TGN Liga Bot",
+          badge: "OFICJALNY WĄTEK",
+          badgeClass: "badge-pro",
+          date: "5 dni temu",
+          views: "6 780",
+          likes: 154,
+          content: "Startuje 5. edycja naszej kultowej ligi zimowej! Gramy co tydzień inne pole mistrzowskie w formacie Stableford Netto. Wyniki z TrackMan, Foresight i Uneekor synchronizują się automatycznie z Waszym profilem 3D.",
+          comments: [
+            { author: "Grzegorz_Sim", badge: "MISTRZ LIGI 2024", badgeClass: "badge-og", date: "4 dni temu", text: "W końcu! W zeszłym roku zabrakło mi 2 punktów do podium. W tym roku celuję w finał." },
+            { author: "Marek Kowalski", badge: "HCP 12.4", badgeClass: "badge-vet", date: "2 dni temu", text: "Runda na First Warsaw zagrana (82 uderzenia). Czekam na aktualizację rankingu!" }
           ]
         }
       ],
@@ -379,29 +535,54 @@
 
     const ForumComponent = {
       render: () => {
-        let postsHTML = AppData.forumPosts.map(post => {
+        const filteredPosts = AppData.activeForumFilter === "ALL"
+          ? AppData.forumPosts
+          : AppData.forumPosts.filter(p => p.catKey === AppData.activeForumFilter);
+
+        let postsHTML = filteredPosts.map(post => {
           let commentsHTML = post.comments.map(comm => `
             <div class="comment-box">
-              <strong style="color: var(--accent);">${comm.author}:</strong>
-              <span style="color: var(--text-main);">${comm.text}</span>
+              <div class="comment-header">
+                <div>
+                  <strong style="color: var(--accent);">${comm.author}</strong>
+                  <span class="user-badge ${comm.badgeClass}">${comm.badge}</span>
+                </div>
+                <span style="color: var(--text-muted); font-size: 0.68rem;">${comm.date}</span>
+              </div>
+              <div style="color: var(--text-main);">${comm.text}</div>
             </div>
           `).join('');
 
           return `
-            <div class="forum-post-card">
-              <span style="font-size: 0.7rem; color: var(--gold); font-weight: 700;">${post.category}</span>
-              <h3 style="font-size: 0.95rem; margin: 0.3rem 0; color: var(--text-main);">${post.title}</h3>
-              <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Autor: ${post.author} • ${post.date}</p>
-              <p style="font-size: 0.8rem; color: #cbd5e1; line-height: 1.4; margin-bottom: 0.8rem;">${post.content}</p>
+            <div class="forum-post-card ${post.pinned ? 'pinned' : ''}">
+              <div class="post-meta-top">
+                <span style="font-size: 0.72rem; color: ${post.pinned ? 'var(--gold)' : 'var(--accent)'}; font-weight: 700;">${post.category}</span>
+                <span style="font-size: 0.7rem; color: var(--text-muted);">${post.date}</span>
+              </div>
+
+              <h3 style="font-size: 1rem; margin: 0.35rem 0; color: var(--text-main); line-height: 1.35;">${post.title}</h3>
               
-              <div style="margin-top: 0.6rem;">
-                <p style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.3rem;">Komentarze (${post.comments.length}):</p>
+              <div style="margin-bottom: 0.6rem; font-size: 0.75rem; color: var(--text-muted);">
+                Autor: <strong style="color: var(--text-main);">${post.author}</strong>
+                <span class="user-badge ${post.badgeClass}">${post.badge}</span>
+              </div>
+
+              <div class="post-metrics">
+                <span>👁️ ${post.views} wyświetleń</span>
+                <span>💬 ${post.comments.length} odpowiedzi</span>
+                <span style="cursor:pointer; color:var(--accent);" onclick="app.likePost(${post.id})">👍 ${post.likes} pomocne</span>
+              </div>
+
+              <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 0.9rem;">${post.content}</p>
+              
+              <div>
+                <p style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Dyskusja społeczności (${post.comments.length}):</p>
                 ${commentsHTML}
               </div>
 
-              <div style="display: flex; gap: 0.5rem; margin-top: 0.8rem;">
-                <input type="text" id="commInput_${post.id}" placeholder="Napisz komentarz..." style="flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.4rem 0.6rem; color:#fff; font-size:0.75rem;" onkeypress="if(event.key==='Enter') app.addComment(${post.id})">
-                <button class="btn-action" style="width: auto; margin:0; padding: 0.4rem 0.8rem;" onclick="app.addComment(${post.id})">Wyślij</button>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.85rem;">
+                <input type="text" id="commInput_${post.id}" placeholder="Dodaj swoją odpowiedź do wątku..." style="flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.45rem 0.7rem; color:#fff; font-size:0.78rem; outline:none;" onkeypress="if(event.key==='Enter') app.addComment(${post.id})">
+                <button class="btn-action" style="width: auto; margin:0; padding: 0.45rem 0.9rem;" onclick="app.addComment(${post.id})">Odpowiedz</button>
               </div>
             </div>
           `;
@@ -409,13 +590,43 @@
 
         return `
           <section class="panel-3d" style="grid-column: span 2;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
-              <h2>💬 TGN Forum & Poradniki PGA Pro</h2>
-              <button class="btn-action" style="width: auto; padding: 0.4rem 1rem; margin: 0;" onclick="app.showToast('Formularz nowego wątku...')">+ Utwórz nowy wątek</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+              <h2>💬 TGN Forum & Baza Wiedzy (2021–2026)</h2>
+              <button class="btn-action" style="width: auto; padding: 0.45rem 1rem; margin: 0;" onclick="app.toggleNewThread()">+ Nowy temat</button>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-              ${postsHTML}
+
+            <!-- Statystyki 5-letniego forum -->
+            <div class="forum-stats-bar">
+              <div><div class="forum-stat-num">14 820</div><div class="forum-stat-lbl">Klubowiczów</div></div>
+              <div><div class="forum-stat-num">42 690</div><div class="forum-stat-lbl">Postów (od 2021)</div></div>
+              <div><div class="forum-stat-num">1 140</div><div class="forum-stat-lbl">Poradników Pro</div></div>
+              <div><div class="forum-stat-num" style="color:var(--gold);">318</div><div class="forum-stat-lbl">Online teraz</div></div>
             </div>
+
+            <!-- Formularz nowego wątku -->
+            <div id="newThreadBox" class="new-thread-box">
+              <h3 style="font-size: 0.85rem; color: var(--accent); margin-bottom: 0.6rem;">Utwórz nowy wątek na forum</h3>
+              <select id="newThreadCat">
+                <option value="FITTING">⚙️ Custom Fitting & Telemetria</option>
+                <option value="SPRZET">🏌️ Sprzęt & Recenzje Graczy</option>
+                <option value="SIM">⛳ Strefa Sim & Arcade</option>
+                <option value="PORADNIKI">🎓 Porady & Technika</option>
+              </select>
+              <input type="text" id="newThreadTitle" placeholder="Tytuł wątku...">
+              <textarea id="newThreadContent" rows="3" placeholder="Treść pytania lub poradnika..."></textarea>
+              <button class="btn-action" style="margin:0; background:var(--accent); color:#052e16;" onclick="app.createThread()">Opublikuj wątek</button>
+            </div>
+
+            <!-- Filtry kategorii -->
+            <div class="forum-filters">
+              <button class="filter-pill ${AppData.activeForumFilter === 'ALL' ? 'active' : ''}" onclick="app.filterForum('ALL')">Wszystkie (42.6k)</button>
+              <button class="filter-pill ${AppData.activeForumFilter === 'PORADNIKI' ? 'active' : ''}" onclick="app.filterForum('PORADNIKI')">🎓 Poradniki PGA Pro</button>
+              <button class="filter-pill ${AppData.activeForumFilter === 'FITTING' ? 'active' : ''}" onclick="app.filterForum('FITTING')">⚙️ Custom Fitting</button>
+              <button class="filter-pill ${AppData.activeForumFilter === 'SPRZET' ? 'active' : ''}" onclick="app.filterForum('SPRZET')">🏌️ Sprzęt & Testy</button>
+              <button class="filter-pill ${AppData.activeForumFilter === 'SIM' ? 'active' : ''}" onclick="app.filterForum('SIM')">⛳ Liga Sim & Arcade</button>
+            </div>
+
+            <div>${postsHTML}</div>
           </section>
         `;
       }
@@ -522,6 +733,59 @@
         });
       },
 
+      filterForum: (catKey) => {
+        AppData.activeForumFilter = catKey;
+        app.switchTab('forum');
+      },
+
+      toggleNewThread: () => {
+        const box = document.getElementById('newThreadBox');
+        if (box) box.style.display = box.style.display === 'block' ? 'none' : 'block';
+      },
+
+      createThread: () => {
+        const catKey = document.getElementById('newThreadCat').value;
+        const title = document.getElementById('newThreadTitle').value.trim();
+        const content = document.getElementById('newThreadContent').value.trim();
+        if (!title || !content) return;
+
+        const catLabels = {
+          FITTING: "⚙️ Custom Fitting & Telemetria",
+          SPRZET: "🏌️ Sprzęt & Recenzje Graczy",
+          SIM: "⛳ Strefa 'Sim & Arcade'",
+          PORADNIKI: "🎓 Porady & Technika"
+        };
+
+        AppData.forumPosts.unshift({
+          id: Date.now(),
+          pinned: false,
+          catKey: catKey,
+          category: catLabels[catKey],
+          title: title,
+          author: AppData.user.name + " (HCP " + AppData.user.hcp + ")",
+          badge: "ZWERYFIKOWANY",
+          badgeClass: "badge-vet",
+          date: "Przed chwilą",
+          views: "1",
+          likes: 1,
+          content: content,
+          comments: []
+        });
+
+        AppData.activeForumFilter = "ALL";
+        app.switchTab('forum');
+        app.showToast('Opublikowano nowy wątek na forum!');
+      },
+
+      likePost: (postId) => {
+        const post = AppData.forumPosts.find(p => p.id === postId);
+        if (post) {
+          post.likes += 1;
+          app.switchTab('forum');
+          app.showToast('Doceniono wpis (+1 XP dla autora)');
+        }
+      },
+
       addComment: (postId) => {
         const input = document.getElementById('commInput_' + postId);
         const text = input ? input.value.trim() : '';
@@ -529,9 +793,15 @@
 
         const post = AppData.forumPosts.find(p => p.id === postId);
         if (post) {
-          post.comments.push({ author: AppData.user.name + " (Ty)", text: text });
+          post.comments.push({
+            author: AppData.user.name,
+            badge: "HCP " + AppData.user.hcp,
+            badgeClass: "badge-vet",
+            date: "Przed chwilą",
+            text: text
+          });
           app.switchTab('forum');
-          app.showToast('Dodano komentarz do wątku!');
+          app.showToast('Dodano odpowiedź do wątku!');
         }
       },
 
