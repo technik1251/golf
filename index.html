@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d1b1e">
+  <title>TGN Global Golf - Spatial PWA</title>
+  <style>
+    :root {
+      --glass-bg: rgba(18, 32, 36, 0.72);
+      --glass-border: rgba(114, 214, 150, 0.35);
+      --accent: #4ade80;
+      --accent-glow: rgba(74, 222, 128, 0.25);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+    body {
+      min-height: 100vh;
+      color: var(--text-main);
+      /* Symulacja tła pola golfowego */
+      background: radial-gradient(circle at 50% 60%, rgba(20, 60, 40, 0.4), rgba(7, 15, 20, 0.92)),
+                  url('https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat fixed;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Górna nawigacja */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(10, 20, 24, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; }
+    .logo span { color: var(--accent); border: 1px solid var(--accent); padding: 2px 6px; border-radius: 4px; margin-right: 8px; }
+
+    nav { display: flex; gap: 1.5rem; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: 0.2s; }
+    nav a.active, nav a:hover { color: var(--accent); }
+
+    .btn-install {
+      background: var(--accent);
+      color: #052e16;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      display: none;
+    }
+
+    /* Scena 3D (Spatial UI) */
+    .spatial-stage {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.1fr 1.2fr;
+      gap: 2rem;
+      padding: 2rem 3rem;
+      perspective: 1400px; /* Kluczowy parametr głębi 3D */
+      align-items: center;
+      max-width: 1500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .panel-3d {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 0 20px var(--accent-glow);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    /* Pochylenie paneli w przestrzeni 3D */
+    .panel-left { transform: rotateY(10deg); }
+    .panel-right { transform: rotateY(-10deg); display: grid; grid-template-columns: 1.2fr 0.9fr; gap: 1.2rem; }
+
+    .panel-left:hover { transform: rotateY(3deg) translateZ(15px); }
+    .panel-right:hover { transform: rotateY(-3deg) translateZ(15px); }
+
+    h2 { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--accent); margin-bottom: 1rem; }
+
+    /* Kafelki wewnątrz paneli */
+    .card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .card:hover { background: rgba(74, 222, 128, 0.1); border-color: var(--accent); transform: translateY(-2px); }
+    .card h3 { font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .card p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(74, 222, 128, 0.15);
+      color: var(--accent);
+      border: 1px solid var(--glass-border);
+      margin-top: 0.4rem;
+    }
+
+    .profile-box { text-align: center; background: rgba(0, 0, 0, 0.25); padding: 1rem; border-radius: 12px; }
+    .avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--accent); color: #052e16; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.6rem; font-size: 1.4rem; }
+    .xp-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin: 0.6rem 0; overflow: hidden; }
+    .xp-fill { width: 78%; height: 100%; background: var(--accent); }
+
+    /* Responsywność dla urządzeń mobilnych (PWA na telefonie) */
+    @media (max-width: 980px) {
+      .spatial-stage { grid-template-columns: 1fr; padding: 1rem; perspective: none; }
+      .panel-left, .panel-right { transform: none !important; grid-template-columns: 1fr; }
+      nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo"><span>TGN</span> GLOBAL GOLF</div>
+    <nav>
+      <a href="#" class="active">FORUM</a>
+      <a href="#">SKLEP</a>
+      <a href="#">WYDARZENIA</a>
+      <a href="#">MOJA TORBA</a>
+    </nav>
+    <button id="installBtn" class="btn-install">Zainstaluj PWA</button>
+  </header>
+
+  <main class="spatial-stage">
+    <!-- Lewy panel 3D -->
+    <section class="panel-3d panel-left">
+      <h2>Kategorie Forum</h2>
+      <div class="card">
+        <h3>⛳ Strefa Sim & Arcade</h3>
+        <p>Dla graczy bez kijów, rekreacyjnych i wirtualnych symulatorów.</p>
+        <span class="badge">Pierwszy Kontakt</span> <span class="badge">Wyzwania XP</span>
+      </div>
+      <div class="card">
+        <h3>⚙️ Custom Fitting & Telemetria</h3>
+        <p>Zaawansowana analiza, gapping i dane z TrackMan / Arccos.</p>
+        <span class="badge">Analiza Zamachu AI</span>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>🎒 WITB (Torba)</h3>
+          <p>Pokaż swój sprzęt i zweryfikuj specyfikację.</p>
+        </div>
+        <div class="card">
+          <h3>🤝 Marketplace C2C</h3>
+          <p>Bezpieczna wymiana i sprzedaż kijów.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prawy panel 3D -->
+    <section class="panel-3d panel-right">
+      <div>
+        <h2>Aktualności & Dyskusje</h2>
+        <div class="card" style="border-color: #facc15;">
+          <h3 style="color: #facc15;">⚠️ Rekomendacja Upgrade'u</h3>
+          <p>Premiera Wilson Dynapower Series – dopasowana do Twojego HCP.</p>
+        </div>
+        <div class="card">
+          <h3>[Sprzedam] Wilson Dynapower Driver</h3>
+          <p>Kategoria: Amator C2C • 19 komentarzy</p>
+        </div>
+        <div class="card">
+          <h3>Wyzwanie Ghost Match: First Warsaw</h3>
+          <p>Kto zagra asynchronicznie w ten weekend? • 13 odpowiedzi</p>
+        </div>
+      </div>
+
+      <div>
+        <h2>Moja Torba & Reputacja</h2>
+        <div class="profile-box">
+          <div class="avatar">MK</div>
+          <h3>Marek Kowalski</h3>
+          <p style="font-size: 0.8rem; color: var(--accent);">HCP 12.4 • Zweryfikowany</p>
+          <div style="margin: 0.8rem 0;">
+            <span class="badge">[ TRUSTED SELLER ]</span>
+            <span class="badge">[ COMMUNITY MENTOR ]</span>
+          </div>
+          <p style="font-size: 0.75rem; color: var(--text-muted);">TGN Level 14 → 15</p>
+          <div class="xp-bar"><div class="xp-fill"></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // 1. Dynamiczny Manifest PWA w jednym pliku (Zero zewnętrznych plików JSON)
+    const manifest = {
+      name: "TGN Global Golf Spatial PWA",
+      short_name: "TGN Golf",
+      start_url: ".",
+      display: "standalone",
+      background_color: "#0d1b1e",
+      theme_color: "#4ade80",
+      icons: [{
+        src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d1b1e'/><text x='50' y='65' font-size='45' text-anchor='middle' fill='%234ade80' font-family='sans-serif' font-weight='bold'>TGN</text></svg>",
+        sizes: "512x512",
+        type: "image/svg+xml"
+      }]
+    };
+    const manifestLink = document.createElement('link');
+    manifestLink.rel = 'manifest';
+    manifestLink.href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
+    document.head.appendChild(manifestLink);
+
+    // 2. Service Worker generowany w locie (zapewnia status instalowalnego PWA)
+    if ('serviceWorker' in navigator) {
+      const swCode = `
+        self.addEventListener('install', e => self.skipWaiting());
+        self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => new Response('Tryb Offline TGN'))));
+      `;
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+    }
+
+    // 3. Obsługa przycisku instalacji PWA
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'block';
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt = null;
+        installBtn.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
