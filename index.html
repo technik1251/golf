@@ -66,7 +66,7 @@
     }
     nav button.active { background: var(--accent); color: #052e16; font-weight: 700; }
 
-    /* Przestrzenna scena 3D (dwa panele obok siebie) */
+    /* Przestrzenna scena 3D (dwa panele obok siebie jak na zdjęciu) */
     .spatial-stage {
       flex: 1;
       display: grid;
@@ -155,4 +155,122 @@
   </header>
 
   <main class="spatial-stage" id="appContainer">
-    <!--
+    <!-- Tutaj aplikacja ładuje widoki -->
+  </main>
+
+  <div id="toast">Powiadomienie</div>
+
+  <script>
+    const AppData = {
+      user: {
+        name: "Marek Kowalski",
+        hcp: 12.4,
+        level: "Średniozaawansowany",
+        city: "Warszawa",
+        lastRound: "82 (Sobota)",
+        swingSpeed: "96 mph"
+      },
+      bag: [
+        { name: "DRIVER: TAYLOR MADE Qi10", loft: "10.5°, Shaft: VENTUS Blue 6S", val: "1 800 PLN", speed: "145 mph", smash: "1.48", attack: "+3°", cond: "9/10" },
+        { name: "IRON: MIZUNO JPX 923", loft: "7-Iron, Steel Shaft DG 105 S", val: "3 400 PLN", speed: "118 mph", spin: "6500 RPM", cond: "9.5/10" },
+        { name: "PUTTER: ODYSSEY AI-ONE #7", loft: "34\", Grip: SUPERSTROKE", val: "1 200 PLN", cond: "Mint" }
+      ]
+    };
+
+    const ProfileComponent = {
+      render: () => `
+        <section class="panel-3d panel-left">
+          <h2>Profil Gracza: ${AppData.user.name} 🇵🇱</h2>
+          
+          <div style="display: flex; gap: 1.2rem; align-items: center; margin-bottom: 1.2rem; background: rgba(0,0,0,0.25); padding: 1rem; border-radius: 12px;">
+            <div style="width: 85px; height: 110px; background: linear-gradient(135deg, #4ade80, #064e3b); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #052e16; font-size: 1.5rem; border: 1px solid var(--accent);">
+              MK
+            </div>
+            <div>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">Handicap Index</p>
+              <strong style="font-size: 1.2rem; color: var(--accent);">${AppData.user.hcp}</strong>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem;">Poziom: <strong>${AppData.user.level}</strong></p>
+              <p style="font-size: 0.75rem; color: var(--text-muted);">Lokalizacja: <strong>${AppData.user.city}</strong></p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <span>Ostatnia Runda</span>
+            <strong>${AppData.user.lastRound}</strong>
+          </div>
+
+          <div class="stat-card">
+            <span>Średnia Prędkość Swingu</span>
+            <strong>${AppData.user.swingSpeed}</strong>
+          </div>
+
+          <div class="stat-card" style="border-color: var(--gold);">
+            <div>
+              <span style="color: var(--gold); font-weight: 700;">⚠️ Gapping AI: Sprawdź Gap Wedge</span>
+              <p style="font-size: 0.7rem; color: var(--text-muted);">Wykryto lukę dystansu w dolnym zakresie.</p>
+            </div>
+            <button class="btn-action" style="width: auto; padding: 0.3rem 0.8rem;" onclick="app.showToast('Analiza AI w toku...')">Analizuj</button>
+          </div>
+        </section>
+      `
+    };
+
+    const BagComponent = {
+      render: () => {
+        let clubsHTML = AppData.bag.map(c => `
+          <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 0.8rem; margin-bottom: 0.8rem;">
+            <h3 style="font-size: 0.9rem; color: var(--accent);">${c.name}</h3>
+            <p style="font-size: 0.75rem; color: var(--text-muted);">${c.loft}</p>
+            <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.75rem;">
+              <span>Wartość: <strong>${c.val}</strong></span>
+              <span>Stan: <strong>${c.cond}</strong></span>
+            </div>
+          </div>
+        `).join('');
+
+        return `
+          <section class="panel-3d panel-right">
+            <h2>Moja Torba: Cyfrowa Kopia (14/14 kijów)</h2>
+            ${clubsHTML}
+            <div style="background: rgba(0,0,0,0.3); padding: 0.9rem; border-radius: 12px; text-align: center; margin-top: 1rem;">
+              <p style="font-size: 0.75rem; color: var(--text-muted);">CAŁKOWITA WARTOŚĆ TORBY</p>
+              <strong style="font-size: 1.3rem; color: var(--accent);">14 200 PLN</strong>
+              <button class="btn-action" onclick="app.showToast('Przekierowanie do Skupu TGN CPO...')">⚡ SPRZEDAJ NATYCHMIAST DO SKUPU TGN CPO</button>
+              <button class="btn-action" style="background: rgba(250,204,21,0.1); border-color: var(--gold); color: var(--gold);" onclick="app.showToast('Trade-In wygenerowany!')">🔄 TRADE-IN NA NOWY MODEL 2026</button>
+            </div>
+          </section>
+        `;
+      }
+    };
+
+    const app = {
+      switchTab: (tabName) => {
+        const container = document.getElementById('appContainer');
+        
+        if (tabName === 'profile') {
+          container.innerHTML = ProfileComponent.render() + BagComponent.render();
+        } else if (tabName === 'forum') {
+          container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>Strefa Forum TGN</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Dyskusje, Custom Fitting i sekcje lokalne.</p></section>`;
+        } else if (tabName === 'sklep') {
+          container.innerHTML = `<section class="panel-3d" style="grid-column: span 2;"><h2>Sklep TGN & Marketplace</h2><p style="color:var(--text-muted); margin-top:0.5rem;">Oficjalny sprzęt 2026 i oferty C2C.</p></section>`;
+        }
+
+        document.querySelectorAll('#mainNav button').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.tab === tabName);
+        });
+      },
+
+      showToast: (msg) => {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2500);
+      }
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      app.switchTab('profile');
+    });
+  </script>
+</body>
+</html>
