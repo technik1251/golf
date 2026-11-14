@@ -7,7 +7,7 @@
   <title>TGN Global Golf - Mobile PWA</title>
   <style>
     :root {
-      --glass-bg: rgba(18, 32, 36, 0.85);
+      --glass-bg: rgba(18, 32, 36, 0.88);
       --glass-border: rgba(114, 214, 150, 0.35);
       --accent: #4ade80;
       --accent-glow: rgba(74, 222, 128, 0.2);
@@ -20,16 +20,16 @@
     body {
       min-height: 100vh;
       color: var(--text-main);
-      background: radial-gradient(circle at 50% 40%, rgba(20, 60, 40, 0.5), rgba(7, 15, 20, 0.95)),
+      background: radial-gradient(circle at 50% 40%, rgba(20, 60, 40, 0.55), rgba(7, 15, 20, 0.96)),
                   url('https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=1000&q=80') center/cover no-repeat fixed;
       display: flex;
       flex-direction: column;
-      padding-bottom: 2rem; /* Normalny margines na dole */
+      padding-bottom: 2.5rem;
     }
 
-    /* Pasek górny (Header + Menu w jednym) */
+    /* Pasek górny */
     header {
-      background: rgba(10, 20, 24, 0.92);
+      background: rgba(10, 20, 24, 0.94);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--glass-border);
@@ -43,17 +43,17 @@
       justify-content: space-between;
       align-items: center;
       padding: 0.75rem 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    .logo { font-weight: 800; font-size: 1rem; letter-spacing: 0.5px; }
-    .logo span { color: var(--accent); border: 1px solid var(--accent); padding: 1px 4px; border-radius: 4px; margin-right: 4px; }
+    .logo { font-weight: 800; font-size: 1rem; letter-spacing: 0.5px; cursor: pointer; }
+    .logo span { color: var(--accent); border: 1px solid var(--accent); padding: 1px 5px; border-radius: 4px; margin-right: 5px; }
 
     .btn-install {
       background: var(--accent);
       color: #052e16;
       border: none;
-      padding: 0.4rem 0.8rem;
+      padding: 0.35rem 0.75rem;
       border-radius: 6px;
       font-weight: 700;
       font-size: 0.75rem;
@@ -61,25 +61,31 @@
       display: none;
     }
 
-    /* Górne menu nawigacyjne */
+    /* Klikalne menu na górze */
     nav {
       display: flex;
-      justify-content: space-around;
-      padding: 0.5rem 0.2rem;
+      justify-content: space-between;
+      padding: 0.45rem 0.6rem;
       overflow-x: auto;
+      gap: 0.25rem;
     }
-    nav a { 
+    nav button { 
+      background: transparent;
+      border: none;
       color: var(--text-muted); 
-      text-decoration: none; 
-      font-size: 0.7rem; 
+      font-size: 0.75rem; 
       font-weight: 600; 
-      text-align: center; 
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
+      padding: 0.4rem 0.65rem;
+      border-radius: 8px;
       white-space: nowrap;
-      transition: 0.15s;
+      cursor: pointer;
+      transition: 0.2s;
     }
-    nav a.active, nav a:hover { color: var(--accent); background: rgba(74, 222, 128, 0.1); }
+    nav button.active { 
+      color: #052e16; 
+      background: var(--accent); 
+      font-weight: 700;
+    }
 
     /* Główny kontener */
     .spatial-stage {
@@ -93,6 +99,15 @@
       width: 100%;
     }
 
+    /* Zarządzanie widocznością zakładek */
+    .tab-view { display: none; flex-direction: column; gap: 1rem; animation: fadeIn 0.25s ease; }
+    .tab-view.active { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .panel-3d {
       background: var(--glass-bg);
       backdrop-filter: blur(14px);
@@ -103,19 +118,20 @@
       box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 0 15px var(--accent-glow);
     }
 
-    h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.75rem; }
+    h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; }
 
     .card {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 10px;
-      padding: 0.75rem;
+      padding: 0.8rem;
       margin-bottom: 0.6rem;
       transition: 0.15s;
     }
-    .card:active { background: rgba(74, 222, 128, 0.15); transform: scale(0.98); }
-    .card h3 { font-size: 0.85rem; margin-bottom: 0.2rem; }
-    .card p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.3; }
+    .card:last-child { margin-bottom: 0; }
+    .card:active { background: rgba(74, 222, 128, 0.12); transform: scale(0.99); }
+    .card h3 { font-size: 0.88rem; margin-bottom: 0.25rem; }
+    .card p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.35; }
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
 
@@ -127,90 +143,249 @@
       background: rgba(74, 222, 128, 0.15);
       color: var(--accent);
       border: 1px solid var(--glass-border);
-      margin-top: 0.3rem;
-      margin-right: 0.2rem;
+      margin-top: 0.35rem;
+      margin-right: 0.25rem;
     }
 
-    .profile-box { text-align: center; background: rgba(0, 0, 0, 0.2); padding: 0.8rem; border-radius: 10px; }
-    .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: #052e16; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.4rem; font-size: 1.1rem; }
-    .xp-bar { height: 5px; background: rgba(255,255,255,0.1); border-radius: 3px; margin: 0.5rem 0; overflow: hidden; }
+    .btn-action {
+      margin-top: 0.6rem;
+      width: 100%;
+      padding: 0.45rem;
+      border-radius: 6px;
+      border: 1px solid var(--accent);
+      background: rgba(74, 222, 128, 0.12);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .btn-action:active { background: var(--accent); color: #052e16; }
+
+    /* Profil */
+    .profile-box { text-align: center; background: rgba(0, 0, 0, 0.25); padding: 0.9rem; border-radius: 10px; }
+    .avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--accent); color: #052e16; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.4rem; font-size: 1.1rem; }
+    .xp-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin: 0.5rem 0; overflow: hidden; }
     .xp-fill { width: 78%; height: 100%; background: var(--accent); }
+
+    /* Powiadomienie Toast przy kliknięciu akcji */
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #052e16;
+      padding: 0.6rem 1.2rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 200;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Górny nagłówek z menu -->
+  <!-- Nagłówek z klikalnym menu -->
   <header>
     <div class="header-top">
-      <div class="logo"><span>TGN</span> GOLF</div>
+      <div class="logo" onclick="switchTab('start')"><span>TGN</span> GLOBAL GOLF</div>
       <button id="installBtn" class="btn-install">Zainstaluj PWA</button>
     </div>
-    <nav>
-      <a href="#" class="active">🏠 Start</a>
-      <a href="#">💬 Forum</a>
-      <a href="#">🛍️ Sklep</a>
-      <a href="#">📅 Wydarzenia</a>
-      <a href="#">🎒 Torba</a>
+    <nav id="mainNav">
+      <button class="active" data-tab="start" onclick="switchTab('start')">🏠 Start</button>
+      <button data-tab="forum" onclick="switchTab('forum')">💬 Forum</button>
+      <button data-tab="sklep" onclick="switchTab('sklep')">🛍️ Sklep</button>
+      <button data-tab="wydarzenia" onclick="switchTab('wydarzenia')">📅 Wydarzenia</button>
+      <button data-tab="torba" onclick="switchTab('torba')">🎒 Torba</button>
     </nav>
   </header>
 
   <main class="spatial-stage">
-    <!-- Panel profilu i reputacji -->
-    <section class="panel-3d">
-      <h2>Moje Konto</h2>
-      <div class="profile-box">
-        <div class="avatar">MK</div>
-        <h3 style="font-size: 0.9rem;">Marek Kowalski</h3>
-        <p style="font-size: 0.75rem; color: var(--accent);">HCP 12.4 • Zweryfikowany</p>
-        <div style="margin: 0.4rem 0;">
-          <span class="badge">TRUSTED SELLER</span>
-          <span class="badge">MENTOR</span>
-        </div>
-        <div class="xp-bar"><div class="xp-fill"></div></div>
-        <p style="font-size: 0.65rem; color: var(--text-muted);">Poziom 14 (XP do następnego: 78%)</p>
-      </div>
-    </section>
 
-    <!-- Panel forum -->
-    <section class="panel-3d">
-      <h2>Strefy Forum</h2>
-      <div class="card">
-        <h3>⛳ Strefa Sim & Arcade</h3>
-        <p>Dla graczy wirtualnych symulatorów i bez kijów.</p>
-        <span class="badge">Pierwszy Kontakt</span> <span class="badge">Wyzwania XP</span>
-      </div>
-      <div class="card">
-        <h3>⚙️ Custom Fitting & Telemetria</h3>
-        <p>Zaawansowana analiza, gapping i dane TrackMan.</p>
-        <span class="badge">Analiza AI</span>
-      </div>
-      <div class="grid-2">
-        <div class="card">
-          <h3>🎒 WITB</h3>
-          <p>Twój sprzęt</p>
+    <!-- ZAKŁADKA 1: START -->
+    <div id="tab-start" class="tab-view active">
+      <section class="panel-3d">
+        <h2>Moje Konto & Reputacja</h2>
+        <div class="profile-box">
+          <div class="avatar">MK</div>
+          <h3 style="font-size: 0.95rem;">Marek Kowalski</h3>
+          <p style="font-size: 0.75rem; color: var(--accent);">HCP 12.4 • Zweryfikowany Profil TGN</p>
+          <div style="margin: 0.4rem 0;">
+            <span class="badge">[ TRUSTED SELLER ]</span>
+            <span class="badge">[ COMMUNITY MENTOR ]</span>
+          </div>
+          <div class="xp-bar"><div class="xp-fill"></div></div>
+          <p style="font-size: 0.7rem; color: var(--text-muted);">TGN Level 14 → 15 (78% XP)</p>
         </div>
-        <div class="card">
-          <h3>🤝 Marketplace</h3>
-          <p>Kupno / C2C</p>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Panel aktualności -->
-    <section class="panel-3d">
-      <h2>Najnowsze Dyskusje</h2>
-      <div class="card" style="border-color: #facc15;">
-        <h3 style="color: #facc15;">⚠️ Upgrade: Wilson Dynapower</h3>
-        <p style="font-size: 0.7rem;">Rekomendacja dopasowana do Twojego HCP.</p>
-      </div>
-      <div class="card">
-        <h3>[Sprzedam] Wilson Dynapower Driver</h3>
-        <p style="font-size: 0.7rem;">Amator C2C • 19 odpowiedzi</p>
-      </div>
-    </section>
+      <section class="panel-3d">
+        <h2>Szybki Dostęp</h2>
+        <div class="grid-2">
+          <div class="card" onclick="switchTab('forum')">
+            <h3>💬 Forum (19)</h3>
+            <p>Nowe dyskusje i porady Pro</p>
+          </div>
+          <div class="card" onclick="switchTab('sklep')">
+            <h3>🛍️ Sklep & C2C</h3>
+            <p>Oferty upgrade'u torby</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel-3d">
+        <h2>Alerty & Rekomendacje AI</h2>
+        <div class="card" style="border-color: #facc15;">
+          <h3 style="color: #facc15;">⚠️ Upgrade: Wilson Dynapower</h3>
+          <p>Analiza gappingu wskazuje +14m dystansu przy Twoim swing speed.</p>
+          <button class="btn-action" onclick="switchTab('sklep')">Zobacz ofertę w sklepie</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- ZAKŁADKA 2: FORUM -->
+    <div id="tab-forum" class="tab-view">
+      <section class="panel-3d">
+        <h2>Kategorie Forum</h2>
+        <div class="card" onclick="showToast('Otwarto: Strefa Sim & Arcade')">
+          <h3>⛳ Strefa 'Sim & Arcade'</h3>
+          <p>Dla graczy bez kijów, rekreacyjnych i wirtualnych symulatorów.</p>
+          <span class="badge">Pierwszy Kontakt</span> <span class="badge">Wyzwania XP</span>
+        </div>
+        <div class="card" onclick="showToast('Otwarto: Custom Fitting & Telemetria')">
+          <h3>⚙️ Custom Fitting & Telemetria</h3>
+          <p>Zaawansowana analiza, gapping i dane z TrackMan / Arccos.</p>
+          <span class="badge">Analiza Zamachu AI</span>
+        </div>
+        <div class="grid-2">
+          <div class="card" onclick="showToast('Otwarto: Polska Sekcja')">
+            <h3>🇵🇱 Polska Sekcja</h3>
+            <p>Lokalne turnieje i umawianie rund.</p>
+          </div>
+          <div class="card" onclick="showToast('Otwarto: Porady PGA Pro')">
+            <h3>🎓 Porady Pro</h3>
+            <p>Q&A z certyfikowanymi trenerami.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel-3d">
+        <h2>Aktywne Wątki</h2>
+        <div class="card">
+          <h3>[DANE AI] Analiza gappingu torby Marka K.</h3>
+          <p>Kategoria: Telemetria • 22 odpowiedzi</p>
+        </div>
+        <div class="card">
+          <h3>Wyzwanie Ghost Match: First Warsaw</h3>
+          <p>Kto zagra asynchronicznie w ten weekend? • 13 odpowiedzi</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ZAKŁADKA 3: SKLEP & MARKETPLACE -->
+    <div id="tab-sklep" class="tab-view">
+      <section class="panel-3d">
+        <h2>Sklep TGN & Oferty Upgrade'u</h2>
+        <div class="card" style="border-color: var(--accent);">
+          <h3>🏌️ Wilson Dynapower Driver (2026)</h3>
+          <p>Loft: 10.5° | Shaft: Ventus Blue Stiff | Nowy, gwarancja TGN</p>
+          <p style="color: var(--accent); font-weight: 700; margin-top: 0.3rem;">1 890 PLN <span style="font-weight:400; color:var(--text-muted);">(lub Trade-In)</span></p>
+          <button class="btn-action" onclick="showToast('Dodano do koszyka: Wilson Dynapower')">Zamów / Zarezerwuj Fitting</button>
+        </div>
+
+        <div class="card">
+          <h3>⚪ Piłki Titleist Pro V1 (12 szt.)</h3>
+          <p>Edycja turniejowa z nadrukiem TGN Global Golf</p>
+          <p style="color: var(--accent); font-weight: 700; margin-top: 0.3rem;">249 PLN</p>
+          <button class="btn-action" onclick="showToast('Dodano do koszyka: Titleist Pro V1')">Dodaj do koszyka</button>
+        </div>
+      </section>
+
+      <section class="panel-3d">
+        <h2>Marketplace C2C (Od graczy)</h2>
+        <div class="card">
+          <h3>[AMATOR C2C] Sprzedam Wilson Dynapower Driver</h3>
+          <p>Stan: 9/10 • Sprzedawca: Janusz_G (HCP 14) • Zweryfikowany</p>
+          <p style="color: var(--accent); font-weight: 700; margin-top: 0.3rem;">1 150 PLN</p>
+          <button class="btn-action" onclick="showToast('Otwarto czat ze sprzedawcą')">Napisz do sprzedawcy</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- ZAKŁADKA 4: WYDARZENIA -->
+    <div id="tab-wydarzenia" class="tab-view">
+      <section class="panel-3d">
+        <h2>Nadchodzące Wydarzenia</h2>
+        <div class="card">
+          <h3>🏆 TGN Ghost Match: First Warsaw</h3>
+          <p>Format: Stableford Netto • Termin: Ten weekend • Wpisowe: Free (XP x2)</p>
+          <button class="btn-action" onclick="showToast('Zapisano na Ghost Match!')">Dołącz do turnieju</button>
+        </div>
+        <div class="card">
+          <h3>🎯 Dzień Fittingu TrackMan (Szczecin / Warszawa)</h3>
+          <p>Bezpłatny pomiar gappingu dla członków TGN Level 10+.</p>
+          <button class="btn-action" onclick="showToast('Zarezerwowano slot na TrackMan')">Zarezerwuj godzinę</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- ZAKŁADKA 5: MOJA TORBA (WITB) -->
+    <div id="tab-torba" class="tab-view">
+      <section class="panel-3d">
+        <h2>WITB – Moja Cyfrowa Torba</h2>
+        <div class="card">
+          <h3>1. Driver: TaylorMade Qi10 (10.5°)</h3>
+          <p>Śr. dystans (Carry): 238 m • Shaft: Fujikura Ventus TR</p>
+        </div>
+        <div class="card">
+          <h3>2. Hybryda: Titleist TSR2 (21°)</h3>
+          <p>Śr. dystans (Carry): 195 m • Shaft: Tensei Blue</p>
+        </div>
+        <div class="card">
+          <h3>3. Irony: Mizuno JPX 923 Forged (5-PW)</h3>
+          <p>7-Iron Carry: 152 m • Lie Angle: Standard</p>
+        </div>
+        <div class="card">
+          <h3>4. Putter: Scotty Cameron Newport 2</h3>
+          <p>Długość: 34" • Grip: SuperStroke Pistol GT</p>
+        </div>
+        <button class="btn-action" onclick="showToast('Dodawanie nowego kija do torby...')">+ Dodaj kij do torby</button>
+      </section>
+    </div>
+
   </main>
 
+  <div id="toast">Powiadomienie</div>
+
   <script>
+    // Przełączanie zakładek
+    function switchTab(tabName) {
+      // Ukryj wszystkie widoki
+      document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
+      // Pokaż wybrany
+      const target = document.getElementById('tab-' + tabName);
+      if (target) target.classList.add('active');
+
+      // Zaktualizuj aktywny przycisk w menu
+      document.querySelectorAll('#mainNav button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+      });
+
+      // Przewiń płynnie na górę
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Proste powiadomienie po kliknięciu przycisku
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2500);
+    }
+
+    // Manifest PWA
     const manifest = {
       name: "TGN Global Golf Mobile",
       short_name: "TGN Golf",
