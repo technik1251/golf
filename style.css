@@ -458,3 +458,168 @@ h2 {
   .chat-container { height: 330px; }
   .ai-popup-card { padding: 1.15rem; border-radius: 15px; }
 }
+/* =========================================================================
+   DODATKOWE STYLE DLA ROZBUDOWANEGO SKLEPU (GOLFBROTHERS & PILKIGOLFOWE STYLE)
+   ========================================================================= */
+.store-main-sections {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+.store-sec-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 0.75rem 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s;
+  color: var(--text-main);
+}
+.store-sec-btn strong {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+.store-sec-btn span {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+.store-sec-btn:hover {
+  border-color: var(--accent);
+  background: rgba(74, 222, 128, 0.08);
+}
+.store-sec-btn.active {
+  background: rgba(74, 222, 128, 0.18);
+  border: 2px solid var(--accent);
+}
+.store-sec-btn.active strong {
+  color: var(--accent);
+}
+.store-sec-btn.used.active {
+  background: rgba(250, 204, 21, 0.15);
+  border-color: var(--gold);
+}
+.store-sec-btn.used.active strong {
+  color: var(--gold);
+}
+
+.store-MultiFilter-bar {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.store-MultiFilter-bar input,
+.store-MultiFilter-bar select {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+  color: #fff;
+  font-size: 0.76rem;
+  outline: none;
+}
+.store-MultiFilter-bar select option {
+  background: #0b171b;
+  color: #fff;
+}
+.store-MultiFilter-bar input:focus,
+.store-MultiFilter-bar select:focus {
+  border-color: var(--accent);
+}
+
+.store-tech-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.3rem;
+}
+.tech-pill {
+  font-size: 0.62rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-muted);
+  font-weight: 700;
+}
+.tech-pill.brand {
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--blue);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.store-condition-box {
+  background: rgba(0, 0, 0, 0.32);
+  border-left: 3px solid var(--accent);
+  padding: 0.4rem 0.6rem;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 0.5rem;
+}
+.store-condition-box.cpo {
+  border-left-color: var(--gold);
+  background: rgba(250, 204, 21, 0.07);
+}
+.store-condition-box strong {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-main);
+}
+.store-condition-box span {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.store-discount-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 5px;
+}
+
+@media (max-width: 1100px) {
+  .store-main-sections {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .store-MultiFilter-bar {
+    grid-template-columns: 1fr 1fr;
+  }
+  .store-MultiFilter-bar input {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .store-main-sections {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.45rem;
+  }
+  .store-sec-btn {
+    padding: 0.55rem 0.65rem;
+  }
+  .store-sec-btn strong {
+    font-size: 0.74rem;
+  }
+  .store-sec-btn span {
+    font-size: 0.6rem;
+  }
+  .store-MultiFilter-bar {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+    padding: 0.6rem;
+  }
+  .store-MultiFilter-bar input {
+    grid-column: span 1;
+  }
+}
