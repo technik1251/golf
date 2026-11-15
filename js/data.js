@@ -5,7 +5,7 @@ const ClubImageEngine = {
 
   buildDirectSearchPhotoUrl: (clubName, variant = 0) => {
     const cleanName = clubName
-      .replace(/DRIVER:|IRON:|PUTTER:|WEDGE:|HYBRYDA:|WOOD:|TORBA:|DALMIERZ:|PIŁKI:|UŻYWANY:|NOWY:/gi, '')
+      .replace(/DRIVER:|IRON:|PUTTER:|WEDGE:|HYBRYDA:|WOOD:|TORBA:|DALMIERZ:|PIŁKI:|BUTY:|ZESTAW:|GRIP:|UŻYWANY:|NOWY:/gi, '')
       .replace(/\(.*?\)/g, '')
       .trim();
 
@@ -61,19 +61,224 @@ const DefaultUser = {
   swingSpeed: "96 mph"
 };
 
+// Pełne drzewo kategorii sklepowych gotowe pod rozbudowę asortymentu
+const StoreCategoriesList = [
+  { id: "ALL", label: "Wszystkie kategorie", icon: "🏬" },
+  { id: "DRIVERY", label: "Drivery", icon: "🏌️" },
+  { id: "WOODS", label: "Fairway Woody", icon: "🚀" },
+  { id: "HYBRYDY", label: "Hybrydy & Driving Irony", icon: "⚡" },
+  { id: "IRONY", label: "Zestawy Ironów", icon: "⚙️" },
+  { id: "WEDGE", label: "Wedge (48°–60°)", icon: "🎯" },
+  { id: "PUTTERY", label: "Puttery", icon: "⛳" },
+  { id: "ZESTAWY", label: "Kompletne Zestawy", icon: "📦" },
+  { id: "PILKI", label: "Piłki Nowe & Lake Balls", icon: "⚪" },
+  { id: "TORBY", label: "Torby & Wózki", icon: "🎒" },
+  { id: "ODZIEZ", label: "Odzież, Buty & Rękawiczki", icon: "👟" },
+  { id: "GPS", label: "Dalmierze, GPS & Launch Monitory", icon: "🔭" },
+  { id: "AKCESORIA", label: "Gripy, Shafty & Akcesoria", icon: "🔧" }
+];
+
+const InitialStoreProducts = [
+  {
+    id: 201, section: "NEW", cat: "DRIVERY", brand: "TaylorMade", flex: "Stiff", hand: "RH", loft: "10.5°",
+    condition: "Fabrycznie nowy", condDetails: "Gwarancja 24 mies. + Headcover", tag: "BESTSELLER PRO 2026", tagGold: false,
+    name: "TaylorMade Qi10 Max Driver", spec: "MOI 10,000 g/cm² • Loft: 10.5° • Shaft: Fujikura Ventus TR Blue 6S",
+    desc: "Maksymalna bezwładność główki 10K gwarantująca proste uderzenia z tee. Idealny pod Twój swing 96 mph.",
+    oldPrice: 2890, price: 2590, tradeInPrice: 1140, stock: 4, imgUrl: null
+  },
+  {
+    id: 202, section: "NEW", cat: "DRIVERY", brand: "Ping", flex: "Stiff", hand: "RH", loft: "9.0°",
+    condition: "Fabrycznie nowy", condDetails: "Gwarancja 24 mies. + Klucz", tag: "REKOMENDACJA AI", tagGold: true,
+    name: "Ping G430 Max 10K Carbonfly Driver", spec: "Loft: 9.0° (Regulowany ±1.5°) • Shaft: Ping Alta CB Black 65 Stiff",
+    desc: "Karbonowa korona Carbonfly Wrap obniża środek ciężkości i daje najwyższą powtarzalność na rynku.",
+    oldPrice: 2990, price: 2690, tradeInPrice: 1240, stock: 3, imgUrl: null
+  },
+  {
+    id: 203, section: "NEW", cat: "WEDGE", brand: "Titleist", flex: "Wedge", hand: "RH", loft: "52°",
+    condition: "Fabrycznie nowy", condDetails: "Nowy w folii", tag: "WYPEŁNIA LUKĘ GAPPINGU 15M", tagGold: true,
+    name: "Titleist Vokey SM10 Tour Chrome 52° Wedge", spec: "Gap Wedge 52° / 12F Bounce • Rowki Spin Milled CNC",
+    desc: "Rekomendowany przez Gapping AI do zamknięcia Twojej luki dystansowej pomiędzy Pitchingiem a Sand Wedge'em.",
+    oldPrice: 890, price: 789, tradeInPrice: 340, stock: 9, imgUrl: null
+  },
+  {
+    id: 204, section: "NEW", cat: "IRONY", brand: "Mizuno", flex: "Stiff", hand: "RH", loft: "5-PW (6 kijów)",
+    condition: "Fabrycznie nowy", condDetails: "Darmowy Custom Fitting", tag: "KOLEKCJA KUTA", tagGold: false,
+    name: "Mizuno Pro 245 Forged Irons (5-PW)", spec: "Konstrukcja Hollow Body Chromoly • Shaft: Dynamic Gold Mid 115 S300",
+    desc: "Połączenie wyglądu klasycznego kutego blade'a z prędkością piłki znaną z modeli Hot Metal.",
+    oldPrice: 5490, price: 4890, tradeInPrice: 2140, stock: 2, imgUrl: null
+  },
+  {
+    id: 205, section: "NEW", cat: "PUTTERY", brand: "Titleist", flex: "N/A", hand: "RH", loft: "34\"",
+    condition: "Fabrycznie nowy", condDetails: "Oryginalny Headcover w komplecie", tag: "KLASYK PGA TOUR", tagGold: true,
+    name: "Scotty Cameron Super Select Newport 2 Putter", spec: "Długość: 34 cale • Podwójnie frezowane lico 303 Stainless Steel",
+    desc: "Najbardziej utytułowany putter typu blade na świecie z ciężarkami wolframowymi w podeszwie.",
+    oldPrice: 2190, price: 1950, tradeInPrice: 1000, stock: 3, imgUrl: null
+  },
+  {
+    id: 206, section: "USED", cat: "DRIVERY", brand: "Callaway", flex: "Regular", hand: "RH", loft: "10.5°",
+    condition: "Używany 9.0/10 (Mint)", condDetails: "Główka: 9/10 | Shaft: 9.5/10 | Grip: Nowy Golf Pride", tag: "UŻYWANY CPO • -1100 PLN", tagGold: true,
+    name: "Używany Callaway Paradym Ai Smoke Max Driver", spec: "Loft: 10.5° • Shaft: Project X Cypher 50g Regular • Praworęczny (RH)",
+    desc: "Zweryfikowany przez serwis TGN CPO. Lico Ai Smart Face w stanie idealnym, minimalne ślady na podeszwie.",
+    oldPrice: 2490, price: 1390, tradeInPrice: 440, stock: 1, imgUrl: null
+  },
+  {
+    id: 207, section: "USED", cat: "DRIVERY", brand: "TaylorMade", flex: "Stiff", hand: "RH", loft: "9.0°",
+    condition: "Używany 8.5/10 (B. Dobry)", condDetails: "Główka: 8.5/10 | Shaft: 9/10 | Grip: 8.5/10", tag: "UŻYWANY CPO • HIT CENOWY", tagGold: false,
+    name: "Używany TaylorMade Stealth 2 Plus Carbon Driver", spec: "Loft: 9.0° • Przesuwny ciężarek 15g • Shaft: Mitsubishi Kai'li Red 60S",
+    desc: "Czerwone lico 60X Carbon Twist Face. Sprawdzony na TrackManie – pełne parametry fabryczne.",
+    oldPrice: 2390, price: 1190, tradeInPrice: 350, stock: 1, imgUrl: null
+  },
+  {
+    id: 208, section: "USED", cat: "HYBRYDY", brand: "Ping", flex: "Regular", hand: "RH", loft: "22° (4H)",
+    condition: "Używany 9.0/10", condDetails: "Główka: 9/10 | Shaft: 9/10 | Grip: 9/10", tag: "UŻYWANA HYBRYDA CPO", tagGold: false,
+    name: "Używana Hybryda Ping G425 #4 (22°) Rescue", spec: "Hybryda 4H (22°) • Shaft: Ping Alta CB Slate 70 Regular • RH",
+    desc: "Niezwykle łatwa w grze z trudnego roughu i fairwaya. Zastępuje długie żelazo nr 4.",
+    oldPrice: 1290, price: 690, tradeInPrice: 190, stock: 2, imgUrl: null
+  },
+  {
+    id: 209, section: "USED", cat: "WOODS", brand: "TaylorMade", flex: "Stiff", hand: "RH", loft: "15° (3W)",
+    condition: "Używany 8.5/10", condDetails: "Główka: 8.5/10 | Shaft: 9/10 | Grip: 9/10", tag: "UŻYWANY FAIRWAY WOOD", tagGold: false,
+    name: "Używany TaylorMade SIM2 Max Fairway Wood #3 (15°)", spec: "3-Wood (15°) • Stalowa podeszwa V-Steel • Shaft: Fujikura Ventus Blue 6S",
+    desc: "Kultowy 3-wood ze stalową płozą V-Steel, która gładko przechodzi przez trawę bez utraty prędkości.",
+    oldPrice: 1450, price: 750, tradeInPrice: 250, stock: 1, imgUrl: null
+  },
+  {
+    id: 210, section: "USED", cat: "HYBRYDY", brand: "Titleist", flex: "Stiff", hand: "LH", loft: "19° (3H)",
+    condition: "Używany 9.0/10 (LH)", condDetails: "Wersja LEWORĘCZNA (LH) • Stan wzorowy", tag: "LEWORĘCZNY (LH) • CPO", tagGold: true,
+    name: "Używana Hybryda Titleist TSR2 #3 (19°) LH", spec: "Leworęczna (Left Hand) • Loft: 19° • Shaft: Tensei Blue 65 HY Stiff",
+    desc: "Rzadko spotykana na rynku wtórnym hybryda dla graczy leworęcznych w stanie gabinetowym.",
+    oldPrice: 1390, price: 790, tradeInPrice: 290, stock: 1, imgUrl: null
+  },
+  {
+    id: 211, section: "USED", cat: "IRONY", brand: "Titleist", flex: "Stiff", hand: "RH", loft: "5-PW (6 kijów)",
+    condition: "Używane 8.5/10", condDetails: "Lica: 8.5/10 | Shafty: 9.5/10 | Gripy: Nowe Tour Velvet", tag: "ZESTAW UŻYWANY CPO", tagGold: true,
+    name: "Używane Irony Titleist T200 (5-PW) Players Distance", spec: "6 kijów (5, 6, 7, 8, 9, PW) • Shaft: Project X IO 6.0 Stiff (110g)",
+    desc: "Po przeglądzie w serwisie TGN: założone fabrycznie nowe gripy Golf Pride i sprawdzony kąt Lie/Loft.",
+    oldPrice: 4690, price: 2890, tradeInPrice: 990, stock: 1, imgUrl: null
+  },
+  {
+    id: 212, section: "USED", cat: "IRONY", brand: "Callaway", flex: "Regular", hand: "RH", loft: "6-PW + SW",
+    condition: "Używane 8.0/10", condDetails: "Idealne na start / średni HCP", tag: "SUPER WYBACZALNE • CPO", tagGold: false,
+    name: "Używane Irony Callaway Rogue ST Max OS (6-SW)", spec: "Grafitowe shafty Mitsubishi Tensei AV Blue Regular • 6 kijów",
+    desc: "Szeroka podeszwa i niski środek ciężkości ułatwiają łatwe podnoszenie piłki w powietrze.",
+    oldPrice: 3800, price: 1990, tradeInPrice: 690, stock: 1, imgUrl: null
+  },
+  {
+    id: 213, section: "USED", cat: "WEDGE", brand: "Cleveland", flex: "Wedge", hand: "RH", loft: "56° / 10",
+    condition: "Używany 9.0/10", condDetails: "Rowki: 95% głębokości fabrycznej", tag: "UŻYWANY WEDGE CPO", tagGold: false,
+    name: "Używany Wedge Cleveland RTX 6 ZipCore 56° Mid", spec: "Sand Wedge 56° • Technologia HydraZip & UltiZip Grooves",
+    desc: "Ostre rowki gwarantujące maksymalny backspin przy wyjściach z bunkra i mokrej trawy.",
+    oldPrice: 750, price: 420, tradeInPrice: 150, stock: 3, imgUrl: null
+  },
+  {
+    id: 214, section: "USED", cat: "PUTTERY", brand: "Odyssey", flex: "N/A", hand: "RH", loft: "35\"",
+    condition: "Używany 9.5/10 (Jak nowy)", condDetails: "Lico White Hot: 10/10 | Shaft Stroke Lab", tag: "UŻYWANY PUTTER CPO", tagGold: false,
+    name: "Używany Putter Odyssey White Hot OG #7 Bird (35\")", spec: "Długość: 35 cali • Shaft: Red Stroke Lab (Stal + Grafit)",
+    desc: "Legendarne lico White Hot w połączeniu z wyważonym shaftem Stroke Lab poprawia tempo putowania.",
+    oldPrice: 1290, price: 720, tradeInPrice: 250, stock: 2, imgUrl: null
+  },
+  {
+    id: 215, section: "BALLS", cat: "PILKI", brand: "Titleist", flex: "N/A", hand: "ALL", loft: "24 szt. (2 tuziny)",
+    condition: "Lake Balls Klasa AAAA / Pearl", condDetails: "Stan idealny • Połysk fabryczny • Bez rys", tag: "HIT! LAKE BALLS KLASA AAAA", tagGold: true,
+    name: "Piłki Titleist Pro V1 / Pro V1x – Pakiet 24 szt. (Klasa AAAA Pearl)", spec: "24 sztuki • Wyselekcjonowane ręcznie z przeszkód wodnych • Stan jak z pudełka",
+    desc: "Najwyższa klasa sortowania (Pearl/AAAA). Piłki zachowują 100% aerodynamiki za połowę ceny sklepowej!",
+    oldPrice: 498, price: 219, tradeInPrice: 219, stock: 25, imgUrl: null
+  },
+  {
+    id: 216, section: "BALLS", cat: "PILKI", brand: "TaylorMade", flex: "N/A", hand: "ALL", loft: "24 szt. (Mix)",
+    condition: "Lake Balls Klasa AAA / AAAA", condDetails: "Idealne na rundy treningowe i turniejowe", tag: "LAKE BALLS • PAKIET EKONOMICZNY", tagGold: false,
+    name: "Piłki TaylorMade TP5 / TP5x Pix – Pakiet 24 szt. (Klasa AAA+)", spec: "24 sztuki • 5-warstwowa piłka Tour z uretanową powłoką",
+    desc: "Świetny zestaw dla graczy szukających miękkiego czucia wokół greenu bez obawy o zgubienie piłki w wodzie.",
+    oldPrice: 460, price: 179, tradeInPrice: 179, stock: 18, imgUrl: null
+  },
+  {
+    id: 217, section: "BALLS", cat: "PILKI", brand: "Callaway", flex: "N/A", hand: "ALL", loft: "50 szt. (Mega Pack)",
+    condition: "Lake Balls Klasa AAA", condDetails: "Zaledwie 3.18 PLN za sztukę!", tag: "MEGA PAKA 50 SZTUK", tagGold: false,
+    name: "Piłki Callaway Supersoft / Chrome Soft – Mega Pakiet 50 szt.", spec: "50 sztuk w worku siatkowym • Bardzo niska kompresja i prosty lot",
+    desc: "Najlepszy wybór na cały sezon gry. Miękka piłka wybaczająca błędy z tee.",
+    oldPrice: 420, price: 159, tradeInPrice: 159, stock: 14, imgUrl: null
+  },
+  {
+    id: 218, section: "NEW", cat: "TORBY", brand: "Titleist", flex: "N/A", hand: "ALL", loft: "Wodoodporna",
+    condition: "Fabrycznie nowa", condDetails: "Waga tylko 1.95 kg • Podwójne szelki", tag: "WODOODPORNA STADRY", tagGold: false,
+    name: "Torba Golfowa Titleist Players 4 StaDry Stand Bag", spec: "4-komorowy top • Klejone zamki wodoodporne • Stelaż aluminiowy",
+    desc: "Najpopularniejsza torba z nóżkami na polskich polach. Chroni sprzęt podczas ulewnego deszczu.",
+    oldPrice: 1390, price: 1190, tradeInPrice: 790, stock: 5, imgUrl: null
+  },
+  {
+    id: 219, section: "NEW", cat: "TORBY", brand: "Wilson", flex: "N/A", hand: "ALL", loft: "Składany 1-Click",
+    condition: "Fabrycznie nowy", condDetails: "Uchwyt na parasol i kartę wyników", tag: "WÓZEK 3-KOŁOWY", tagGold: false,
+    name: "Wózek Golfowy Clicgear Model 4.0 Push Cart (Matte Black)", spec: "System składania w kostkę • Hamulec ręczny • Silikonowe paski",
+    desc: "Pancerny 3-kołowy wózek golfowy, który bez problemu radzi sobie na pagórkowatych polach.",
+    oldPrice: 1450, price: 1290, tradeInPrice: 890, stock: 4, imgUrl: null
+  },
+  {
+    id: 220, section: "NEW", cat: "GPS", brand: "Bushnell", flex: "N/A", hand: "ALL", loft: "Z kompensacją Slope",
+    condition: "Fabrycznie nowy", condDetails: "Magnes BITE do wózka • Etui Tour", tag: "NR 1 NA PGA TOUR", tagGold: true,
+    name: "Dalmierz Laserowy Bushnell Tour V6 Shift Slope", spec: "Zasięg do 1100m • PinSeeker z Visual JOLT • Przełącznik turniejowy Slope",
+    desc: "Wibruje i błyska czerwoną obwódką po złapaniu flagi. Przełącznik Slope dozwolony w turniejach WHS.",
+    oldPrice: 2090, price: 1850, tradeInPrice: 1250, stock: 6, imgUrl: null
+  },
+  {
+    id: 221, section: "NEW", cat: "ZESTAWY", brand: "Wilson", flex: "Regular", hand: "RH", loft: "10 kijów + Torba",
+    condition: "Fabrycznie nowy zestaw", condDetails: "Gotowy do wyjścia na pole (Driver, Fairway, Hybryda, Irony 6-SW, Putter)", tag: "KOMPLETNY BOX SET", tagGold: false,
+    name: "Kompletny Zestaw Kijów Wilson Profile SGI Complete Set + Torba", spec: "Praworęczny (RH) • Shafty Grafit/Stal Regular • Headcovery w komplecie",
+    desc: "Idealny kompletny zestaw startowy z technologią Super Game Improvement.",
+    oldPrice: 2690, price: 2290, tradeInPrice: 1490, stock: 4, imgUrl: null
+  },
+  {
+    id: 222, section: "NEW", cat: "ODZIEZ", brand: "FootJoy", flex: "N/A", hand: "ALL", loft: "Rozmiary 41–46",
+    condition: "Fabrycznie nowe", condDetails: "100% Wodoodporna skóra Pittards", tag: "BUTY GOLFOWE PRO", tagGold: false,
+    name: "Buty Golfowe FootJoy Pro/SLX Carbon Spikeless", spec: "Podeszwa PWR TRAX z wkładką karbonową • Bezkolcowe",
+    desc: "Najwygodniejsze buty na 18 dołków marszu z trzymaniem bocznym podczas szybkiego swingu.",
+    oldPrice: 990, price: 849, tradeInPrice: 849, stock: 8, imgUrl: null
+  },
+  {
+    id: 223, section: "NEW", cat: "AKCESORIA", brand: "Golf Pride", flex: "N/A", hand: "ALL", loft: "Standard / Midsize",
+    condition: "Fabrycznie nowy", condDetails: "Darmowy montaż w serwisie TGN", tag: "NR 1 WŚRÓD GRIPÓW", tagGold: false,
+    name: "Grip Golf Pride MCC Plus4 (MultiCompound) – Sztuka lub Zestaw", spec: "Hybryda sznurka Cord w górnej części i miękkiej gumy na dole",
+    desc: "Pogrubiona dolna część gripu redukuje napięcie w dłoniach i zwiększa płynność swingu.",
+    oldPrice: 79, price: 65, tradeInPrice: 65, stock: 50, imgUrl: null
+  }
+];
+
+// Wczytaj zapisane przez użytkownika własne produkty ze sklepu (jeśli dodawał je przez formularz)
+const loadSavedStoreProducts = () => {
+  try {
+    const saved = localStorage.getItem('tgn_custom_store_products');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return [...parsed, ...InitialStoreProducts];
+      }
+    }
+  } catch (e) {}
+  return [...InitialStoreProducts];
+};
+
 const AppData = {
   activeForumFilter: "ALL",
-  // Stan zaawansowanych filtrów sklepu (styl GolfBrothers & PilkiGolfowe)
+  storeCategories: StoreCategoriesList,
   storeState: {
-    section: "ALL",       // ALL | NEW | USED | BALLS
-    category: "ALL",      // ALL | DRIVERY | WOOD_HYB | IRONY | WEDGE | PUTTERY | PILKI | TORBY | GPS
+    section: "ALL",
+    category: "ALL",
     brand: "ALL",
-    flex: "ALL",          // ALL | Regular | Stiff | X-Stiff | Wedge | N/A
-    hand: "ALL",          // ALL | RH | LH
+    flex: "ALL",
+    hand: "ALL",
+    maxPrice: 6000,
     search: "",
-    sortBy: "RECOMMENDED", // RECOMMENDED | PRICE_ASC | PRICE_DESC
+    sortBy: "RECOMMENDED",
     cartOpen: false,
-    deliveryMethod: "KURIER"
+    addProductOpen: false,
+    aiAssistantOpen: true,
+    deliveryMethod: "KURIER",
+    aiChatHistory: [
+      {
+        sender: "TGN AI Pro Fitter",
+        text: "Cześć Marek! Przeanalizowałem Twoją cyfrową torbę (Qi10 Driver, Mizuno JPX 923, Putter Odyssey #7) oraz parametry (HCP 12.4, Swing Speed 96 mph). W czym pomóc? Mogę wyfiltrować kije pod Twoją lukę 15m na Gap Wedge'u, znaleźć używane okazje CPO albo wyliczyć dopłatę Trade-In!",
+        filterAction: null
+      }
+    ]
   },
   activeEventFilter: "ALL",
   activeCourseFilter: "ALL",
@@ -85,440 +290,7 @@ const AppData = {
     { id: 2, name: "IRON: MIZUNO JPX 923 HOT METAL", loft: "7-Iron, Steel Shaft DG 105 S", val: "3 400 PLN", cpoOffer: "2 750 PLN", speed: "118 mph", smash: "1.39", attack: "-4.1°", cond: "9.5/10", imgUrl: null },
     { id: 3, name: "PUTTER: ODYSSEY AI-ONE #7", loft: "34\", Grip: SUPERSTROKE Tour 2.0", val: "1 200 PLN", cpoOffer: "950 PLN", speed: "Green", smash: "1.02", attack: "+1.0°", cond: "Mint", imgUrl: null }
   ],
-
-  /* =========================================================================
-     ROZBUDOWANY ASORTYMENT SKLEPU (INSPIRACJA: GOLFBROTHERS.PL & PILKIGOLFOWE.PL)
-     ========================================================================= */
-  storeProducts: [
-    // --- DZIAŁ 1: NOWE KIJE (PRO SHOP 2026) ---
-    {
-      id: 201,
-      section: "NEW",
-      cat: "DRIVERY",
-      brand: "TaylorMade",
-      flex: "Stiff",
-      hand: "RH",
-      loft: "10.5°",
-      condition: "Fabrycznie nowy",
-      condDetails: "Gwarancja 24 mies. + Headcover",
-      tag: "BESTSELLER PRO 2026",
-      tagGold: false,
-      name: "TaylorMade Qi10 Max Driver",
-      spec: "MOI 10,000 g/cm² • Loft: 10.5° • Shaft: Fujikura Ventus TR Blue 6S",
-      desc: "Maksymalna bezwładność główki 10K gwarantująca proste uderzenia z tee. Idealny pod Twój swing 96 mph.",
-      oldPrice: 2890,
-      price: 2590,
-      tradeInPrice: 1140,
-      stock: 4,
-      imgUrl: null
-    },
-    {
-      id: 202,
-      section: "NEW",
-      cat: "DRIVERY",
-      brand: "Ping",
-      flex: "Stiff",
-      hand: "RH",
-      loft: "9.0°",
-      condition: "Fabrycznie nowy",
-      condDetails: "Gwarancja 24 mies. + Klucz",
-      tag: "REKOMENDACJA AI",
-      tagGold: true,
-      name: "Ping G430 Max 10K Carbonfly Driver",
-      spec: "Loft: 9.0° (Regulowany ±1.5°) • Shaft: Ping Alta CB Black 65 Stiff",
-      desc: "Karbonowa korona Carbonfly Wrap obniża środek ciężkości i daje najwyższą powtarzalność na rynku.",
-      oldPrice: 2990,
-      price: 2690,
-      tradeInPrice: 1240,
-      stock: 3,
-      imgUrl: null
-    },
-    {
-      id: 203,
-      section: "NEW",
-      cat: "WEDGE",
-      brand: "Titleist",
-      flex: "Wedge",
-      hand: "RH",
-      loft: "52°",
-      condition: "Fabrycznie nowy",
-      condDetails: "Nowy w folii",
-      tag: "WYPEŁNIA LUKĘ GAPPINGU 15M",
-      tagGold: true,
-      name: "Titleist Vokey SM10 Tour Chrome 52° Wedge",
-      spec: "Gap Wedge 52° / 12F Bounce • Rowki Spin Milled CNC",
-      desc: "Rekomendowany przez Gapping AI do zamknięcia Twojej luki dystansowej pomiędzy Pitchingiem a Sand Wedge'em.",
-      oldPrice: 890,
-      price: 789,
-      tradeInPrice: 340,
-      stock: 9,
-      imgUrl: null
-    },
-    {
-      id: 204,
-      section: "NEW",
-      cat: "IRONY",
-      brand: "Mizuno",
-      flex: "Stiff",
-      hand: "RH",
-      loft: "5-PW (6 kijów)",
-      condition: "Fabrycznie nowy",
-      condDetails: "Darmowy Custom Fitting",
-      tag: "KOLEKCJA KUTA",
-      tagGold: false,
-      name: "Mizuno Pro 245 Forged Irons (5-PW)",
-      spec: "Konstrukcja Hollow Body Chromoly • Shaft: Dynamic Gold Mid 115 S300",
-      desc: "Połączenie wyglądu klasycznego kutego blade'a z prędkością piłki znaną z modeli Hot Metal.",
-      oldPrice: 5490,
-      price: 4890,
-      tradeInPrice: 2140,
-      stock: 2,
-      imgUrl: null
-    },
-    {
-      id: 205,
-      section: "NEW",
-      cat: "PUTTERY",
-      brand: "Titleist",
-      flex: "N/A",
-      hand: "RH",
-      loft: "34\"",
-      condition: "Fabrycznie nowy",
-      condDetails: "Oryginalny Headcover w komplecie",
-      tag: "KLASYK PGA TOUR",
-      tagGold: true,
-      name: "Scotty Cameron Super Select Newport 2 Putter",
-      spec: "Długość: 34 cale • Podwójnie frezowane lico 303 Stainless Steel",
-      desc: "Najbardziej utytułowany putter typu blade na świecie z ciężarkami wolframowymi w podeszwie.",
-      oldPrice: 2190,
-      price: 1950,
-      tradeInPrice: 1000,
-      stock: 3,
-      imgUrl: null
-    },
-
-    // --- DZIAŁ 2: UŻYWANE KIJE CPO (STYL PILKIGOLFOWE.PL – DRIVERY, IRONY, HYBRYDY, WOODS) ---
-    {
-      id: 206,
-      section: "USED",
-      cat: "DRIVERY",
-      brand: "Callaway",
-      flex: "Regular",
-      hand: "RH",
-      loft: "10.5°",
-      condition: "Używany 9.0/10 (Mint)",
-      condDetails: "Główka: 9/10 | Shaft: 9.5/10 | Grip: Nowy Golf Pride",
-      tag: "UŻYWANY CPO • OSZCZĘDZASZ 1100 PLN",
-      tagGold: true,
-      name: "Używany Callaway Paradym Ai Smoke Max Driver",
-      spec: "Loft: 10.5° • Shaft: Project X Cypher 50g Regular • Praworęczny (RH)",
-      desc: "Zweryfikowany przez serwis TGN CPO. Lico Ai Smart Face w stanie idealnym, minimalne ślady na podeszwie.",
-      oldPrice: 2490,
-      price: 1390,
-      tradeInPrice: 440,
-      stock: 1,
-      imgUrl: null
-    },
-    {
-      id: 207,
-      section: "USED",
-      cat: "DRIVERY",
-      brand: "TaylorMade",
-      flex: "Stiff",
-      hand: "RH",
-      loft: "9.0°",
-      condition: "Używany 8.5/10 (B. Dobry)",
-      condDetails: "Główka: 8.5/10 | Shaft: 9/10 | Grip: 8.5/10",
-      tag: "UŻYWANY CPO • HIT CENOWY",
-      tagGold: false,
-      name: "Używany TaylorMade Stealth 2 Plus Carbon Driver",
-      spec: "Loft: 9.0° • Przesuwny ciężarek 15g • Shaft: Mitsubishi Kai'li Red 60S",
-      desc: "czerwone lico 60X Carbon Twist Face. Sprawdzony na TrackManie – pełne parametry fabryczne.",
-      oldPrice: 2390,
-      price: 1190,
-      tradeInPrice: 350,
-      stock: 1,
-      imgUrl: null
-    },
-    {
-      id: 208,
-      section: "USED",
-      cat: "WOOD_HYB",
-      brand: "Ping",
-      flex: "Regular",
-      hand: "RH",
-      loft: "22° (4H)",
-      condition: "Używany 9.0/10",
-      condDetails: "Główka: 9/10 | Shaft: 9/10 | Grip: 9/10",
-      tag: "UŻYWANA HYBRYDA CPO",
-      tagGold: false,
-      name: "Używana Hybryda Ping G425 #4 (22°) Rescue",
-      spec: "Hybryda 4H (22°) • Shaft: Ping Alta CB Slate 70 Regular • RH",
-      desc: "Niezwykle łatwa w grze z trudnego roughu i fairwaya. Zastępuje długie żelazo nr 4.",
-      oldPrice: 1290,
-      price: 690,
-      tradeInPrice: 190,
-      stock: 2,
-      imgUrl: null
-    },
-    {
-      id: 209,
-      section: "USED",
-      cat: "WOOD_HYB",
-      brand: "TaylorMade",
-      flex: "Stiff",
-      hand: "RH",
-      loft: "15° (3W)",
-      condition: "Używany 8.5/10",
-      condDetails: "Główka: 8.5/10 | Shaft: 9/10 | Grip: 9/10",
-      tag: "UŻYWANY FAIRWAY WOOD",
-      tagGold: false,
-      name: "Używany TaylorMade SIM2 Max Fairway Wood #3 (15°)",
-      spec: "3-Wood (15°) • Stalowa podeszwa V-Steel • Shaft: Fujikura Ventus Blue 6S",
-      desc: "Kultowy 3-wood ze stalową płozą V-Steel, która gładko przechodzi przez trawę bez utraty prędkości.",
-      oldPrice: 1450,
-      price: 750,
-      tradeInPrice: 250,
-      stock: 1,
-      imgUrl: null
-    },
-    {
-      id: 210,
-      section: "USED",
-      cat: "WOOD_HYB",
-      brand: "Titleist",
-      flex: "Stiff",
-      hand: "LH",
-      loft: "19° (3H)",
-      condition: "Używany 9.0/10 (LH)",
-      condDetails: "Wersja LEWORĘCZNA (LH) • Stan wzorowy",
-      tag: "LEWORĘCZNY (LH) • CPO",
-      tagGold: true,
-      name: "Używana Hybryda Titleist TSR2 #3 (19°) LH",
-      spec: "Leworęczna (Left Hand) • Loft: 19° • Shaft: Tensei Blue 65 HY Stiff",
-      desc: "Rzadko spotykana na rynku wtórnym hybryda dla graczy leworęcznych w stanie gabinetowym.",
-      oldPrice: 1390,
-      price: 790,
-      tradeInPrice: 290,
-      stock: 1,
-      imgUrl: null
-    },
-    {
-      id: 211,
-      section: "USED",
-      cat: "IRONY",
-      brand: "Titleist",
-      flex: "Stiff",
-      hand: "RH",
-      loft: "5-PW (6 kijów)",
-      condition: "Używane 8.5/10",
-      condDetails: "Lica: 8.5/10 | Shafty: 9.5/10 | Gripy: Nowe Tour Velvet",
-      tag: "ZESTAW UŻYWANY CPO",
-      tagGold: true,
-      name: "Używane Irony Titleist T200 (5-PW) Players Distance",
-      spec: "6 kijów (5, 6, 7, 8, 9, PW) • Shaft: Project X IO 6.0 Stiff (110g)",
-      desc: "Po przeglądzie w serwisie TGN: założone fabrycznie nowe gripy Golf Pride i sprawdzony kąt Lie/Loft.",
-      oldPrice: 4690,
-      price: 2890,
-      tradeInPrice: 990,
-      stock: 1,
-      imgUrl: null
-    },
-    {
-      id: 212,
-      section: "USED",
-      cat: "IRONY",
-      brand: "Callaway",
-      flex: "Regular",
-      hand: "RH",
-      loft: "6-PW + SW",
-      condition: "Używane 8.0/10",
-      condDetails: "Idealne na start / wysoki HCP",
-      tag: "SUPER WYBACZALNE • CPO",
-      tagGold: false,
-      name: "Używane Irony Callaway Rogue ST Max OS (6-SW)",
-      spec: "Grafitowe shafty Mitsubishi Tensei AV Blue Regular • 6 kijów",
-      desc: "Szeroka podeszwa i niski środek ciężkości ułatwiają łatwe podnoszenie piłki w powietrze.",
-      oldPrice: 3800,
-      price: 1990,
-      tradeInPrice: 690,
-      stock: 1,
-      imgUrl: null
-    },
-    {
-      id: 213,
-      section: "USED",
-      cat: "WEDGE",
-      brand: "Cleveland",
-      flex: "Wedge",
-      hand: "RH",
-      loft: "56° / 10",
-      condition: "Używany 9.0/10",
-      condDetails: "Rowki: 95% głębokości fabrycznej",
-      tag: "UŻYWANY WEDGE CPO",
-      tagGold: false,
-      name: "Używany Wedge Cleveland RTX 6 ZipCore 56° Mid",
-      spec: "Sand Wedge 56° • Technologia HydraZip & UltiZip Grooves",
-      desc: "Ostre rowki gwarantujące maksymalny backspin przy wyjściach z bunkra i mokrej trawy.",
-      oldPrice: 750,
-      price: 420,
-      tradeInPrice: 150,
-      stock: 3,
-      imgUrl: null
-    },
-    {
-      id: 214,
-      section: "USED",
-      cat: "PUTTERY",
-      brand: "Odyssey",
-      flex: "N/A",
-      hand: "RH",
-      loft: "35\"",
-      condition: "Używany 9.5/10 (Jak nowy)",
-      condDetails: "Lico White Hot: 10/10 | Shaft Stroke Lab",
-      tag: "UŻYWANY PUTTER CPO",
-      tagGold: false,
-      name: "Używany Putter Odyssey White Hot OG #7 Bird (35\")",
-      spec: "Długość: 35 cali • Shaft: Red Stroke Lab (Stal + Grafit)",
-      desc: "Legendarne lico White Hot w połączeniu z wyważonym shaftem Stroke Lab poprawia tempo putowania.",
-      oldPrice: 1290,
-      price: 720,
-      tradeInPrice: 250,
-      stock: 2,
-      imgUrl: null
-    },
-
-    // --- DZIAŁ 3: PIŁKI GOLFOWE (NOWE & LAKE BALLS KLASY AAAA / PEARL – STYL PILKIGOLFOWE.PL) ---
-    {
-      id: 215,
-      section: "BALLS",
-      cat: "PILKI",
-      brand: "Titleist",
-      flex: "N/A",
-      hand: "ALL",
-      loft: "24 szt. (2 tuziny)",
-      condition: "Lake Balls Klasa AAAA / Pearl",
-      condDetails: "Stan idealny • Połysk fabryczny • Bez rys i X-Out",
-      tag: "HIT! LAKE BALLS KLASA AAAA",
-      tagGold: true,
-      name: "Piłki Titleist Pro V1 / Pro V1x – Pakiet 24 szt. (Klasa AAAA Pearl)",
-      spec: "24 sztuki • Wyselekcjonowane ręcznie z przeszkód wodnych • Stan jak z pudełka",
-      desc: "Najwyższa klasa sortowania (Pearl/AAAA). Piłki zachowują 100% aerodynamiki za połowę ceny sklepowej!",
-      oldPrice: 498,
-      price: 219,
-      tradeInPrice: 219,
-      stock: 25,
-      imgUrl: null
-    },
-    {
-      id: 216,
-      section: "BALLS",
-      cat: "PILKI",
-      brand: "TaylorMade",
-      flex: "N/A",
-      hand: "ALL",
-      loft: "24 szt. (Mix)",
-      condition: "Lake Balls Klasa AAA / AAAA",
-      condDetails: "Idealne na rundy treningowe i turniejowe",
-      tag: "LAKE BALLS • PAKIET EKONOMICZNY",
-      tagGold: false,
-      name: "Piłki TaylorMade TP5 / TP5x Pix – Pakiet 24 szt. (Klasa AAA+)",
-      spec: "24 sztuki • 5-warstwowa piłka Tour z uretanową powłoką",
-      desc: "Świetny zestaw dla graczy szukających miękkiego czucia wokół greenu bez obawy o zgubienie piłki w wodzie.",
-      oldPrice: 460,
-      price: 179,
-      tradeInPrice: 179,
-      stock: 18,
-      imgUrl: null
-    },
-    {
-      id: 217,
-      section: "BALLS",
-      cat: "PILKI",
-      brand: "Callaway",
-      flex: "N/A",
-      hand: "ALL",
-      loft: "50 szt. (Mega Pack)",
-      condition: "Lake Balls Klasa AAA",
-      condDetails: "Zaledwie 3.18 PLN za sztukę!",
-      tag: "MEGA PAKA 50 SZTUK",
-      tagGold: false,
-      name: "Piłki Callaway Supersoft / Chrome Soft – Mega Pakiet 50 szt.",
-      spec: "50 sztuk w worku siatkowym • Bardzo niska kompresja i prosty lot",
-      desc: "Najlepszy wybór na cały sezon gry. Miękka piłka wybaczająca błędy z tee.",
-      oldPrice: 420,
-      price: 159,
-      tradeInPrice: 159,
-      stock: 14,
-      imgUrl: null
-    },
-
-    // --- DZIAŁ 4: TORBY, WÓZKI I DALMIERZE (STYL GOLFBROTHERS.PL) ---
-    {
-      id: 218,
-      section: "NEW",
-      cat: "TORBY",
-      brand: "Titleist",
-      flex: "N/A",
-      hand: "ALL",
-      loft: "Wodoodporna",
-      condition: "Fabrycznie nowa",
-      condDetails: "Waga tylko 1.95 kg • Podwójne szelki",
-      tag: "WODOODPORNA STADRY",
-      tagGold: false,
-      name: "Torba Golfowa Titleist Players 4 StaDry Stand Bag",
-      spec: "4-komorowy top • Klejone zamki wodoodporne • Stelaż aluminiowy",
-      desc: "Najpopularniejsza torba z nóżkami na polskich polach. Chroni sprzęt podczas ulewnego deszczu.",
-      oldPrice: 1390,
-      price: 1190,
-      tradeInPrice: 790,
-      stock: 5,
-      imgUrl: null
-    },
-    {
-      id: 219,
-      section: "NEW",
-      cat: "TORBY",
-      brand: "Wilson",
-      flex: "N/A",
-      hand: "ALL",
-      loft: "Składany 1-Click",
-      condition: "Fabrycznie nowy",
-      condDetails: "Uchwyt na parasol i kartę wyników",
-      tag: "WÓZEK 3-KOŁOWY",
-      tagGold: false,
-      name: "Wózek Golfowy Clicgear Model 4.0 Push Cart (Matte Black)",
-      spec: "System składania w kostkę • Hamulec ręczny • Silikonowe paski",
-      desc: "Pancerny 3-kołowy wózek golfowy, który bez problemu radzi sobie na pagórkowatych polach jak Binowo czy Tokary.",
-      oldPrice: 1450,
-      price: 1290,
-      tradeInPrice: 890,
-      stock: 4,
-      imgUrl: null
-    },
-    {
-      id: 220,
-      section: "NEW",
-      cat: "GPS",
-      brand: "Bushnell",
-      flex: "N/A",
-      hand: "ALL",
-      loft: "Z kompensacją Slope",
-      condition: "Fabrycznie nowy",
-      condDetails: "Magnes BITE do wózka • Etui Tour",
-      tag: "NR 1 NA PGA TOUR",
-      tagGold: true,
-      name: "Dalmierz Laserowy Bushnell Tour V6 Shift Slope",
-      spec: "Zasięg do 1100m • PinSeeker z Visual JOLT • Przełącznik turniejowy Slope",
-      desc: "Wibruje i błyska czerwoną obwódką po złapaniu flagi. Przełącznik Slope dozwolony w turniejach WHS.",
-      oldPrice: 2090,
-      price: 1850,
-      tradeInPrice: 1250,
-      stock: 6,
-      imgUrl: null
-    }
-  ],
-
+  storeProducts: loadSavedStoreProducts(),
   polishCourses: [
     { id: 1, name: "Modry Las Golf Resort (PGA National Poland)", city: "Choszczno", voivodeship: "Zachodniopomorskie", region: "POLNOC", holes: 18, holesLabel: "18 + 9 dołków", par: 72, cr: 72.8, slope: 136, length: "6 350 m", greenFee: "360 PLN", bookingUrl: "https://modrylas.pl/", desc: "Projekt Gary'ego Playera. Jedno z najwyżej ocenianych pól mistrzowskich w Europie Środkowej.", aiTip: "Wymaga kontrolowanego fade'u z tee na dołkach wzdłuż jeziora." },
     { id: 2, name: "Binowo Park Golf Club", city: "Szczecin / Binowo", voivodeship: "Zachodniopomorskie", region: "POLNOC", holes: 18, holesLabel: "18 + 9 dołków", par: 72, cr: 71.5, slope: 131, length: "6 014 m", greenFee: "290 PLN", bookingUrl: "https://binowopark.pl/", desc: "Położone w Szczecińskim Parku Krajobrazowym Puszcza Bukowa, niezwykle malownicze i pagórkowate.", aiTip: "Duże przewyższenia – używaj dalmierza z kompensacją nachylenia (Slope)." },
