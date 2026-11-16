@@ -1,14 +1,16 @@
 /* =========================================================================
-   MODUŁ SKLEPU TGN v14.0: POPRAWIONY MODAL MOBILNY (BEZ SCROLLOWANIA) + KATEGORIE + AI FITTER
+   MODUŁ SKLEPU TGN v15.0 (PRODUKCYJNY): PEŁNY CHECKOUT + GABARYTY + UKRYTY ADMIN + AI FITTER
    ========================================================================= */
 
-(function injectStoreV14Styles() {
-  const oldStyle = document.getElementById('tgnStoreV13Styles');
-  if (oldStyle) oldStyle.remove();
-  if (document.getElementById('tgnStoreV14Styles')) return;
+(function injectStoreV15Styles() {
+  ['tgnStoreAiStyles', 'tgnStoreV13Styles', 'tgnStoreV14Styles'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  });
+  if (document.getElementById('tgnStoreV15Styles')) return;
 
   const style = document.createElement('style');
-  style.id = 'tgnStoreV14Styles';
+  style.id = 'tgnStoreV15Styles';
   style.textContent = `
     .store-ai-assistant-box {
       background: linear-gradient(145deg, rgba(16, 38, 44, 0.96), rgba(8, 20, 24, 0.98));
@@ -65,36 +67,18 @@
     }
     .cat-menu-item span.arrow { opacity: 0.6; font-size: 0.7rem; }
 
-    /* Modal przyklejony bezpośrednio do ekranu telefonu (w body, poza panelem z backdrop-filter) */
+    /* Modal przyklejony bezpośrednio do ekranu telefonu */
     #tgnGlobalPromoOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      height: 100dvh;
-      background: rgba(0, 0, 0, 0.82);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      padding: 1rem;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
+      background: rgba(0, 0, 0, 0.82); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      display: none; align-items: center; justify-content: center; z-index: 9999; padding: 1rem;
     }
     .promo-modal-box {
-      width: 100%;
-      max-width: 400px;
-      max-height: 88dvh;
-      overflow-y: auto;
-      background: linear-gradient(160deg, #102428, #081317);
-      border: 2px solid #4ade80;
-      border-radius: 20px;
-      padding: 1.4rem 1.25rem;
-      text-align: center;
+      width: 100%; max-width: 400px; max-height: 88dvh; overflow-y: auto;
+      background: linear-gradient(160deg, #102428, #081317); border: 2px solid #4ade80;
+      border-radius: 20px; padding: 1.4rem 1.25rem; text-align: center;
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), inset 0 0 25px rgba(74, 222, 128, 0.15);
-      position: relative;
-      margin: auto;
+      position: relative; margin: auto;
     }
     .promo-info-circle {
       width: 54px; height: 54px; border-radius: 50%; border: 3px solid #38bdf8; color: #38bdf8;
@@ -107,8 +91,31 @@
       letter-spacing: 1.5px; margin: 0.5rem 0; cursor: pointer;
     }
 
+    /* Formularz Checkoutu (Produkcyjny Koszyk i Zamówienie) */
+    .checkout-form-box {
+      background: rgba(5, 14, 18, 0.95);
+      border: 2px solid var(--accent);
+      border-radius: 14px;
+      padding: 1.2rem;
+      margin-top: 0.9rem;
+    }
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+    .checkout-grid label {
+      display: block; font-size: 0.66rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 3px;
+    }
+    .checkout-grid input, .checkout-grid select {
+      width: 100%; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 7px; padding: 0.55rem 0.7rem; color: #fff; font-size: 0.78rem; outline: none;
+    }
+    .checkout-grid input:focus, .checkout-grid select:focus { border-color: var(--accent); }
+
     .store-admin-add-box {
-      background: rgba(8, 22, 26, 0.98); border: 2px solid #4ade80; border-radius: 16px;
+      background: rgba(8, 22, 26, 0.98); border: 2px solid var(--gold); border-radius: 16px;
       padding: 1.15rem; margin-bottom: 1.25rem; box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
     }
     .store-add-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
@@ -117,15 +124,14 @@
       width: 100%; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 6px; padding: 0.45rem 0.6rem; color: #fff; font-size: 0.75rem; outline: none;
     }
-    .store-add-grid select option { background: #091519; color: #fff; }
+    .store-add-grid select option, .checkout-grid select option { background: #091519; color: #fff; }
 
     @media (max-width: 1024px) {
       .category-Accordion-list { grid-template-columns: repeat(2, 1fr); }
-      .store-add-grid { grid-template-columns: repeat(2, 1fr); }
+      .store-add-grid, .checkout-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 768px) {
-      .category-Accordion-list { grid-template-columns: 1fr; gap: 0.35rem; }
-      .store-add-grid { grid-template-columns: 1fr; }
+      .category-Accordion-list, .store-add-grid, .checkout-grid { grid-template-columns: 1fr; gap: 0.4rem; }
       .store-ai-input-row { flex-direction: column; }
       .store-ai-input-row button { padding: 0.55rem; }
       .promo-modal-box { padding: 1.15rem 1rem; max-width: 92vw; }
@@ -211,15 +217,30 @@ const StoreComponent = {
       }
     });
 
+    // Wczytaj zapisane lokalnie produkty dodane przez Admina oraz zaktualizowane stany magazynowe
+    try {
+      const savedCustom = JSON.parse(localStorage.getItem('tgn_custom_store_products') || '[]');
+      savedCustom.forEach(cp => {
+        if (!AppData.storeProducts.some(p => p.id === cp.id)) {
+          AppData.storeProducts.unshift(cp);
+        }
+      });
+      const deletedIds = JSON.parse(localStorage.getItem('tgn_deleted_prod_ids') || '[]');
+      if (deletedIds.length > 0) {
+        AppData.storeProducts = AppData.storeProducts.filter(p => !deletedIds.includes(p.id));
+      }
+    } catch (e) {}
+
     if (!AppData.storeState) {
       AppData.storeState = {
         section: "ALL", category: "ALL", brand: "ALL", flex: "ALL", hand: "ALL",
-        search: "", sortBy: "RECOMMENDED", cartOpen: false, deliveryMethod: "KURIER"
+        search: "", sortBy: "RECOMMENDED", cartOpen: false, checkoutStep: false, deliveryMethod: "KURIER_DPD"
       };
     }
 
     if (typeof AppData.storeState.aiAssistantOpen === 'undefined') AppData.storeState.aiAssistantOpen = true;
     if (typeof AppData.storeState.addProductOpen === 'undefined') AppData.storeState.addProductOpen = false;
+    if (typeof AppData.storeState.checkoutStep === 'undefined') AppData.storeState.checkoutStep = false;
     if (typeof AppData.storeState.promoModalMode === 'undefined') {
       const alreadySeen = sessionStorage.getItem('tgn_promo_seen');
       AppData.storeState.promoModalMode = alreadySeen ? null : 'RABAT3';
@@ -231,13 +252,12 @@ const StoreComponent = {
       AppData.storeState.aiChatHistory = [
         {
           sender: "TGN AI Pro Fitter",
-          text: "Cześć Marek! Rozszerzyliśmy sklep o nowe działy: Personalizację Piłek, Prezenty dla Golfistów, Trening Golfowy oraz Używany Sprzęt CPO. Pamiętaj też o kodzie rabatowym RABAT3 (-3% jak 'Par 3')!"
+          text: "Witaj w oficjalnym sklepie TGN! Pomogę Ci dobrać sprzęt pod Twój Handicap i prędkość swingu. Kliknij jedną z kategorii poniżej lub zapytaj mnie o dowolny kij."
         }
       ];
     }
   },
 
-  // Renderuje okienko reklamowe bezpośrednio w document.body, dzięki czemu na telefonie jest zawsze na środku ekranu bez scrollowania!
   syncGlobalPromoModal: () => {
     let overlay = document.getElementById('tgnGlobalPromoOverlay');
     if (!overlay) {
@@ -302,11 +322,20 @@ const StoreComponent = {
     return false;
   },
 
+  // Sprawdza, czy w koszyku znajduje się długi kij golfowy / torba / wózek (powyżej gabarytu Paczkomatu InPost 64cm)
+  cartHasOversizeClub: () => {
+    const oversizeCats = ["DRIVERY", "WOODS", "WOOD_HYB", "HYBRYDY", "IRONY", "WEDGE", "PUTTERY", "ZESTAWY", "TORBY", "WOZKI", "KIJE_NOWE", "UZYWANE_KIJE"];
+    return AppData.cart.some(item => {
+      const prod = AppData.storeProducts.find(p => p.id === item.id);
+      return prod && oversizeCats.includes(prod.cat);
+    });
+  },
+
   render: () => {
     StoreComponent.ensureStoreDataInitialized();
     const st = AppData.storeState;
+    const isAdmin = AppData.user && AppData.user.role === 'ADMIN';
 
-    // Zsynchronizuj okienko reklamowe bezpośrednio na ekranie telefonu (w body)
     setTimeout(() => StoreComponent.syncGlobalPromoModal(), 10);
 
     let filtered = AppData.storeProducts.filter(p => {
@@ -333,7 +362,9 @@ const StoreComponent = {
     const totalItemsCount = AppData.cart.reduce((sum, i) => sum + (i.qty || 1), 0);
     const rawCartValue = AppData.cart.reduce((sum, i) => sum + (i.price * (i.qty || 1)), 0);
     const discountAmount = st.discountCodeApplied ? Math.round(rawCartValue * 0.03) : 0;
-    const finalCartValue = rawCartValue - discountAmount;
+    const hasOversize = StoreComponent.cartHasOversizeClub();
+    const shippingCost = rawCartValue >= 300 || rawCartValue === 0 ? 0 : (hasOversize ? 29 : 16);
+    const finalCartValue = rawCartValue - discountAmount + shippingCost;
 
     const brandsList = [...new Set(AppData.storeProducts.map(p => p.brand))];
 
@@ -347,7 +378,7 @@ const StoreComponent = {
           </span>
         </div>
         <div style="display:flex; gap:0.45rem;">
-          <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.openPromoModal('RABAT3')">🏷️ Info o rabacie -3%</button>
+          <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.openPromoModal('RABAT3')">🏷️ Kod Rabatowy -3%</button>
           <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.openPromoModal('NEWSLETTER')">📩 Newsletter TGN</button>
         </div>
       </div>
@@ -358,9 +389,9 @@ const StoreComponent = {
         <div class="store-ai-header">
           <div style="display:flex; align-items:center; gap:0.6rem;">
             <span class="ai-pulse-dot"></span>
-            <strong style="color:#38bdf8; font-size:0.9rem; letter-spacing:0.5px;">🤖 ASYSTENT AI SKLEPU & PRO FITTER</strong>
+            <strong style="color:#38bdf8; font-size:0.9rem; letter-spacing:0.5px;">🤖 DORADCA SPRZĘTOWY AI (PRO FITTER)</strong>
           </div>
-          <span style="font-size:0.72rem; color:var(--gold); font-weight:700;">Twoja telemetria: HCP ${AppData.user.hcp} | Swing ${AppData.user.swingSpeed} | Luka: 52°</span>
+          <span style="font-size:0.72rem; color:var(--gold); font-weight:700;">Profil: HCP ${AppData.user.hcp} | Swing ${AppData.user.swingSpeed}</span>
         </div>
 
         <div class="store-ai-messages" id="storeAiMsgs">
@@ -380,18 +411,19 @@ const StoreComponent = {
         </div>
 
         <div class="store-ai-input-row">
-          <input type="text" id="storeAiInput" placeholder="Zapytaj AI (np. 'Szukam prezentu do 350 zł', 'Chcę piłki z własnym logo', 'Pokaż używane drivery')..." onkeypress="if(event.key==='Enter') StoreComponent.sendCustomAiQuestion()">
+          <input type="text" id="storeAiInput" placeholder="Zapytaj doradcę AI (np. 'Szukam prezentu do 350 zł', 'Chcę piłki z własnym logo', 'Pokaż używane drivery')..." onkeypress="if(event.key==='Enter') StoreComponent.sendCustomAiQuestion()">
           <button onclick="StoreComponent.sendCustomAiQuestion()">Zapytaj AI & Filtruj</button>
         </div>
       </div>
     ` : '';
 
+    // Formularz dodawania produktu (Widoczny TYLKO dla Administratora!)
     const defaultPreviewImg = ClubImageEngine.buildDirectSearchPhotoUrl("Titleist TSR3 Driver", 0);
-    const addProductModalHTML = st.addProductOpen ? `
+    const addProductModalHTML = (isAdmin && st.addProductOpen) ? `
       <div class="store-admin-add-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
-          <h3 style="color:var(--accent); font-size:0.9rem;">➕ Dodaj nowy produkt do asortymentu sklepu (Auto-Foto z sieci)</h3>
-          <button class="btn-mini-tool" onclick="StoreComponent.toggleAddProduct()">✕ Zamknij kreator</button>
+          <h3 style="color:var(--gold); font-size:0.9rem;">⚙️ [TRYB ADMINA] Dodaj nowy produkt do bazy sklepu</h3>
+          <button class="btn-mini-tool" onclick="StoreComponent.toggleAddProduct()">✕ Zamknij</button>
         </div>
 
         <div class="live-preview-row">
@@ -464,21 +496,25 @@ const StoreComponent = {
           <input type="text" id="addProdDesc" placeholder="Krótki opis produktu..." style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.76rem;">
         </div>
 
-        <button class="btn-primary" style="margin:0; padding:0.6rem;" onclick="StoreComponent.saveNewProductToStore()">✓ Dodaj i opublikuj produkt w sklepie</button>
+        <button class="btn-primary" style="margin:0; padding:0.6rem;" onclick="StoreComponent.saveNewProductToStore()">✓ Zapisz produkt w bazie sklepu</button>
       </div>
     ` : '';
 
+    // --- PRODUKCYJNY KOSZYK + FORMULARZ CHECKOUTU (ADRES, INPOST/DPD, BLIK/P24, FAKTURA) ---
     const cartDrawerHTML = (st.cartOpen || AppData.cart.length > 0) ? `
       <div class="cart-summary-bar" style="flex-direction:column; align-items:stretch;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
           <div>
-            <strong style="color:var(--accent); font-size:0.92rem;">🛒 Twój Koszyk Pro Shop (${totalItemsCount} szt.)</strong>
-            ${st.discountCodeApplied ? `<span style="font-size:0.72rem; color:var(--gold); margin-left:8px; font-weight:700;">🏷️ Kod RABAT3 aktywny (-${discountAmount} PLN)</span>` : ''}
+            <strong style="color:var(--accent); font-size:0.92rem;">🛒 Twój Koszyk (${totalItemsCount} szt.)</strong>
+            ${st.discountCodeApplied ? `<span style="font-size:0.72rem; color:var(--gold); margin-left:8px; font-weight:700;">🏷️ Kod RABAT3 (-${discountAmount} PLN)</span>` : ''}
+            <span style="font-size:0.72rem; color:var(--text-muted); margin-left:8px;">
+              ${shippingCost === 0 ? '✓ Darmowa dostawa (od 300 PLN)' : `Dostawa: +${shippingCost} PLN`}
+            </span>
           </div>
           <div style="display:flex; align-items:center; gap:0.75rem;">
             <strong style="font-size:1.15rem; color:var(--gold);">Do zapłaty: ${finalCartValue} PLN</strong>
             <button class="btn-mini-tool" onclick="StoreComponent.toggleCartDrawer()">
-              ${st.cartOpen ? '▲ Zwiń koszyk' : '▼ Rozwiń koszyk (' + AppData.cart.length + ')'}
+              ${st.cartOpen ? '▲ Zwiń koszyk' : '▼ Rozwiń koszyk i zamów (' + AppData.cart.length + ')'}
             </button>
           </div>
         </div>
@@ -501,22 +537,84 @@ const StoreComponent = {
               </div>
             `).join('')}
 
+            ${hasOversize ? `
+              <div style="font-size:0.72rem; color:var(--gold); background:rgba(250,204,21,0.08); padding:0.45rem 0.75rem; border-radius:6px; border:1px solid rgba(250,204,21,0.3);">
+                📦 <strong>Informacja gabarytowa:</strong> Koszyk zawiera kije golfowe / torbę (przesyłka dłużycowa powyżej 120 cm) – wysyłka realizowana ubezpieczonym Kurierem DPD/DHL lub odbiór osobisty.
+              </div>
+            ` : ''}
+
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem; margin-top:0.4rem; padding-top:0.5rem; border-top:1px solid rgba(255,255,255,0.08);">
               <div style="display:flex; gap:0.4rem; align-items:center;">
-                <input type="text" id="cartPromoCodeInput" placeholder="Kod rabatowy (np. RABAT3)" value="${st.discountCodeApplied ? 'RABAT3' : ''}" style="background:rgba(0,0,0,0.45); border:1px solid var(--gold); border-radius:6px; padding:0.35rem 0.65rem; color:#fff; font-size:0.75rem; width:165px;">
-                <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.checkCartPromoCode()">Zastosuj kod (-3%)</button>
+                <input type="text" id="cartPromoCodeInput" placeholder="Kod rabatowy (RABAT3)" value="${st.discountCodeApplied ? 'RABAT3' : ''}" style="background:rgba(0,0,0,0.45); border:1px solid var(--gold); border-radius:6px; padding:0.4rem 0.65rem; color:#fff; font-size:0.75rem; width:165px;">
+                <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.checkCartPromoCode()">Aktywuj kod (-3%)</button>
               </div>
 
-              <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
-                <select onchange="StoreComponent.setDelivery(this.value)" style="background:rgba(0,0,0,0.5); color:#fff; border:1px solid var(--glass-border); padding:0.4rem 0.6rem; border-radius:6px; font-size:0.75rem;">
-                  <option value="KURIER" ${st.deliveryMethod === 'KURIER' ? 'selected' : ''}>📦 Kurier DPD / InPost (0 PLN)</option>
-                  <option value="FITTING" ${st.deliveryMethod === 'FITTING' ? 'selected' : ''}>🎯 Odbiór ze sprawdzeniem na TrackManie</option>
-                </select>
-                <button class="btn-primary" style="width:auto; margin:0; padding:0.55rem 1.3rem;" onclick="app.checkoutStore()">
-                  ✓ Zamawiam (${finalCartValue} PLN)
-                </button>
-              </div>
+              <button class="btn-primary" style="width:auto; margin:0; padding:0.55rem 1.4rem;" onclick="StoreComponent.toggleCheckoutStep()">
+                ${st.checkoutStep ? '▲ Ukryj formularz dostawy' : '💳 Przejdź do kasy i płatności (' + finalCartValue + ' PLN) →'}
+              </button>
             </div>
+
+            ${st.checkoutStep ? `
+              <div class="checkout-form-box">
+                <h3 style="color:var(--accent); font-size:0.88rem; margin-bottom:0.75rem;">📦 Dane do wysyłki i płatności (Bezpieczny Checkout SSL)</h3>
+                <div class="checkout-grid">
+                  <div>
+                    <label>Imię i Nazwisko odbiorcy *</label>
+                    <input type="text" id="chkName" value="${AppData.user.name || ''}" placeholder="Jan Kowalski">
+                  </div>
+                  <div>
+                    <label>Telefon kontaktowy dla kuriera *</label>
+                    <input type="tel" id="chkPhone" placeholder="np. 600 100 200">
+                  </div>
+                  <div>
+                    <label>Adres E-mail (do faktury i śledzenia) *</label>
+                    <input type="email" id="chkEmail" value="${AppData.user.email || ''}">
+                  </div>
+                  <div>
+                    <label>Ulica i numer domu / Kod Paczkomatu *</label>
+                    <input type="text" id="chkAddress" placeholder="np. ul. Golfowa 12/4 lub WAW123M">
+                  </div>
+                  <div>
+                    <label>Kod pocztowy i Miasto *</label>
+                    <input type="text" id="chkCity" value="${AppData.user.city || ''}" placeholder="00-001 Warszawa">
+                  </div>
+                  <div>
+                    <label>NIP do Faktury VAT (opcjonalnie)</label>
+                    <input type="text" id="chkNip" placeholder="Wpisz NIP jeśli potrzebujesz FV">
+                  </div>
+                  <div>
+                    <label>Sposób dostawy</label>
+                    <select id="chkDelivery" onchange="StoreComponent.setDelivery(this.value)">
+                      <option value="KURIER_DPD">🚚 Kurier DPD Dłużyca Golf (Ubezpieczony)</option>
+                      ${!hasOversize ? `<option value="INPOST">📦 Paczkomat InPost 24/7 (Piłki / Akcesoria)</option>` : ''}
+                      <option value="ODBIOR_TRACKMAN">🎯 Odbiór osobisty + Test na TrackManie (0 PLN)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label>Metoda płatności</label>
+                    <select id="chkPayment">
+                      <option value="BLIK">📱 Szybki BLIK (0 PLN prowizji)</option>
+                      <option value="P24">🏦 Szybki przelew Przelewy24 / PayNow</option>
+                      <option value="CARD">💳 Karta płatnicza Visa / Mastercard / Apple Pay</option>
+                      <option value="COD">💵 Płatność przy odbiorze u kuriera</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label>Uwagi do zamówienia / Nadruk na piłkach</label>
+                    <input type="text" id="chkNotes" placeholder="np. Tekst nadruku na piłkach lub godzina dostawy">
+                  </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; padding-top:0.65rem; border-top:1px solid rgba(255,255,255,0.1);">
+                  <label style="font-size:0.72rem; color:var(--text-muted); display:flex; align-items:center; gap:6px; cursor:pointer;">
+                    <input type="checkbox" id="chkTerms" checked> Akceptuję Regulamin Sklepu TGN oraz Politykę Prywatności.
+                  </label>
+                  <button class="btn-primary" style="width:auto; margin:0; padding:0.65rem 1.6rem; font-size:0.85rem;" onclick="StoreComponent.submitProductionOrder(${finalCartValue})">
+                    🔒 Zamawiam z obowiązkiem zapłaty (${finalCartValue} PLN)
+                  </button>
+                </div>
+              </div>
+            ` : ''}
           </div>
         ` : ''}
       </div>
@@ -564,11 +662,14 @@ const StoreComponent = {
 
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.55rem;">
               <div style="display:flex; gap:0.35rem;">
-                <button class="btn-mini-tool" onclick="app.nextWebSearchPhoto('${imgId}', '${safeName}')">📷 Inne foto</button>
-                <button class="btn-mini-tool" onclick="app.openGoogleImages('${safeName}')">🔎 Google ↗</button>
+                <button class="btn-mini-tool" onclick="app.openPhotoZoom('${safeName}', document.getElementById('${imgId}').src, '${prod.spec}')">🔍 Powiększ</button>
+                ${isAdmin ? `
+                  <button class="btn-mini-tool" onclick="app.nextWebSearchPhoto('${imgId}', '${safeName}')">📷 Foto</button>
+                  <button class="btn-mini-tool" style="color:#fca5a5; border-color:rgba(239,68,68,0.4);" onclick="StoreComponent.deleteProduct(${prod.id})">🗑️ Usuń</button>
+                ` : ''}
               </div>
               <span style="font-size:0.65rem; color:${prod.stock <= 2 ? 'var(--gold)' : 'var(--accent)'}; font-weight:700;">
-                ● Magazyn: ${prod.stock} szt.
+                ● Dostępność: ${prod.stock > 0 ? prod.stock + ' szt.' : 'Wyprzedane'}
               </span>
             </div>
           </div>
@@ -576,7 +677,7 @@ const StoreComponent = {
           <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.6rem;">
             <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.2rem;">
               <span style="font-size:0.7rem; color:var(--text-muted);">
-                ${isUsed ? 'Cena nowego / Nasza cena CPO:' : 'Cena w sklepie TGN:'}
+                ${isUsed ? 'Cena nowego / Cena CPO:' : 'Cena brutto (z VAT):'}
               </span>
               <div>
                 ${prod.oldPrice && prod.oldPrice > prod.price ? `<span style="font-size:0.72rem; color:var(--text-muted); text-decoration:line-through; margin-right:6px;">${prod.oldPrice} PLN</span>` : ''}
@@ -586,7 +687,7 @@ const StoreComponent = {
 
             ${!isBallsOrAcc ? `
               <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.55rem;">
-                <span style="font-size:0.68rem; color:var(--gold);">W rozliczeniu Trade-In (Twój kij):</span>
+                <span style="font-size:0.68rem; color:var(--gold);">W rozliczeniu Trade-In:</span>
                 <strong style="font-size:0.86rem; color:var(--gold);">dopłata od ${prod.tradeInPrice} PLN</strong>
               </div>
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.4rem;">
@@ -605,18 +706,20 @@ const StoreComponent = {
       <section class="panel-3d" style="grid-column: span 2;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem; margin-bottom:0.85rem;">
           <h2 style="margin:0;">
-            <span>🛍️ TGN Pro Shop & Komis CPO (${AppData.storeProducts.length} produktów)</span>
+            <span>🛍️ Oficjalny Sklep TGN Pro Shop & Komis CPO (${AppData.storeProducts.length} produktów)</span>
           </h2>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
             <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.85rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.12);" onclick="StoreComponent.openPromoModal('NEWSLETTER')">
               📩 Newsletter & Kod -3%
             </button>
             <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.85rem; border-color:#38bdf8; color:#38bdf8; background:rgba(56,189,248,0.15);" onclick="StoreComponent.toggleAiAssistant()">
-              🤖 ${st.aiAssistantOpen ? 'Ukryj Asystenta AI' : 'Asystent AI Sklepu'}
+              🤖 ${st.aiAssistantOpen ? 'Ukryj Doradcę AI' : 'Doradca AI Sklepu'}
             </button>
-            <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.9rem; background:var(--accent); color:#052e16;" onclick="StoreComponent.toggleAddProduct()">
-              ➕ Dodaj produkt do sklepu
-            </button>
+            ${isAdmin ? `
+              <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.9rem; background:var(--gold); color:#052e16; border-color:var(--gold);" onclick="StoreComponent.toggleAddProduct()">
+                ⚙️ + Dodaj produkt (Admin)
+              </button>
+            ` : ''}
           </div>
         </div>
 
@@ -648,7 +751,7 @@ const StoreComponent = {
           <select onchange="StoreComponent.setFlex(this.value)">
             <option value="ALL" ${st.flex === 'ALL' ? 'selected' : ''}>Dowolny Flex shaftu</option>
             <option value="Regular" ${st.flex === 'Regular' ? 'selected' : ''}>Regular Flex (R)</option>
-            <option value="Stiff" ${st.flex === 'Stiff' ? 'selected' : ''}>Stiff Flex (S - pod 96 mph)</option>
+            <option value="Stiff" ${st.flex === 'Stiff' ? 'selected' : ''}>Stiff Flex (S)</option>
             <option value="Wedge" ${st.flex === 'Wedge' ? 'selected' : ''}>Wedge Flex</option>
           </select>
 
@@ -659,7 +762,7 @@ const StoreComponent = {
           </select>
 
           <select onchange="StoreComponent.setSort(this.value)">
-            <option value="RECOMMENDED" ${st.sortBy === 'RECOMMENDED' ? 'selected' : ''}>Sortuj: Polecane AI</option>
+            <option value="RECOMMENDED" ${st.sortBy === 'RECOMMENDED' ? 'selected' : ''}>Sortuj: Polecane</option>
             <option value="PRICE_ASC" ${st.sortBy === 'PRICE_ASC' ? 'selected' : ''}>Cena: od najniższej</option>
             <option value="PRICE_DESC" ${st.sortBy === 'PRICE_DESC' ? 'selected' : ''}>Cena: od najwyższej</option>
           </select>
@@ -670,6 +773,83 @@ const StoreComponent = {
         </div>
       </section>
     `;
+  },
+
+  toggleCheckoutStep: () => {
+    AppData.storeState.checkoutStep = !AppData.storeState.checkoutStep;
+    app.switchTab('sklep');
+  },
+
+  submitProductionOrder: (finalTotal) => {
+    const name = document.getElementById('chkName')?.value.trim();
+    const phone = document.getElementById('chkPhone')?.value.trim();
+    const email = document.getElementById('chkEmail')?.value.trim();
+    const address = document.getElementById('chkAddress')?.value.trim();
+    const city = document.getElementById('chkCity')?.value.trim();
+    const nip = document.getElementById('chkNip')?.value.trim();
+    const delivery = document.getElementById('chkDelivery')?.value;
+    const payment = document.getElementById('chkPayment')?.value;
+    const notes = document.getElementById('chkNotes')?.value.trim();
+    const terms = document.getElementById('chkTerms')?.checked;
+
+    if (!name || !phone || !email || !address || !city) {
+      app.showToast('⚠️ Uzupełnij wszystkie wymagane pola adresowe i telefon dla kuriera!');
+      return;
+    }
+    if (!terms) {
+      app.showToast('⚠️ Zaakceptuj Regulamin Sklepu, aby złożyć zamówienie!');
+      return;
+    }
+
+    const orderNumber = 'TGN-2026-' + (Math.floor(Math.random() * 8999) + 1000);
+    const newOrder = {
+      orderId: orderNumber,
+      date: new Date().toLocaleString('pl-PL'),
+      customerName: name,
+      phone: phone,
+      email: email,
+      address: `${address}, ${city}`,
+      nip: nip || 'Paragon',
+      delivery: delivery,
+      payment: payment,
+      notes: notes || '-',
+      items: [...AppData.cart],
+      total: finalTotal,
+      status: payment === 'COD' ? 'Do wysyłki (Za pobraniem)' : 'Opłacone (' + payment + ')'
+    };
+
+    // Pomniejsz stany magazynowe kupionych produktów
+    AppData.cart.forEach(cartItem => {
+      const prod = AppData.storeProducts.find(p => p.id === cartItem.id);
+      if (prod && prod.stock > 0) {
+        prod.stock = Math.max(0, prod.stock - (cartItem.qty || 1));
+      }
+    });
+
+    // Zapisz zamówienie w lokalnej bazie produkcyjnej (widoczne w Panelu Admina i w Moim Koncie)
+    try {
+      const orders = JSON.parse(localStorage.getItem('tgn_orders_db') || '[]');
+      orders.unshift(newOrder);
+      localStorage.setItem('tgn_orders_db', JSON.stringify(orders));
+    } catch (e) {}
+
+    AppData.cart = [];
+    AppData.storeState.cartOpen = false;
+    AppData.storeState.checkoutStep = false;
+    auth.updateHeaderBar();
+    app.switchTab('sklep');
+    app.showToast(`✅ Zamówienie #${orderNumber} przyjęte! Potwierdzenie wysłano na: ${email}`);
+  },
+
+  deleteProduct: (prodId) => {
+    AppData.storeProducts = AppData.storeProducts.filter(p => p.id !== prodId);
+    try {
+      const deletedIds = JSON.parse(localStorage.getItem('tgn_deleted_prod_ids') || '[]');
+      deletedIds.push(prodId);
+      localStorage.setItem('tgn_deleted_prod_ids', JSON.stringify(deletedIds));
+    } catch (e) {}
+    app.switchTab('sklep');
+    app.showToast('🗑️ Usunięto produkt z katalogu sklepu.');
   },
 
   openPromoModal: (mode) => {
@@ -712,7 +892,11 @@ const StoreComponent = {
       app.showToast('Podaj poprawny adres e-mail!');
       return;
     }
-    localStorage.setItem('tgn_newsletter_email', email);
+    try {
+      const subs = JSON.parse(localStorage.getItem('tgn_newsletter_list') || '[]');
+      if (!subs.includes(email)) subs.push(email);
+      localStorage.setItem('tgn_newsletter_list', JSON.stringify(subs));
+    } catch (e) {}
     AppData.storeState.discountCodeApplied = true;
     AppData.storeState.promoModalMode = 'RABAT3';
     StoreComponent.syncGlobalPromoModal();
@@ -859,11 +1043,17 @@ const StoreComponent = {
     };
 
     AppData.storeProducts.unshift(newProduct);
+    try {
+      const prevCustom = JSON.parse(localStorage.getItem('tgn_custom_store_products') || '[]');
+      prevCustom.unshift(newProduct);
+      localStorage.setItem('tgn_custom_store_products', JSON.stringify(prevCustom));
+    } catch (e) {}
+
     AppData.storeState.addProductOpen = false;
     AppData.storeState.section = "ALL";
     AppData.storeState.category = "ALL";
     app.switchTab('sklep');
-    app.showToast(`✓ Dodano nowy produkt do sklepu: ${name}`);
+    app.showToast(`✓ Dodano nowy produkt do bazy sklepu: ${name}`);
   },
 
   setSection: (sec) => { AppData.storeState.section = sec; app.switchTab('sklep'); },
@@ -892,6 +1082,10 @@ const StoreComponent = {
   addItem: (prodId, useTradeIn) => {
     const prod = AppData.storeProducts.find(p => p.id === prodId);
     if (!prod) return;
+    if (prod.stock <= 0) {
+      app.showToast('⚠️ Ten egzemplarz został już wyprzedany!');
+      return;
+    }
     const finalPrice = useTradeIn ? prod.tradeInPrice : prod.price;
     const modeLabel = useTradeIn ? "[W rozliczeniu Trade-In]" : (prod.section === "USED" ? "[Używany CPO]" : "[Nowy]");
     const existing = AppData.cart.find(i => i.id === prodId && i.useTradeIn === useTradeIn);
