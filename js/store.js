@@ -1,42 +1,30 @@
 /* =========================================================================
-   PRODUKCYJNY MODUŁ SKLEPU TGN v16.0:
-   - Wysuwana Szuflada Koszyka (Slide-Over Drawer) działająca zawsze i wszędzie
-   - Wybór wariantów (Loft / Flex / Rozmiar / Nadruk) przed dodaniem do koszyka
-   - Pełny Checkout (Adres, InPost/DPD Dłużyca, BLIK/P24, Kod RABAT3 -3%)
-   - Menedżer Asortymentu CMS (Dodawanie + Edycja + Usuwanie + Eksport/Import)
+   MODUŁ SKLEPU TGN v17.0 (PREMIUM PRO SHOP & KOMIS CPO)
+   - Czysty, profesjonalny interfejs e-commerce
+   - Usunięty element "Trusted Shop", w jego miejsce profesjonalna belka akcji elitarnych
+   - Pełna szuflada koszyka (Slide-Over Cart Drawer) z obsługą kodu RABAT3 (-3% jak "Par 3")
+   - Ukryty panel dodawania/edycji asortymentu dostępny TYLKO dla roli ADMIN
    ========================================================================= */
 
-(function injectStoreV16Styles() {
-  ['tgnStoreAiStyles', 'tgnStoreV13Styles', 'tgnStoreV14Styles', 'tgnStoreV15Styles'].forEach(id => {
+(function injectStoreV17Styles() {
+  ['tgnStoreAiStyles', 'tgnStoreV13Styles', 'tgnStoreV14Styles', 'tgnStoreV15Styles', 'tgnStoreV16Styles'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
-  if (document.getElementById('tgnStoreV16Styles')) return;
+  if (document.getElementById('tgnStoreV17Styles')) return;
 
   const style = document.createElement('style');
-  style.id = 'tgnStoreV16Styles';
+  style.id = 'tgnStoreV17Styles';
   style.textContent = `
-    /* Wysuwana Szuflada Koszyka (Slide-Over Cart Drawer) */
+    /* Koszyk szufladowy (Slide-Over) */
     #tgnCartDrawerBackdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.78);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      z-index: 9990;
-      display: none;
-      justify-content: flex-end;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.78); backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px); z-index: 9990; display: none; justify-content: flex-end;
     }
     .cart-drawer-panel {
-      width: 100%;
-      max-width: 480px;
-      height: 100vh;
-      height: 100dvh;
-      background: linear-gradient(165deg, #0d1f24, #061014);
-      border-left: 2px solid var(--accent);
-      display: flex;
-      flex-direction: column;
-      box-shadow: -15px 0 50px rgba(0, 0, 0, 0.9);
+      width: 100%; max-width: 480px; height: 100vh; height: 100dvh;
+      background: linear-gradient(165deg, #0d1f24, #061014); border-left: 2px solid var(--accent);
+      display: flex; flex-direction: column; box-shadow: -15px 0 50px rgba(0, 0, 0, 0.9);
       animation: slideInRight 0.25s ease-out;
     }
     @keyframes slideInRight {
@@ -44,126 +32,64 @@
       to { transform: translateX(0); }
     }
     .cart-drawer-header {
-      padding: 1.1rem 1.25rem;
-      background: rgba(0, 0, 0, 0.45);
-      border-bottom: 1px solid var(--glass-border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      padding: 1.1rem 1.25rem; background: rgba(0, 0, 0, 0.45); border-bottom: 1px solid var(--glass-border);
+      display: flex; justify-content: space-between; align-items: center;
     }
     .cart-drawer-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1.1rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
+      flex: 1; overflow-y: auto; padding: 1.1rem 1.25rem; display: flex; flex-direction: column; gap: 0.85rem;
     }
     .cart-drawer-footer {
-      padding: 1rem 1.25rem;
-      background: rgba(5, 14, 18, 0.96);
-      border-top: 1px solid var(--glass-border);
+      padding: 1rem 1.25rem; background: rgba(5, 14, 18, 0.96); border-top: 1px solid var(--glass-border);
     }
     .cart-item-row {
-      background: rgba(255, 255, 255, 0.045);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 0.75rem;
-      display: grid;
-      grid-template-columns: 60px 1fr;
-      gap: 0.75rem;
-      align-items: center;
+      background: rgba(255, 255, 255, 0.045); border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px; padding: 0.75rem; display: grid; grid-template-columns: 60px 1fr; gap: 0.75rem; align-items: center;
     }
     .cart-item-thumb {
-      width: 60px;
-      height: 60px;
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--glass-border);
+      width: 60px; height: 60px; background: #fff; border-radius: 8px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border);
     }
-    .cart-item-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      padding: 3px;
-    }
+    .cart-item-thumb img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
 
-    /* Pływający przycisk koszyka w prawym dolnym rogu (FAB) */
     #tgnFloatingCartBtn {
-      position: fixed;
-      bottom: 22px;
-      right: 22px;
-      background: var(--accent);
-      color: #052e16;
-      border: 2px solid #ffffff;
-      border-radius: 30px;
-      padding: 0.7rem 1.2rem;
-      font-size: 0.85rem;
-      font-weight: 900;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.75);
-      cursor: pointer;
-      z-index: 8500;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: transform 0.2s;
+      position: fixed; bottom: 22px; right: 22px; background: var(--accent); color: #052e16;
+      border: 2px solid #ffffff; border-radius: 30px; padding: 0.7rem 1.2rem; font-size: 0.85rem; font-weight: 900;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.75); cursor: pointer; z-index: 8500;
+      display: flex; align-items: center; gap: 8px; transition: transform 0.2s;
     }
-    #tgnFloatingCartBtn:hover {
-      transform: scale(1.06);
-    }
+    #tgnFloatingCartBtn:hover { transform: scale(1.06); }
 
-    /* Selektory wariantów na karcie produktu */
     .prod-variant-box {
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 8px;
-      padding: 0.45rem 0.6rem;
-      margin-bottom: 0.55rem;
+      background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; padding: 0.45rem 0.6rem; margin-bottom: 0.55rem;
     }
-    .prod-variant-box label {
-      display: block;
-      font-size: 0.62rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-bottom: 3px;
-    }
+    .prod-variant-box label { display: block; font-size: 0.62rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 3px; }
     .prod-variant-box select, .prod-variant-box input {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(114, 214, 150, 0.35);
-      border-radius: 5px;
-      padding: 0.35rem 0.5rem;
-      color: #fff;
-      font-size: 0.74rem;
-      outline: none;
+      width: 100%; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(114, 214, 150, 0.35);
+      border-radius: 5px; padding: 0.35rem 0.5rem; color: #fff; font-size: 0.74rem; outline: none;
     }
-    .prod-variant-box select option {
-      background: #091519;
-      color: #fff;
+    .prod-variant-box select option { background: #091519; color: #fff; }
+
+    /* Profesjonalna belka elitarna sklepu (Zamiast "Trusted Shop") */
+    .elite-store-bar {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;
+      background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), rgba(56, 189, 248, 0.08));
+      border: 1px solid rgba(74, 222, 128, 0.35); border-radius: 12px; padding: 0.75rem 1.1rem; margin-bottom: 1.1rem;
+    }
+    .elite-badge-pill {
+      display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--accent); padding: 4px 11px; border-radius: 20px; font-size: 0.74rem; font-weight: 800; color: var(--accent);
     }
 
-    /* Asystent AI & Pasek Trusted Shop */
     .store-ai-assistant-box {
       background: linear-gradient(145deg, rgba(16, 38, 44, 0.96), rgba(8, 20, 24, 0.98));
-      border: 2px solid rgba(56, 189, 248, 0.55);
-      border-radius: 16px;
-      padding: 1.1rem 1.25rem;
-      margin-bottom: 1.2rem;
+      border: 2px solid rgba(56, 189, 248, 0.55); border-radius: 16px; padding: 1.1rem 1.25rem; margin-bottom: 1.2rem;
     }
     .store-ai-header {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
       gap: 0.5rem; padding-bottom: 0.65rem; margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
-    .ai-pulse-dot {
-      width: 10px; height: 10px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 12px #4ade80; display: inline-block;
-    }
-    .store-ai-messages {
-      max-height: 140px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem;
-    }
+    .ai-pulse-dot { width: 10px; height: 10px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 12px #4ade80; display: inline-block; }
+    .store-ai-messages { max-height: 140px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; }
     .store-ai-msg { font-size: 0.78rem; line-height: 1.45; padding: 0.55rem 0.85rem; border-radius: 10px; }
     .store-ai-msg.bot { background: rgba(56, 189, 248, 0.12); border-left: 3px solid #38bdf8; color: #f1f5f9; }
     .store-ai-msg.user { background: rgba(74, 222, 128, 0.18); border-right: 3px solid #4ade80; color: #4ade80; align-self: flex-end; }
@@ -178,29 +104,14 @@
       font-size: 0.76rem; font-weight: 800; cursor: pointer; white-space: nowrap;
     }
 
-    .trusted-promo-bar {
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;
-      background: linear-gradient(90deg, rgba(250, 204, 21, 0.14), rgba(74, 222, 128, 0.12));
-      border: 1px solid rgba(250, 204, 21, 0.45); border-radius: 12px; padding: 0.7rem 1rem; margin-bottom: 1rem;
-    }
-    .trusted-badge-pill {
-      display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 0, 0, 0.45);
-      border: 1px solid rgba(250, 204, 21, 0.5); padding: 4px 10px; border-radius: 20px; font-size: 0.74rem; font-weight: 800; color: #facc15;
-    }
-
-    .category-Accordion-list {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.45rem; margin-bottom: 1.1rem;
-    }
+    .category-Accordion-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.45rem; margin-bottom: 1.1rem; }
     .cat-menu-item {
       background: rgba(255, 255, 255, 0.045); border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 9px; padding: 0.55rem 0.75rem; color: #f1f5f9; font-size: 0.74rem; font-weight: 600;
       display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; text-align: left;
     }
-    .cat-menu-item:hover, .cat-menu-item.active {
-      background: rgba(74, 222, 128, 0.18); border-color: #4ade80; color: #4ade80; font-weight: 700;
-    }
+    .cat-menu-item:hover, .cat-menu-item.active { background: rgba(74, 222, 128, 0.18); border-color: #4ade80; color: #4ade80; font-weight: 700; }
 
-    /* Modal Promocyjny */
     #tgnGlobalPromoOverlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
       background: rgba(0, 0, 0, 0.82); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -223,7 +134,6 @@
       letter-spacing: 1.5px; margin: 0.5rem 0; cursor: pointer;
     }
 
-    /* Kreator dodawania/edycji towaru */
     .store-admin-add-box {
       background: rgba(8, 22, 26, 0.98); border: 2px solid var(--gold); border-radius: 16px;
       padding: 1.15rem; margin-bottom: 1.25rem; box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
@@ -236,12 +146,22 @@
     }
     .store-add-grid select option { background: #091519; color: #fff; }
 
+    .checkout-form-box {
+      background: rgba(5, 14, 18, 0.95); border: 2px solid var(--accent); border-radius: 14px; padding: 1.2rem; margin-top: 0.9rem;
+    }
+    .checkout-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; margin-bottom: 0.8rem; }
+    .checkout-grid label { display: block; font-size: 0.66rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 3px; }
+    .checkout-grid input, .checkout-grid select {
+      width: 100%; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 7px; padding: 0.55rem 0.7rem; color: #fff; font-size: 0.78rem; outline: none;
+    }
+
     @media (max-width: 1024px) {
       .category-Accordion-list { grid-template-columns: repeat(2, 1fr); }
-      .store-add-grid { grid-template-columns: repeat(2, 1fr); }
+      .store-add-grid, .checkout-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 768px) {
-      .category-Accordion-list, .store-add-grid { grid-template-columns: 1fr; gap: 0.4rem; }
+      .category-Accordion-list, .store-add-grid, .checkout-grid { grid-template-columns: 1fr; gap: 0.4rem; }
       .store-ai-input-row { flex-direction: column; }
       .store-ai-input-row button { padding: 0.55rem; }
       .cart-drawer-panel { max-width: 100vw; }
@@ -335,7 +255,6 @@ const StoreComponent = {
       }
     });
 
-    // Wczytaj zapisany koszyk z localStorage, aby nie znikał po odświeżeniu strony
     try {
       const savedCart = localStorage.getItem('tgn_persistent_cart');
       if (savedCart && (!AppData.cart || AppData.cart.length === 0)) {
@@ -374,7 +293,7 @@ const StoreComponent = {
       AppData.storeState.aiChatHistory = [
         {
           sender: "TGN AI Pro Fitter",
-          text: "Witaj w oficjalnym sklepie TGN! Wybierz wariant produktu i dodaj go do koszyka – szuflada zamówienia otworzy się automatycznie po prawej stronie."
+          text: "Witaj w elitarnym sklepie TGN Pro Shop! Wybierz wariant sprzętu i dodaj go do koszyka. Szuflada zamówień otwiera się po prawej stronie."
         }
       ];
     }
@@ -386,7 +305,6 @@ const StoreComponent = {
     } catch (e) {}
   },
 
-  // Domyślne warianty dla każdego typu produktu w sklepie
   getProductVariants: (prod) => {
     if (prod.variants && Array.isArray(prod.variants) && prod.variants.length > 0) return prod.variants;
     if (prod.section === "USED") return [`Egzemplarz CPO (${prod.loft} • ${prod.flex} • ${prod.hand})`];
@@ -399,12 +317,10 @@ const StoreComponent = {
     return [`Wersja Standard (${prod.loft})`];
   },
 
-  // Renderuje globalną szufladę koszyka (Slide-Over Drawer) oraz pływający przycisk koszyka
   syncGlobalCartDrawer: () => {
     StoreComponent.ensureStoreDataInitialized();
     const st = AppData.storeState;
 
-    // 1. Pływający przycisk koszyka w prawym dolnym rogu
     let fab = document.getElementById('tgnFloatingCartBtn');
     if (!fab) {
       fab = document.createElement('button');
@@ -424,7 +340,6 @@ const StoreComponent = {
     fab.style.display = isLoggedIn ? 'flex' : 'none';
     fab.innerHTML = `🛒 Koszyk (${totalItemsCount}) • ${finalCartValue} PLN`;
 
-    // 2. Szuflada Koszyka
     let backdrop = document.getElementById('tgnCartDrawerBackdrop');
     if (!backdrop) {
       backdrop = document.createElement('div');
@@ -441,9 +356,9 @@ const StoreComponent = {
     const itemsHTML = AppData.cart.length === 0 ? `
       <div style="text-align:center; padding:3rem 1rem; color:var(--text-muted);">
         <div style="font-size:3rem; margin-bottom:0.8rem;">🛒</div>
-        <strong style="color:var(--text-main); font-size:0.95rem; display:block; margin-bottom:0.4rem;">Twój koszyk w sklepie TGN jest pusty</strong>
-        <p style="font-size:0.78rem; margin-bottom:1.2rem;">Wybierz nowy sprzęt, używane kije CPO lub pakiet piłek Lake Balls i kliknij „Do koszyka”.</p>
-        <button class="btn-primary" style="width:auto; padding:0.6rem 1.4rem;" onclick="StoreComponent.closeCartDrawer(); app.switchTab('sklep');">Przeglądaj asortyment sklepu</button>
+        <strong style="color:var(--text-main); font-size:0.95rem; display:block; margin-bottom:0.4rem;">Twój koszyk jest pusty</strong>
+        <p style="font-size:0.78rem; margin-bottom:1.2rem;">Wybierz sprzęt PGA Tour, używane kije CPO lub akcesoria z katalogu.</p>
+        <button class="btn-primary" style="width:auto; padding:0.6rem 1.4rem;" onclick="StoreComponent.closeCartDrawer()">Przeglądaj sklep</button>
       </div>
     ` : AppData.cart.map((item, idx) => {
       const thumbUrl = ClubImageEngine.getClubVisualUrl(item.name, item.imgUrl);
@@ -459,7 +374,7 @@ const StoreComponent = {
               <button class="btn-mini-tool" style="color:#fca5a5; border-color:rgba(239,68,68,0.35); padding:1px 6px;" onclick="StoreComponent.removeItem(${idx})">✕</button>
             </div>
             <p style="font-size:0.68rem; color:var(--accent); margin:3px 0;">Wariant: ${item.variant || 'Standard'} ${item.modeLabel || ''}</p>
-            ${item.customPrint ? `<p style="font-size:0.66rem; color:var(--gold);">🖨️ Nadruk UV: "${item.customPrint}"</p>` : ''}
+            ${item.customPrint ? `<p style="font-size:0.66rem; color:var(--gold);">🖨️ Nadruk: "${item.customPrint}"</p>` : ''}
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.4rem;">
               <div style="display:flex; align-items:center; gap:0.4rem;">
                 <button class="btn-mini-tool" onclick="StoreComponent.changeQty(${idx}, -1)">-</button>
@@ -480,25 +395,25 @@ const StoreComponent = {
           <input type="text" id="chkName" value="${AppData.user.name || ''}" placeholder="Imię i Nazwisko *" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
             <input type="tel" id="chkPhone" placeholder="Telefon dla kuriera *" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
-            <input type="email" id="chkEmail" value="${AppData.user.email || ''}" placeholder="E-mail do faktury *" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
+            <input type="email" id="chkEmail" value="${AppData.user.email || ''}" placeholder="E-mail *" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
           </div>
-          <input type="text" id="chkAddress" placeholder="Ulica i nr domu / Kod Paczkomatu InPost *" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
+          <input type="text" id="chkAddress" placeholder="Ulica i nr domu / Kod Paczkomatu *" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
             <input type="text" id="chkCity" value="${AppData.user.city || ''}" placeholder="Kod i Miasto *" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
             <input type="text" id="chkNip" placeholder="NIP (opcjonalnie do FV)" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
           </div>
           <select id="chkDelivery" onchange="StoreComponent.setDelivery(this.value)" style="background:#091519; border:1px solid var(--glass-border); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.76rem;">
             <option value="KURIER_DPD">🚚 Kurier DPD Dłużyca Golf (Ubezpieczony)</option>
-            ${!hasOversize ? `<option value="INPOST">📦 Paczkomat InPost 24/7 (Piłki / Akcesoria)</option>` : ''}
+            ${!hasOversize ? `<option value="INPOST">📦 Paczkomat InPost 24/7</option>` : ''}
             <option value="ODBIOR_TRACKMAN">🎯 Odbiór osobisty + Test na TrackManie (0 PLN)</option>
           </select>
           <select id="chkPayment" style="background:#091519; border:1px solid var(--glass-border); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.76rem;">
             <option value="BLIK">📱 Szybki BLIK (0 PLN)</option>
-            <option value="P24">🏦 Szybki przelew Przelewy24 / PayNow</option>
-            <option value="CARD">💳 Karta Visa / Mastercard / Apple Pay</option>
-            <option value="COD">💵 Płatność przy odbiorze u kuriera</option>
+            <option value="P24">🏦 Przelew Przelewy24 / PayNow</option>
+            <option value="CARD">💳 Karta Visa / Mastercard</option>
+            <option value="COD">💵 Płatność przy odbiorze</option>
           </select>
-          <input type="text" id="chkNotes" placeholder="Uwagi dla kuriera / sklepu..." style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.76rem;">
+          <input type="text" id="chkNotes" placeholder="Uwagi do zamówienia..." style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.76rem;">
           <label style="font-size:0.7rem; color:var(--text-muted); display:flex; align-items:center; gap:6px; margin-top:2px;">
             <input type="checkbox" id="chkTerms" checked> Akceptuję Regulamin Sklepu TGN oraz Politykę Prywatności.
           </label>
@@ -510,28 +425,26 @@ const StoreComponent = {
       <div class="cart-drawer-panel" onclick="event.stopPropagation()">
         <div class="cart-drawer-header">
           <div>
-            <strong style="color:var(--accent); font-size:0.95rem;">🛒 Twój Koszyk TGN Pro Shop (${totalItemsCount})</strong>
-            <p style="font-size:0.68rem; color:var(--text-muted);">Darmowa wysyłka od 300 PLN • Gwarancja Trusted Shop</p>
+            <strong style="color:var(--accent); font-size:0.95rem;">🛒 Twój Koszyk (${totalItemsCount})</strong>
+            <p style="font-size:0.68rem; color:var(--text-muted);">Darmowa wysyłka od 300 PLN • Gwarancja TGN Elite</p>
           </div>
           <button style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer;" onclick="StoreComponent.closeCartDrawer()">✕</button>
         </div>
 
         <div class="cart-drawer-body">
           ${itemsHTML}
-
           ${AppData.cart.length > 0 ? `
-            <!-- Kod rabatowy RABAT3 -->
             <div style="background:rgba(250,204,21,0.07); border:1px dashed rgba(250,204,21,0.4); border-radius:10px; padding:0.65rem;">
               <div style="display:flex; justify-content:space-between; align-items:center; gap:0.4rem;">
                 <input type="text" id="cartPromoCodeInput" placeholder="Kod rabatowy (np. RABAT3)" value="${st.discountCodeApplied ? 'RABAT3' : ''}" style="flex:1; background:rgba(0,0,0,0.5); border:1px solid var(--gold); border-radius:6px; padding:0.4rem 0.65rem; color:#fff; font-size:0.75rem;">
                 <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold); padding:0.42rem 0.75rem;" onclick="StoreComponent.checkCartPromoCode()">Aktywuj -3%</button>
               </div>
-              ${st.discountCodeApplied ? `<span style="font-size:0.68rem; color:var(--accent); display:block; margin-top:4px;">✓ Naliczono rabat 3% ("3 jak Par 3"): -${discountAmount} PLN</span>` : ''}
+              ${st.discountCodeApplied ? `<span style="font-size:0.68rem; color:var(--accent); display:block; margin-top:4px;">✓ Zastosowano kod RABAT3 (-3% jak "Par 3"): -${discountAmount} PLN</span>` : ''}
             </div>
 
             ${hasOversize ? `
               <div style="font-size:0.68rem; color:var(--gold); background:rgba(250,204,21,0.08); padding:0.45rem 0.65rem; border-radius:6px;">
-                📦 W koszyku znajduje się długi sprzęt golfowy (>120cm) – wysyłka ubezpieczonym kurierem dłużycowym DPD/DHL.
+                📦 Koszyk zawiera długi sprzęt (>120cm) – wysyłka ubezpieczonym kurierem dłużycowym.
               </div>
             ` : ''}
 
@@ -547,7 +460,7 @@ const StoreComponent = {
             </div>
             ${discountAmount > 0 ? `
               <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--accent); margin-bottom:3px;">
-                <span>Rabat (Kod RABAT3 -3%):</span>
+                <span>Rabat (RABAT3 -3%):</span>
                 <span>-${discountAmount} PLN</span>
               </div>
             ` : ''}
@@ -643,14 +556,6 @@ const StoreComponent = {
     return false;
   },
 
-  cartHasOversizeClub: () => {
-    const oversizeCats = ["DRIVERY", "WOODS", "WOOD_HYB", "HYBRYDY", "IRONY", "WEDGE", "PUTTERY", "ZESTAWY", "TORBY", "WOZKI", "KIJE_NOWE", "UZYWANE_KIJE"];
-    return (AppData.cart || []).some(item => {
-      const prod = AppData.storeProducts.find(p => p.id === item.id);
-      return prod && oversizeCats.includes(prod.cat);
-    });
-  },
-
   render: () => {
     StoreComponent.ensureStoreDataInitialized();
     const st = AppData.storeState;
@@ -685,19 +590,19 @@ const StoreComponent = {
     const totalItemsCount = (AppData.cart || []).reduce((sum, i) => sum + (i.qty || 1), 0);
     const brandsList = [...new Set(AppData.storeProducts.map(p => p.brand))];
 
-    const trustedPromoBarHTML = `
-      <div class="trusted-promo-bar">
+    // Profesjonalna belka elitarna w stylu sklepów PGA Tour (zamiast Trusted Shop)
+    const eliteStoreBarHTML = `
+      <div class="elite-store-bar">
         <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
-          <span class="trusted-badge-pill">🛡️ TRUSTED SHOP GUARANTEE • 4,95 ★</span>
+          <span class="elite-badge-pill">⭐ TGN ELITE PRO SHOP • PGA CERTIFIED</span>
           <span style="font-size:0.76rem; color:var(--text-main);">
             🎁 Akcja <strong style="color:var(--gold);">"3 jak Par 3"</strong> – odbierz <strong>3% rabatu</strong> z kodem <strong style="color:var(--accent); cursor:pointer; text-decoration:underline;" onclick="StoreComponent.applyRabat3Code()">RABAT3</strong>
-            ${st.discountCodeApplied ? '<span style="color:var(--accent); font-weight:800; margin-left:6px;">(✓ AKTYWNY!)</span>' : ''}
+            ${st.discountCodeApplied ? '<span style="color:var(--accent); font-weight:800; margin-left:6px;">(✓ KOD AKTYWNY!)</span>' : ''}
           </span>
         </div>
         <div style="display:flex; gap:0.45rem;">
           <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.openPromoModal('RABAT3')">🏷️ Kod Rabatowy -3%</button>
-          <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.openPromoModal('NEWSLETTER')">📩 Newsletter TGN</button>
-          <button class="btn-mini-tool" style="background:var(--accent); color:#052e16; border-color:var(--accent);" onclick="StoreComponent.openCartDrawer()">🛒 Otwórz Koszyk (${totalItemsCount})</button>
+          <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.openPromoModal('NEWSLETTER')">📩 Newsletter</button>
         </div>
       </div>
     `;
@@ -723,47 +628,39 @@ const StoreComponent = {
         <div class="store-ai-quick-prompts">
           <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.askAiPrompt('LUKA_52')">🎯 Wedge 52° pod moją lukę 15m</button>
           <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.askAiPrompt('SWING_96')">⚡ Kije pod Swing 96 mph (Stiff)</button>
-          <button class="btn-mini-tool" onclick="StoreComponent.askAiPrompt('PERSONALIZACJA')">🖨️ Personalizacja piłek z logo</button>
-          <button class="btn-mini-tool" onclick="StoreComponent.askAiPrompt('PREZENTY')">🎁 Pomysł na prezent dla golfisty</button>
-          <button class="btn-mini-tool" onclick="StoreComponent.askAiPrompt('TRENING')">🏋️ Trenażery i maty do domu</button>
+          <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.askAiPrompt('PERSONALIZACJA')">🖨️ Personalizacja piłek z logo</button>
+          <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.askAiPrompt('PREZENTY')">🎁 Prezent dla golfisty</button>
+          <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.askAiPrompt('TRENING')">🏋️ Trenażery do domu</button>
         </div>
 
         <div class="store-ai-input-row">
-          <input type="text" id="storeAiInput" placeholder="Zapytaj doradcę AI (np. 'Szukam prezentu do 350 zł', 'Chcę piłki z własnym logo', 'Pokaż używane drivery')..." onkeypress="if(event.key==='Enter') StoreComponent.sendCustomAiQuestion()">
+          <input type="text" id="storeAiInput" placeholder="Zapytaj doradcę AI (np. 'Szukam prezentu do 350 zł', 'Chcę piłki z własnym logo')..." onkeypress="if(event.key==='Enter') StoreComponent.sendCustomAiQuestion()">
           <button onclick="StoreComponent.sendCustomAiQuestion()">Zapytaj AI & Filtruj</button>
         </div>
       </div>
     ` : '';
 
-    // Formularz dodawania lub edycji produktu w sklepie
-    const editProd = StoreComponent.editingProductId
-      ? AppData.storeProducts.find(p => p.id === StoreComponent.editingProductId)
-      : null;
-
-    const defaultPreviewImg = editProd
-      ? ClubImageEngine.getClubVisualUrl(editProd.name, editProd.imgUrl)
-      : ClubImageEngine.buildDirectSearchPhotoUrl("Titleist TSR3 Driver", 0);
-
-    const addProductModalHTML = st.addProductOpen ? `
+    const defaultPreviewImg = ClubImageEngine.buildDirectSearchPhotoUrl("Titleist TSR3 Driver", 0);
+    const addProductModalHTML = (isAdmin && st.addProductOpen) ? `
       <div class="store-admin-add-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
           <h3 style="color:var(--gold); font-size:0.9rem;">
-            ${editProd ? `✏️ Edytuj produkt: ${editProd.name}` : '➕ Dodaj nowy produkt do asortymentu sklepu'}
+            ${StoreComponent.editingProductId ? '✏️ Edytuj produkt w katalogu' : '⚙️ [TRYB ADMINA] Dodaj nowy produkt do asortymentu'}
           </h3>
-          <button class="btn-mini-tool" onclick="StoreComponent.toggleAddProduct()">✕ Zamknij kreator</button>
+          <button class="btn-mini-tool" onclick="StoreComponent.toggleAddProduct()">✕ Zamknij</button>
         </div>
 
         <div class="live-preview-row">
           <div class="club-photo-frame" style="width:86px !important; height:86px !important;">
-            <img id="newStoreProdPreviewImg" src="${defaultPreviewImg}" alt="Podgląd produktu">
+            <img id="newStoreProdPreviewImg" src="${defaultPreviewImg}" alt="Podgląd">
             <span class="live-photo-badge">FOTO</span>
           </div>
           <div style="display:grid; grid-template-columns: 1.5fr 1fr; gap:0.5rem;">
-            <input type="text" id="addProdName" value="${editProd ? editProd.name : ''}" placeholder="Nazwa produktu (np. Callaway Paradym Ai Smoke Driver)" oninput="StoreComponent.updateNewProductPreview(this.value)" style="background:rgba(255,255,255,0.08); border:1px solid var(--accent); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.8rem;">
-            <input type="text" id="addProdBrand" value="${editProd ? editProd.brand : ''}" placeholder="Marka (np. Callaway, Ping, Titleist)" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.8rem;">
+            <input type="text" id="addProdName" placeholder="Nazwa produktu (np. Callaway Paradym Driver)" oninput="StoreComponent.updateNewProductPreview(this.value)" style="background:rgba(255,255,255,0.08); border:1px solid var(--accent); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.8rem;">
+            <input type="text" id="addProdBrand" placeholder="Marka (np. Callaway, Ping)" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.8rem;">
             <div style="grid-column: span 2; display:flex; gap:0.4rem;">
               <button class="btn-mini-tool" onclick="StoreComponent.updateNewProductPreview(document.getElementById('addProdName').value || 'Callaway Paradym', true)">📷 Inne zdjęcie z sieci</button>
-              <input type="text" id="addProdCustomImg" value="${editProd && editProd.imgUrl ? editProd.imgUrl : ''}" placeholder="(Opcjonalnie) Własny link URL do zdjęcia produktu..." style="flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); border-radius:5px; padding:0.25rem 0.5rem; color:#fff; font-size:0.72rem;">
+              <input type="text" id="addProdCustomImg" placeholder="(Opcjonalnie) Własny link URL do zdjęcia..." style="flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); border-radius:5px; padding:0.25rem 0.5rem; color:#fff; font-size:0.72rem;">
             </div>
           </div>
         </div>
@@ -772,68 +669,65 @@ const StoreComponent = {
           <div>
             <label>Dział sklepu</label>
             <select id="addProdSection">
-              <option value="NEW" ${editProd?.section === 'NEW' ? 'selected' : ''}>🏆 Nowy Sprzęt (Pro Shop)</option>
-              <option value="USED" ${editProd?.section === 'USED' ? 'selected' : ''}>♻️ Używany Kij / Sprzęt CPO</option>
-              <option value="BALLS" ${editProd?.section === 'BALLS' ? 'selected' : ''}>⚪ Piłki / Personalizacja</option>
+              <option value="NEW">🏆 Nowy Sprzęt (Pro Shop)</option>
+              <option value="USED">♻️ Używany Kij / CPO</option>
+              <option value="BALLS">⚪ Piłki / Personalizacja</option>
             </select>
           </div>
           <div>
-            <label>Kategoria produktu</label>
+            <label>Kategoria</label>
             <select id="addProdCat">
-              ${AppData.storeCategories.filter(c => c.id !== 'ALL').map(c => `<option value="${c.id}" ${editProd?.cat === c.id ? 'selected' : ''}>${c.icon} ${c.label}</option>`).join('')}
+              ${AppData.storeCategories.filter(c => c.id !== 'ALL').map(c => `<option value="${c.id}">${c.icon} ${c.label}</option>`).join('')}
             </select>
           </div>
           <div>
-            <label>Twardość Shaftu (Flex)</label>
+            <label>Flex shaftu</label>
             <select id="addProdFlex">
-              <option value="Stiff" ${editProd?.flex === 'Stiff' ? 'selected' : ''}>Stiff (S)</option>
-              <option value="Regular" ${editProd?.flex === 'Regular' ? 'selected' : ''}>Regular (R)</option>
-              <option value="Wedge" ${editProd?.flex === 'Wedge' ? 'selected' : ''}>Wedge Flex</option>
-              <option value="N/A" ${editProd?.flex === 'N/A' ? 'selected' : ''}>Nie dotyczy (N/A)</option>
+              <option value="Stiff">Stiff (S)</option>
+              <option value="Regular">Regular (R)</option>
+              <option value="Wedge">Wedge Flex</option>
+              <option value="N/A">Nie dotyczy</option>
             </select>
           </div>
           <div>
-            <label>Ręka gracza</label>
+            <label>Ręka</label>
             <select id="addProdHand">
-              <option value="RH" ${editProd?.hand === 'RH' ? 'selected' : ''}>Praworęczny (RH)</option>
-              <option value="LH" ${editProd?.hand === 'LH' ? 'selected' : ''}>Leworęczny (LH)</option>
-              <option value="ALL" ${editProd?.hand === 'ALL' ? 'selected' : ''}>Uniwersalny</option>
+              <option value="RH">Praworęczny (RH)</option>
+              <option value="LH">Leworęczny (LH)</option>
+              <option value="ALL">Uniwersalny</option>
             </select>
           </div>
           <div>
-            <label>Loft / Rozmiar / Pakiet</label>
-            <input type="text" id="addProdLoft" value="${editProd ? editProd.loft : '10.5°'}">
+            <label>Loft / Rozmiar</label>
+            <input type="text" id="addProdLoft" value="Standard">
           </div>
           <div>
-            <label>Stan (np. Nowy lub 9/10 CPO)</label>
-            <input type="text" id="addProdCond" value="${editProd ? editProd.condition : 'Fabrycznie nowy'}">
+            <label>Stan</label>
+            <input type="text" id="addProdCond" value="Fabrycznie nowy">
           </div>
           <div>
-            <label>Cena sprzedaży (PLN)</label>
-            <input type="number" id="addProdPrice" value="${editProd ? editProd.price : 990}">
+            <label>Cena (PLN)</label>
+            <input type="number" id="addProdPrice" value="990">
           </div>
           <div>
-            <label>Ilość w magazynie (szt.)</label>
-            <input type="number" id="addProdStock" value="${editProd ? editProd.stock : 3}">
+            <label>Magazyn (szt.)</label>
+            <input type="number" id="addProdStock" value="3">
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:0.5rem; margin-top:0.5rem; margin-bottom:0.65rem;">
-          <input type="text" id="addProdSpec" value="${editProd ? editProd.spec : ''}" placeholder="Specyfikacja (np. Shaft Fujikura Ventus Blue 6S)" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.75rem;">
-          <input type="text" id="addProdDesc" value="${editProd ? editProd.desc : ''}" placeholder="Krótki opis produktu..." style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.75rem;">
-          <input type="text" id="addProdVariants" value="${editProd && editProd.variants ? editProd.variants.join(', ') : ''}" placeholder="Warianty po przecinku (np. 9.0° Stiff, 10.5° Regular)" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.75rem;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-top:0.5rem; margin-bottom:0.65rem;">
+          <input type="text" id="addProdSpec" placeholder="Specyfikacja (np. Shaft Ventus Blue 6S)" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.76rem;">
+          <input type="text" id="addProdDesc" placeholder="Krótki opis produktu..." style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.76rem;">
         </div>
 
-        <button class="btn-primary" style="margin:0; padding:0.6rem;" onclick="StoreComponent.saveNewProductToStore()">
-          ${editProd ? '💾 Zapisz zmiany w produkcie' : '✓ Dodaj i opublikuj produkt w sklepie'}
-        </button>
+        <button class="btn-primary" style="margin:0; padding:0.6rem;" onclick="StoreComponent.saveNewProductToStore()">✓ Zapisz produkt w bazie sklepu</button>
       </div>
     ` : '';
 
     let productsHTML = filtered.length === 0 ? `
       <div style="grid-column: 1 / -1; text-align:center; padding: 2.5rem; background:rgba(0,0,0,0.25); border-radius:14px; border:1px dashed rgba(255,255,255,0.15);">
         <p style="font-size:0.95rem; color:var(--text-main); margin-bottom:0.5rem;">Brak produktów w wybranej kategorii.</p>
-        <button class="btn-action" style="width:auto; padding:0.45rem 1.2rem;" onclick="StoreComponent.resetFilters()">Pokaż cały asortyment sklepu</button>
+        <button class="btn-action" style="width:auto; padding:0.45rem 1.2rem;" onclick="StoreComponent.resetFilters()">Pokaż cały asortyment</button>
       </div>
     ` : filtered.map(prod => {
       const imgId = `store_prod_img_${prod.id}`;
@@ -856,7 +750,7 @@ const StoreComponent = {
 
             <div class="store-tech-pills">
               <span class="tech-pill brand">${prod.brand}</span>
-              ${prod.hand !== 'ALL' ? `<span class="tech-pill">${prod.hand === 'RH' ? 'Praworęczny (RH)' : 'Leworęczny (LH)'}</span>` : ''}
+              ${prod.hand !== 'ALL' ? `<span class="tech-pill">${prod.hand === 'RH' ? 'RH' : 'LH'}</span>` : ''}
               ${prod.flex !== 'N/A' ? `<span class="tech-pill">Flex: ${prod.flex}</span>` : ''}
               <span class="tech-pill">${prod.loft}</span>
             </div>
@@ -871,20 +765,19 @@ const StoreComponent = {
 
             <p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 0.5rem;">${prod.desc}</p>
 
-            <!-- Wybór wariantu (Specyfikacji / Rozmiaru) przed dodaniem do koszyka -->
             <div class="prod-variant-box">
               <label>Wybierz wariant / specyfikację:</label>
               <select id="variant_sel_${prod.id}">
                 ${variantsList.map(v => `<option value="${v}">${v}</option>`).join('')}
               </select>
               ${prod.cat === 'PERSONALIZACJA' ? `
-                <input type="text" id="custom_print_${prod.id}" placeholder="Wpisz tekst nadruku na piłkach (np. MAREK #1)..." style="margin-top:4px;">
+                <input type="text" id="custom_print_${prod.id}" placeholder="Wpisz tekst nadruku na piłkach..." style="margin-top:4px;">
               ` : ''}
             </div>
 
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.55rem;">
               <div style="display:flex; gap:0.3rem; flex-wrap:wrap;">
-                <button class="btn-mini-tool" onclick="app.openPhotoZoom('${safeName}', document.getElementById('${imgId}').src, '${prod.spec}')">🔍 Powiększ</button>
+                <button class="btn-mini-tool" onclick="app.openPhotoZoom('${safeName}', document.getElementById('${imgId}').src, '${prod.spec}')">🔍 HD</button>
                 <button class="btn-mini-tool" onclick="app.nextWebSearchPhoto('${imgId}', '${safeName}')">📷 Foto</button>
                 ${isAdmin ? `
                   <button class="btn-mini-tool" style="color:var(--gold); border-color:var(--gold);" onclick="StoreComponent.startEditProduct(${prod.id})">✏️ Edytuj</button>
@@ -899,9 +792,7 @@ const StoreComponent = {
 
           <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.6rem;">
             <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.2rem;">
-              <span style="font-size:0.7rem; color:var(--text-muted);">
-                ${isUsed ? 'Cena nowego / Cena CPO:' : 'Cena brutto (z VAT):'}
-              </span>
+              <span style="font-size:0.7rem; color:var(--text-muted);">Cena brutto:</span>
               <div>
                 ${prod.oldPrice && prod.oldPrice > prod.price ? `<span style="font-size:0.72rem; color:var(--text-muted); text-decoration:line-through; margin-right:6px;">${prod.oldPrice} PLN</span>` : ''}
                 <strong style="font-size:1.05rem; color:var(--text-main);">${prod.price} PLN</strong>
@@ -910,15 +801,15 @@ const StoreComponent = {
 
             ${!isBallsOrAcc ? `
               <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.55rem;">
-                <span style="font-size:0.68rem; color:var(--gold);">W rozliczeniu Trade-In:</span>
-                <strong style="font-size:0.86rem; color:var(--gold);">dopłata od ${prod.tradeInPrice} PLN</strong>
+                <span style="font-size:0.68rem; color:var(--gold);">Trade-In (dopłata):</span>
+                <strong style="font-size:0.86rem; color:var(--gold);">${prod.tradeInPrice} PLN</strong>
               </div>
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.4rem;">
-                <button class="btn-action" style="margin:0; padding:0.5rem;" onclick="StoreComponent.addItem(${prod.id}, false)">🛒 Do koszyka</button>
-                <button class="btn-action" style="margin:0; padding:0.5rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="StoreComponent.addItem(${prod.id}, true)">🔄 Kup w Trade-In</button>
+                <button class="btn-action" style="margin:0; padding:0.48rem;" onclick="StoreComponent.addItem(${prod.id}, false)">🛒 Do koszyka</button>
+                <button class="btn-action" style="margin:0; padding:0.48rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="StoreComponent.addItem(${prod.id}, true)">🔄 Trade-In</button>
               </div>
             ` : `
-              <button class="btn-action" style="margin:0.3rem 0 0; padding:0.52rem;" onclick="StoreComponent.addItem(${prod.id}, false)">🛒 Dodaj do koszyka</button>
+              <button class="btn-action" style="margin:0.3rem 0 0; padding:0.5rem;" onclick="StoreComponent.addItem(${prod.id}, false)">🛒 Dodaj do koszyka</button>
             `}
           </div>
         </div>
@@ -929,22 +820,24 @@ const StoreComponent = {
       <section class="panel-3d" style="grid-column: span 2;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem; margin-bottom:0.85rem;">
           <h2 style="margin:0;">
-            <span>🛍️ Oficjalny Sklep TGN Pro Shop & Komis CPO (${AppData.storeProducts.length} produktów)</span>
+            <span>🛍️ TGN Pro Shop & Komis CPO (${AppData.storeProducts.length} produktów)</span>
           </h2>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.9rem; background:var(--accent); color:#052e16;" onclick="StoreComponent.openCartDrawer()">
-              🛒 Podgląd Koszyka (${totalItemsCount})
+            <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.85rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.12);" onclick="StoreComponent.openPromoModal('NEWSLETTER')">
+              📩 Newsletter & Kod -3%
             </button>
             <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.85rem; border-color:#38bdf8; color:#38bdf8; background:rgba(56,189,248,0.15);" onclick="StoreComponent.toggleAiAssistant()">
               🤖 ${st.aiAssistantOpen ? 'Ukryj Doradcę AI' : 'Doradca AI'}
             </button>
-            <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.9rem; background:rgba(250,204,21,0.18); color:var(--gold); border-color:var(--gold);" onclick="StoreComponent.startAddNewProduct()">
-              ➕ Dodaj asortyment do sklepu
-            </button>
+            ${isAdmin ? `
+              <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.9rem; background:var(--gold); color:#052e16; border-color:var(--gold);" onclick="StoreComponent.startAddNewProduct()">
+                ⚙️ + Dodaj asortyment (Admin)
+              </button>
+            ` : ''}
           </div>
         </div>
 
-        ${trustedPromoBarHTML}
+        ${eliteStoreBarHTML}
         ${aiAssistantHTML}
         ${addProductModalHTML}
 
@@ -961,7 +854,7 @@ const StoreComponent = {
         </div>
 
         <div class="store-MultiFilter-bar">
-          <input type="text" id="storeSearchInput" placeholder="🔍 Szukaj produktu (np. Qi10, Personalizowane Pro V1, Prezent, Mata Wellputt, Garmin R10)..." value="${st.search}" oninput="StoreComponent.setSearch(this.value)">
+          <input type="text" id="storeSearchInput" placeholder="🔍 Szukaj produktu (np. Qi10, Pro V1, Prezent, Mata Wellputt)..." value="${st.search}" oninput="StoreComponent.setSearch(this.value)">
           
           <select onchange="StoreComponent.setBrand(this.value)">
             <option value="ALL" ${st.brand === 'ALL' ? 'selected' : ''}>Wszystkie marki (${brandsList.length})</option>
@@ -969,9 +862,9 @@ const StoreComponent = {
           </select>
 
           <select onchange="StoreComponent.setFlex(this.value)">
-            <option value="ALL" ${st.flex === 'ALL' ? 'selected' : ''}>Dowolny Flex shaftu</option>
-            <option value="Regular" ${st.flex === 'Regular' ? 'selected' : ''}>Regular Flex (R)</option>
-            <option value="Stiff" ${st.flex === 'Stiff' ? 'selected' : ''}>Stiff Flex (S)</option>
+            <option value="ALL" ${st.flex === 'ALL' ? 'selected' : ''}>Dowolny Flex</option>
+            <option value="Regular" ${st.flex === 'Regular' ? 'selected' : ''}>Regular (R)</option>
+            <option value="Stiff" ${st.flex === 'Stiff' ? 'selected' : ''}>Stiff (S)</option>
             <option value="Wedge" ${st.flex === 'Wedge' ? 'selected' : ''}>Wedge Flex</option>
           </select>
 
@@ -995,7 +888,6 @@ const StoreComponent = {
     `;
   },
 
-  // --- OTWIERANIE I ZAMYKANIE SZUFLADY KOSZYKA ---
   openCartDrawer: () => {
     StoreComponent.ensureStoreDataInitialized();
     AppData.storeState.cartOpen = true;
@@ -1070,9 +962,7 @@ const StoreComponent = {
   changeQty: (idx, delta) => {
     if (!AppData.cart[idx]) return;
     AppData.cart[idx].qty = (AppData.cart[idx].qty || 1) + delta;
-    if (AppData.cart[idx].qty <= 0) {
-      AppData.cart.splice(idx, 1);
-    }
+    if (AppData.cart[idx].qty <= 0) AppData.cart.splice(idx, 1);
     StoreComponent.saveCartToStorage();
     auth.updateHeaderBar();
     StoreComponent.syncGlobalCartDrawer();
@@ -1102,11 +992,11 @@ const StoreComponent = {
     const terms = document.getElementById('chkTerms')?.checked;
 
     if (!name || !phone || !email || !address || !city) {
-      app.showToast('⚠️ Uzupełnij wymagane pola adresowe i telefon dla kuriera!');
+      app.showToast('⚠️ Uzupełnij wymagane pola adresowe i telefon!');
       return;
     }
     if (!terms) {
-      app.showToast('⚠️ Zaakceptuj Regulamin Sklepu, aby złożyć zamówienie!');
+      app.showToast('⚠️ Zaakceptuj Regulamin Sklepu!');
       return;
     }
 
@@ -1114,13 +1004,10 @@ const StoreComponent = {
     const newOrder = {
       orderId: orderNumber,
       date: new Date().toLocaleString('pl-PL'),
-      customerName: name,
-      phone: phone,
-      email: email,
+      customerName: name, phone, email,
       address: `${address}, ${city}`,
       nip: nip || 'Paragon',
-      delivery: delivery,
-      payment: payment,
+      delivery, payment,
       notes: notes || '-',
       items: [...AppData.cart],
       total: finalTotal,
@@ -1147,14 +1034,14 @@ const StoreComponent = {
     auth.updateHeaderBar();
     StoreComponent.syncGlobalCartDrawer();
     app.switchTab('sklep');
-    app.showToast(`✅ Zamówienie #${orderNumber} złożone! Sprawdź szczegóły w Panelu Admina.`);
+    app.showToast(`✅ Zamówienie #${orderNumber} zostało złożone pomyślnie!`);
   },
 
-  // --- ZARZĄDZANIE ASORTYMENTEM (DODAWANIE / EDYCJA / USUWANIE) ---
   startAddNewProduct: () => {
     StoreComponent.editingProductId = null;
     AppData.storeState.addProductOpen = true;
     app.switchTab('sklep');
+    window.scrollTo({ top: 120, behavior: 'smooth' });
   },
 
   startEditProduct: (prodId) => {
@@ -1191,27 +1078,22 @@ const StoreComponent = {
     const loft = document.getElementById('addProdLoft').value.trim() || "Standard";
     const condition = document.getElementById('addProdCond').value.trim() || "Fabrycznie nowy";
     const price = parseInt(document.getElementById('addProdPrice').value, 10) || 990;
-    const stock = parseInt(document.getElementById('addProdStock').value, 10) || 1;
+    const stock = parseInt(document.getElementById('addProdStock').value, 10) || 3;
     const spec = document.getElementById('addProdSpec').value.trim() || `${brand} • ${loft} • Flex: ${flex}`;
-    const desc = document.getElementById('addProdDesc').value.trim() || "Produkt dostępny od ręki w magazynie TGN Pro Shop.";
+    const desc = document.getElementById('addProdDesc').value.trim() || "Produkt gotowy do wysyłki z magazynu TGN.";
     const customImg = document.getElementById('addProdCustomImg').value.trim();
-    const rawVariants = document.getElementById('addProdVariants').value.trim();
 
     if (!name) {
       app.showToast("Wpisz nazwę produktu!");
       return;
     }
 
-    const variants = rawVariants
-      ? rawVariants.split(',').map(s => s.trim()).filter(Boolean)
-      : [`${loft} • ${flex} (${hand})`];
-
     const finalImgUrl = customImg || ClubImageEngine.buildDirectSearchPhotoUrl(name, ClubImageEngine.searchVariantIndex);
 
     const productObj = {
       id: StoreComponent.editingProductId || Date.now(),
       section, cat, brand, flex, hand, loft, condition,
-      condDetails: section === "USED" ? "Zweryfikowany przez serwis TGN CPO" : "Gwarancja producenta 24 mies.",
+      condDetails: section === "USED" ? "Zweryfikowany przez serwis CPO" : "Gwarancja 24 mies.",
       tag: section === "USED" ? "KOMIS CPO" : "OFERTA PRO SHOP",
       tagGold: true, name, spec, desc,
       oldPrice: Math.round(price * 1.18),
@@ -1219,7 +1101,7 @@ const StoreComponent = {
       tradeInPrice: Math.max(150, Math.round(price * 0.45)),
       stock,
       imgUrl: finalImgUrl,
-      variants
+      variants: [`${loft} • ${flex} (${hand})`]
     };
 
     if (StoreComponent.editingProductId) {
@@ -1240,7 +1122,7 @@ const StoreComponent = {
     StoreComponent.editingProductId = null;
     AppData.storeState.addProductOpen = false;
     app.switchTab('sklep');
-    app.showToast(`✓ Zapisano produkt w katalogu sklepu: ${name}`);
+    app.showToast(`✓ Zapisano produkt w katalogu: ${name}`);
   },
 
   deleteProduct: (prodId) => {
@@ -1251,7 +1133,7 @@ const StoreComponent = {
       localStorage.setItem('tgn_deleted_prod_ids', JSON.stringify(deletedIds));
     } catch (e) {}
     app.switchTab('sklep');
-    app.showToast('🗑️ Usunięto produkt z katalogu sklepu.');
+    app.showToast('🗑️ Usunięto produkt z katalogu.');
   },
 
   openPromoModal: (mode) => {
@@ -1273,7 +1155,7 @@ const StoreComponent = {
     StoreComponent.syncGlobalPromoModal();
     StoreComponent.syncGlobalCartDrawer();
     app.switchTab('sklep');
-    app.showToast('🎉 Aktywowano kod RABAT3! Otrzymujesz 3% rabatu ("3 jak Par 3")!');
+    app.showToast('🎉 Aktywowano kod RABAT3 (-3% jak "Par 3")!');
   },
 
   checkCartPromoCode: () => {
@@ -1282,7 +1164,7 @@ const StoreComponent = {
     if (code === 'RABAT3' || code === 'PAR3' || code === 'TGN3') {
       AppData.storeState.discountCodeApplied = true;
       StoreComponent.syncGlobalCartDrawer();
-      app.showToast('🎉 Kod RABAT3 przyjęty! Naliczono 3% zniżki w koszyku.');
+      app.showToast('🎉 Kod RABAT3 przyjęty! Naliczono 3% zniżki.');
     } else {
       app.showToast('Wpisz kod: RABAT3 aby odebrać 3% zniżki!');
     }
@@ -1303,7 +1185,7 @@ const StoreComponent = {
     AppData.storeState.discountCodeApplied = true;
     AppData.storeState.promoModalMode = 'RABAT3';
     StoreComponent.syncGlobalPromoModal();
-    app.showToast(`📩 Zapisano ${email}! Twój kod RABAT3 (-3%) został aktywowany!`);
+    app.showToast(`📩 Zapisano ${email}! Kod RABAT3 został aktywowany!`);
   },
 
   toggleAiAssistant: () => {
@@ -1321,31 +1203,31 @@ const StoreComponent = {
       st.category = "WEDGE";
       st.aiChatHistory.push(
         { sender: "Ty", text: "Dobierz kij pod moją lukę 15m z Gapping AI." },
-        { sender: "TGN AI Pro Fitter", text: "Wyfiltrowałem kategorię 🎯 Wedge! Najlepszym wyborem na lukę 100–115m będzie nowy Titleist Vokey SM10 52° lub używany Cleveland RTX 6 ZipCore." }
+        { sender: "TGN AI Pro Fitter", text: "Wyfiltrowałem kategorię 🎯 Wedge! Polecam Titleist Vokey SM10 52°." }
       );
     } else if (promptType === "SWING_96") {
       st.flex = "Stiff";
       st.aiChatHistory.push(
-        { sender: "Ty", text: "Pokaż kije pod mój Swing Speed 96 mph." },
-        { sender: "TGN AI Pro Fitter", text: "Przy 96 mph optymalną kontrolę daje shaft Stiff (S). Wyfiltrowałem wszystkie kije ze sztywnością Stiff!" }
+        { sender: "Ty", text: "Pokaż kije pod Swing 96 mph." },
+        { sender: "TGN AI Pro Fitter", text: "Wyfiltrowałem sprzęt ze sztywnością shaftu Stiff (S)." }
       );
     } else if (promptType === "PERSONALIZACJA") {
       st.category = "PERSONALIZACJA";
       st.aiChatHistory.push(
-        { sender: "Ty", text: "Chcę zamówić piłki z własnym nadrukiem / logo." },
-        { sender: "TGN AI Pro Fitter", text: "Otworzyłem dział 🖨️ Personalizacja piłek golfowych! Wpisz swój tekst nadruku na karcie piłek Titleist Pro V1 i dodaj je do koszyka." }
+        { sender: "Ty", text: "Chcę zamówić piłki z nadrukiem." },
+        { sender: "TGN AI Pro Fitter", text: "Otworzyłem dział 🖨️ Personalizacja piłek golfowych!" }
       );
     } else if (promptType === "PREZENTY") {
       st.category = "PREZENTY";
       st.aiChatHistory.push(
-        { sender: "Ty", text: "Szukam prezentu dla golfisty." },
-        { sender: "TGN AI Pro Fitter", text: "Wyfiltrowałem dział 🎁 Prezenty & Zestawy prezentowe! Sprawdź nasz Zestaw Prezentowy VIP z piłkami Pro V1, ręcznikiem i pitchmarkiem." }
+        { sender: "Ty", text: "Szukam prezentu." },
+        { sender: "TGN AI Pro Fitter", text: "Wyfiltrowałem dział 🎁 Prezenty & Zestawy prezentowe." }
       );
     } else if (promptType === "TRENING") {
       st.category = "TRENING";
       st.aiChatHistory.push(
-        { sender: "Ty", text: "Pokaż sprzęt do treningu w domu i ćwiczeń." },
-        { sender: "TGN AI Pro Fitter", text: "Włączyłem kategorię 🏋️ Trening golfowy i ćwiczenia! Polecam 3-metrową matę Wellputt oraz trenażer prędkości swingu SuperSpeed Golf." }
+        { sender: "Ty", text: "Sprzęt do treningu." },
+        { sender: "TGN AI Pro Fitter", text: "Włączyłem kategorię 🏋️ Trening golfowy i ćwiczenia." }
       );
     }
 
@@ -1358,34 +1240,12 @@ const StoreComponent = {
     const input = document.getElementById('storeAiInput');
     if (!input || !input.value.trim()) return;
     const text = input.value.trim();
-    const lower = text.toLowerCase();
     const st = AppData.storeState;
 
     st.aiChatHistory.push({ sender: "Ty", text: text });
-    st.section = "ALL"; st.category = "ALL"; st.brand = "ALL"; st.flex = "ALL"; st.hand = "ALL"; st.search = "";
+    st.section = "ALL"; st.category = "ALL"; st.brand = "ALL"; st.flex = "ALL"; st.hand = "ALL"; st.search = text;
 
-    let reply = "";
-    if (lower.includes("prezent") || lower.includes("upominek")) {
-      st.category = "PREZENTY";
-      reply = "Wyfiltrowałem dział 🎁 Prezenty dla golfistów i zestawy prezentowe!";
-    } else if (lower.includes("logo") || lower.includes("nadruk") || lower.includes("personaliz")) {
-      st.category = "PERSONALIZACJA";
-      reply = "Otworzyłem dział 🖨️ Personalizacja piłek golfowych!";
-    } else if (lower.includes("trening") || lower.includes("mata") || lower.includes("ćwicz") || lower.includes("cwicz")) {
-      st.category = "TRENING";
-      reply = "Wyświetlam akcesoria z działu 🏋️ Trening golfowy i ćwiczenia!";
-    } else if (lower.includes("używan") || lower.includes("uzywan") || lower.includes("cpo")) {
-      st.category = "UZYWANE_KIJE";
-      reply = "Włączyłem dział ♻️ Używanych kijów i sprzętu golfowego CPO!";
-    } else if (lower.includes("rabat") || lower.includes("kod") || lower.includes("zniżk")) {
-      StoreComponent.applyRabat3Code();
-      return;
-    } else {
-      st.search = text;
-      reply = `Przeszukuję katalog sklepu pod kątem frazy: "${text}". Sprawdź wyniki poniżej!`;
-    }
-
-    st.aiChatHistory.push({ sender: "TGN AI Pro Fitter", text: reply });
+    st.aiChatHistory.push({ sender: "TGN AI Pro Fitter", text: `Przeszukuję katalog sklepu pod kątem: "${text}".` });
     app.switchTab('sklep');
     StoreComponent.scrollAiToBottom();
   },
