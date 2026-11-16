@@ -1,20 +1,19 @@
 /* =========================================================================
-   MODUŁ SKLEPU TGN v17.0 (PREMIUM PRO SHOP & KOMIS CPO)
-   - Czysty, profesjonalny interfejs e-commerce
-   - Usunięty element "Trusted Shop", w jego miejsce profesjonalna belka akcji elitarnych
-   - Pełna szuflada koszyka (Slide-Over Cart Drawer) z obsługą kodu RABAT3 (-3% jak "Par 3")
-   - Ukryty panel dodawania/edycji asortymentu dostępny TYLKO dla roli ADMIN
+   MODUŁ SKLEPU TGN v18.0 (ELITE MOBILE UI):
+   - Poziomy, przewijany pasek kategorii (Slider) oszczędzający miejsce na telefonie
+   - Czysty, minimalistyczny nagłówek i siatka produktowa klasy Premium
+   - Szuflada koszyka i wybór wariantów
    ========================================================================= */
 
-(function injectStoreV17Styles() {
-  ['tgnStoreAiStyles', 'tgnStoreV13Styles', 'tgnStoreV14Styles', 'tgnStoreV15Styles', 'tgnStoreV16Styles'].forEach(id => {
+(function injectStoreV18Styles() {
+  ['tgnStoreAiStyles', 'tgnStoreV13Styles', 'tgnStoreV14Styles', 'tgnStoreV15Styles', 'tgnStoreV16Styles', 'tgnStoreV17Styles'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
-  if (document.getElementById('tgnStoreV17Styles')) return;
+  if (document.getElementById('tgnStoreV18Styles')) return;
 
   const style = document.createElement('style');
-  style.id = 'tgnStoreV17Styles';
+  style.id = 'tgnStoreV18Styles';
   style.textContent = `
     /* Koszyk szufladowy (Slide-Over) */
     #tgnCartDrawerBackdrop {
@@ -69,11 +68,54 @@
     }
     .prod-variant-box select option { background: #091519; color: #fff; }
 
-    /* Profesjonalna belka elitarna sklepu (Zamiast "Trusted Shop") */
+    /* Nowy, kompaktowy i elegancki poziomy slider kategorii na telefonie */
+    .store-category-slider {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) rgba(0,0,0,0.2);
+    }
+    .store-category-slider::-webkit-scrollbar {
+      height: 4px;
+    }
+    .store-category-slider::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 4px;
+    }
+    .cat-pill-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--text-main);
+      padding: 0.45rem 0.95rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .cat-pill-chip:hover {
+      background: rgba(74, 222, 128, 0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .cat-pill-chip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #052e16;
+      font-weight: 800;
+    }
+
     .elite-store-bar {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;
       background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), rgba(56, 189, 248, 0.08));
-      border: 1px solid rgba(74, 222, 128, 0.35); border-radius: 12px; padding: 0.75rem 1.1rem; margin-bottom: 1.1rem;
+      border: 1px solid rgba(74, 222, 128, 0.35); border-radius: 12px; padding: 0.75rem 1.1rem; margin-bottom: 1rem;
     }
     .elite-badge-pill {
       display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 0, 0, 0.5);
@@ -103,14 +145,6 @@
       background: #38bdf8; color: #041e2b; border: none; border-radius: 8px; padding: 0 1.1rem;
       font-size: 0.76rem; font-weight: 800; cursor: pointer; white-space: nowrap;
     }
-
-    .category-Accordion-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.45rem; margin-bottom: 1.1rem; }
-    .cat-menu-item {
-      background: rgba(255, 255, 255, 0.045); border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 9px; padding: 0.55rem 0.75rem; color: #f1f5f9; font-size: 0.74rem; font-weight: 600;
-      display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; text-align: left;
-    }
-    .cat-menu-item:hover, .cat-menu-item.active { background: rgba(74, 222, 128, 0.18); border-color: #4ade80; color: #4ade80; font-weight: 700; }
 
     #tgnGlobalPromoOverlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
@@ -157,11 +191,10 @@
     }
 
     @media (max-width: 1024px) {
-      .category-Accordion-list { grid-template-columns: repeat(2, 1fr); }
       .store-add-grid, .checkout-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 768px) {
-      .category-Accordion-list, .store-add-grid, .checkout-grid { grid-template-columns: 1fr; gap: 0.4rem; }
+      .store-add-grid, .checkout-grid { grid-template-columns: 1fr; gap: 0.4rem; }
       .store-ai-input-row { flex-direction: column; }
       .store-ai-input-row button { padding: 0.55rem; }
       .cart-drawer-panel { max-width: 100vw; }
@@ -177,19 +210,19 @@ const StoreComponent = {
 
   ensureStoreDataInitialized: () => {
     AppData.storeCategories = [
-      { id: "ALL", label: "Wszystkie kategorie", icon: "🏬" },
-      { id: "PILKI", label: "Piłki do golfa (Nowe & Lake Balls)", icon: "⚪" },
-      { id: "PERSONALIZACJA", label: "Personalizacja piłek golfowych", icon: "🖨️" },
-      { id: "KIJE_NOWE", label: "Kije golfowe (Nowe 2026)", icon: "🏌️" },
-      { id: "UZYWANE_KIJE", label: "Używane kije golfowe (CPO)", icon: "♻️" },
-      { id: "UZYWANY_SPRZET", label: "Używany sprzęt golfowy", icon: "🛠️" },
-      { id: "TRENING", label: "Trening golfowy i ćwiczenia", icon: "🏋️" },
-      { id: "PREZENTY", label: "Prezenty & Zestawy prezentowe", icon: "🎁" },
-      { id: "TORBY", label: "Torby golfowe", icon: "🎒" },
-      { id: "WOZKI", label: "Wózki golfowe", icon: "🛒" },
-      { id: "ODZIEZ", label: "Odzież golfowa & Buty", icon: "👕" },
-      { id: "GPS", label: "Elektronika (Dalmierze & GPS)", icon: "🔭" },
-      { id: "AKCESORIA", label: "Akcesoria dla golfistów", icon: "🧤" }
+      { id: "ALL", label: "Wszystkie", icon: "🏬" },
+      { id: "PILKI", label: "Piłki & Lake Balls", icon: "⚪" },
+      { id: "PERSONALIZACJA", label: "Personalizacja", icon: "🖨️" },
+      { id: "KIJE_NOWE", label: "Kije Nowe", icon: "🏌️" },
+      { id: "UZYWANE_KIJE", label: "Używane CPO", icon: "♻️" },
+      { id: "UZYWANY_SPRZET", label: "Sprzęt CPO", icon: "🛠️" },
+      { id: "TRENING", label: "Trening", icon: "🏋️" },
+      { id: "PREZENTY", label: "Prezenty", icon: "🎁" },
+      { id: "TORBY", label: "Torby", icon: "🎒" },
+      { id: "WOZKI", label: "Wózki", icon: "🛒" },
+      { id: "ODZIEZ", label: "Odzież & Buty", icon: "👕" },
+      { id: "GPS", label: "Elektronika & GPS", icon: "🔭" },
+      { id: "AKCESORIA", label: "Akcesoria", icon: "🧤" }
     ];
 
     const extraProducts = [
@@ -590,7 +623,7 @@ const StoreComponent = {
     const totalItemsCount = (AppData.cart || []).reduce((sum, i) => sum + (i.qty || 1), 0);
     const brandsList = [...new Set(AppData.storeProducts.map(p => p.brand))];
 
-    // Profesjonalna belka elitarna w stylu sklepów PGA Tour (zamiast Trusted Shop)
+    // Profesjonalna belka elitarna w stylu PGA Tour Elite
     const eliteStoreBarHTML = `
       <div class="elite-store-bar">
         <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
@@ -601,7 +634,7 @@ const StoreComponent = {
           </span>
         </div>
         <div style="display:flex; gap:0.45rem;">
-          <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.openPromoModal('RABAT3')">🏷️ Kod Rabatowy -3%</button>
+          <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.openPromoModal('RABAT3')">🏷️ Kod rabatowy -3%</button>
           <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.openPromoModal('NEWSLETTER')">📩 Newsletter</button>
         </div>
       </div>
@@ -626,16 +659,16 @@ const StoreComponent = {
         </div>
 
         <div class="store-ai-quick-prompts">
-          <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.askAiPrompt('LUKA_52')">🎯 Wedge 52° pod moją lukę 15m</button>
-          <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.askAiPrompt('SWING_96')">⚡ Kije pod Swing 96 mph (Stiff)</button>
-          <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.askAiPrompt('PERSONALIZACJA')">🖨️ Personalizacja piłek z logo</button>
+          <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.askAiPrompt('LUKA_52')">🎯 Wedge 52° pod lukę 15m</button>
+          <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.askAiPrompt('SWING_96')">⚡ Kije pod Swing 96 mph</button>
+          <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.askAiPrompt('PERSONALIZACJA')">🖨️ Piłki z logo</button>
           <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.askAiPrompt('PREZENTY')">🎁 Prezent dla golfisty</button>
           <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.askAiPrompt('TRENING')">🏋️ Trenażery do domu</button>
         </div>
 
         <div class="store-ai-input-row">
-          <input type="text" id="storeAiInput" placeholder="Zapytaj doradcę AI (np. 'Szukam prezentu do 350 zł', 'Chcę piłki z własnym logo')..." onkeypress="if(event.key==='Enter') StoreComponent.sendCustomAiQuestion()">
-          <button onclick="StoreComponent.sendCustomAiQuestion()">Zapytaj AI & Filtruj</button>
+          <input type="text" id="storeAiInput" placeholder="Zapytaj doradcę AI (np. 'Jaki driver do 2500 zł?', 'Pokaż piłki')..." onkeypress="if(event.key==='Enter') StoreComponent.sendCustomAiQuestion()">
+          <button onclick="StoreComponent.sendCustomAiQuestion()">Zapytaj AI</button>
         </div>
       </div>
     ` : '';
@@ -806,7 +839,7 @@ const StoreComponent = {
               </div>
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.4rem;">
                 <button class="btn-action" style="margin:0; padding:0.48rem;" onclick="StoreComponent.addItem(${prod.id}, false)">🛒 Do koszyka</button>
-                <button class="btn-action" style="margin:0; padding:0.48rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="StoreComponent.addItem(${prod.id}, true)">🔄 Trade-In</button>
+                <button class="btn-action" style="margin:0; padding:0.48rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="StoreComponent.addItem(${prod.id}, true)">🔄 Kup w Trade-In</button>
               </div>
             ` : `
               <button class="btn-action" style="margin:0.3rem 0 0; padding:0.5rem;" onclick="StoreComponent.addItem(${prod.id}, false)">🛒 Dodaj do koszyka</button>
@@ -823,9 +856,6 @@ const StoreComponent = {
             <span>🛍️ TGN Pro Shop & Komis CPO (${AppData.storeProducts.length} produktów)</span>
           </h2>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.85rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.12);" onclick="StoreComponent.openPromoModal('NEWSLETTER')">
-              📩 Newsletter & Kod -3%
-            </button>
             <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.85rem; border-color:#38bdf8; color:#38bdf8; background:rgba(56,189,248,0.15);" onclick="StoreComponent.toggleAiAssistant()">
               🤖 ${st.aiAssistantOpen ? 'Ukryj Doradcę AI' : 'Doradca AI'}
             </button>
@@ -841,13 +871,15 @@ const StoreComponent = {
         ${aiAssistantHTML}
         ${addProductModalHTML}
 
-        <div class="category-Accordion-list">
+        <!-- POZIOMY SLIDER KATEGORII (ELEGANCJA PREMIUM) -->
+        <div class="store-category-slider">
           ${AppData.storeCategories.map(catObj => {
             const countInCat = AppData.storeProducts.filter(p => StoreComponent.matchesCategory(p, catObj.id)).length;
             return `
-              <button class="cat-menu-item ${st.category === catObj.id ? 'active' : ''}" onclick="StoreComponent.setCategory('${catObj.id}')">
-                <span>${catObj.icon} ${catObj.label} (${countInCat})</span>
-                <span class="arrow">❯</span>
+              <button class="cat-pill-chip ${st.category === catObj.id ? 'active' : ''}" onclick="StoreComponent.setCategory('${catObj.id}')">
+                <span>${catObj.icon}</span>
+                <span>${catObj.label}</span>
+                <span style="opacity:0.6; font-size:0.65rem;">(${countInCat})</span>
               </button>
             `;
           }).join('')}
