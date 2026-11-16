@@ -1,128 +1,109 @@
 /* =========================================================================
-   MODUŁ SKLEPU TGN v12.0 (SAMOWYSTARCZALNY: ASYSTENT AI + KREATOR ASORTYMENTU + 12 KATEGORII)
+   MODUŁ SKLEPU TGN v13.0: PEŁNE KATEGORIE PILKIGOLFOWE.PL + NEWSLETTER + KOD RABAT3 + AI FITTER
    ========================================================================= */
 
-// Automatyczne wstrzyknięcie stylów dla Asystenta AI i Kreatora Produktów (odporne na cache CSS)
-(function injectStoreAiStyles() {
-  if (document.getElementById('tgnStoreAiStyles')) return;
+(function injectStoreV13Styles() {
+  if (document.getElementById('tgnStoreV13Styles')) return;
   const style = document.createElement('style');
-  style.id = 'tgnStoreAiStyles';
+  style.id = 'tgnStoreV13Styles';
   style.textContent = `
     .store-ai-assistant-box {
       background: linear-gradient(145deg, rgba(16, 38, 44, 0.96), rgba(8, 20, 24, 0.98));
       border: 2px solid rgba(56, 189, 248, 0.55);
       border-radius: 16px;
       padding: 1.1rem 1.25rem;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.2rem;
       box-shadow: 0 14px 35px rgba(0, 0, 0, 0.55), inset 0 0 22px rgba(56, 189, 248, 0.12);
     }
     .store-ai-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      padding-bottom: 0.65rem;
-      margin-bottom: 0.75rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+      gap: 0.5rem; padding-bottom: 0.65rem; margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     .ai-pulse-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #4ade80;
-      box-shadow: 0 0 12px #4ade80;
-      display: inline-block;
+      width: 10px; height: 10px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 12px #4ade80; display: inline-block;
     }
     .store-ai-messages {
-      max-height: 160px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-bottom: 0.8rem;
-      padding-right: 4px;
+      max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; padding-right: 4px;
     }
-    .store-ai-msg {
-      font-size: 0.78rem;
-      line-height: 1.45;
-      padding: 0.6rem 0.9rem;
-      border-radius: 10px;
-    }
-    .store-ai-msg.bot {
-      background: rgba(56, 189, 248, 0.12);
-      border-left: 3px solid #38bdf8;
-      color: #f1f5f9;
-    }
-    .store-ai-msg.user {
-      background: rgba(74, 222, 128, 0.18);
-      border-right: 3px solid #4ade80;
-      color: #4ade80;
-      align-self: flex-end;
-    }
-    .store-ai-quick-prompts {
-      display: flex;
-      gap: 0.45rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.75rem;
-    }
-    .store-ai-input-row {
-      display: flex;
-      gap: 0.5rem;
-    }
+    .store-ai-msg { font-size: 0.78rem; line-height: 1.45; padding: 0.55rem 0.85rem; border-radius: 10px; }
+    .store-ai-msg.bot { background: rgba(56, 189, 248, 0.12); border-left: 3px solid #38bdf8; color: #f1f5f9; }
+    .store-ai-msg.user { background: rgba(74, 222, 128, 0.18); border-right: 3px solid #4ade80; color: #4ade80; align-self: flex-end; }
+    .store-ai-quick-prompts { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .store-ai-input-row { display: flex; gap: 0.5rem; }
     .store-ai-input-row input {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      border-radius: 8px;
-      padding: 0.6rem 0.85rem;
-      color: #fff;
-      font-size: 0.8rem;
-      outline: none;
+      flex: 1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 8px; padding: 0.55rem 0.85rem; color: #fff; font-size: 0.78rem; outline: none;
     }
     .store-ai-input-row button {
-      background: #38bdf8;
-      color: #041e2b;
-      border: none;
-      border-radius: 8px;
-      padding: 0 1.1rem;
-      font-size: 0.78rem;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
+      background: #38bdf8; color: #041e2b; border: none; border-radius: 8px; padding: 0 1.1rem;
+      font-size: 0.76rem; font-weight: 800; cursor: pointer; white-space: nowrap;
     }
+
+    /* Pasek zaufania Trusted Shops + Baner Kod Rabatowy RABAT3 */
+    .trusted-promo-bar {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;
+      background: linear-gradient(90deg, rgba(250, 204, 21, 0.14), rgba(74, 222, 128, 0.12));
+      border: 1px solid rgba(250, 204, 21, 0.45); border-radius: 12px; padding: 0.7rem 1rem; margin-bottom: 1rem;
+    }
+    .trusted-badge-pill {
+      display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(250, 204, 21, 0.5); padding: 4px 10px; border-radius: 20px; font-size: 0.74rem; font-weight: 800; color: #facc15;
+    }
+
+    /* Rozwijana Szuflada Kategorii w stylu menu mobilnego PilkiGolfowe.pl */
+    .category-Accordion-list {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.45rem; margin-bottom: 1.1rem;
+    }
+    .cat-menu-item {
+      background: rgba(255, 255, 255, 0.045); border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 9px; padding: 0.55rem 0.75rem; color: #f1f5f9; font-size: 0.74rem; font-weight: 600;
+      display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; text-align: left;
+    }
+    .cat-menu-item:hover, .cat-menu-item.active {
+      background: rgba(74, 222, 128, 0.18); border-color: #4ade80; color: #4ade80; font-weight: 700;
+    }
+    .cat-menu-item span.arrow { opacity: 0.6; font-size: 0.7rem; }
+
+    /* Modal Newslettera i Kodu Rabatowego RABAT3 ("3 jak Par 3") */
+    .promo-modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.78); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center; z-index: 350; padding: 1rem;
+    }
+    .promo-modal-box {
+      width: 100%; max-width: 430px; background: linear-gradient(160deg, #102428, #081317);
+      border: 2px solid #4ade80; border-radius: 20px; padding: 1.75rem 1.5rem; text-align: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), inset 0 0 25px rgba(74, 222, 128, 0.15);
+      position: relative;
+    }
+    .promo-info-circle {
+      width: 64px; height: 64px; border-radius: 50%; border: 3px solid #38bdf8; color: #38bdf8;
+      display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800;
+      margin: 0 auto 1rem; background: rgba(56, 189, 248, 0.1);
+    }
+    .rabat-code-pill {
+      display: inline-block; background: rgba(250, 204, 21, 0.18); border: 2px dashed #facc15;
+      color: #facc15; font-size: 1.2rem; font-weight: 900; padding: 0.45rem 1.2rem; border-radius: 10px;
+      letter-spacing: 1.5px; margin: 0.6rem 0; cursor: pointer;
+    }
+
     .store-admin-add-box {
-      background: rgba(8, 22, 26, 0.98);
-      border: 2px solid #4ade80;
-      border-radius: 16px;
-      padding: 1.15rem;
-      margin-bottom: 1.25rem;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
+      background: rgba(8, 22, 26, 0.98); border: 2px solid #4ade80; border-radius: 16px;
+      padding: 1.15rem; margin-bottom: 1.25rem; box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
     }
-    .store-add-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.6rem;
-    }
-    .store-add-grid label {
-      display: block;
-      font-size: 0.65rem;
-      color: #94a3b8;
-      text-transform: uppercase;
-      margin-bottom: 3px;
-    }
+    .store-add-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+    .store-add-grid label { display: block; font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 3px; }
     .store-add-grid input, .store-add-grid select {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 6px;
-      padding: 0.45rem 0.6rem;
-      color: #fff;
-      font-size: 0.75rem;
-      outline: none;
+      width: 100%; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 6px; padding: 0.45rem 0.6rem; color: #fff; font-size: 0.75rem; outline: none;
     }
     .store-add-grid select option { background: #091519; color: #fff; }
+
+    @media (max-width: 1024px) {
+      .category-Accordion-list { grid-template-columns: repeat(2, 1fr); }
+      .store-add-grid { grid-template-columns: repeat(2, 1fr); }
+    }
     @media (max-width: 768px) {
+      .category-Accordion-list { grid-template-columns: 1fr; gap: 0.35rem; }
       .store-add-grid { grid-template-columns: 1fr; }
       .store-ai-input-row { flex-direction: column; }
       .store-ai-input-row button { padding: 0.55rem; }
@@ -134,24 +115,81 @@
 const StoreComponent = {
   previewTimer: null,
 
-  // Gwarantuje, że wszystkie dane Asystenta AI i 12 kategorii są zawsze zainicjalizowane
   ensureStoreDataInitialized: () => {
-    if (!AppData.storeCategories) {
-      AppData.storeCategories = [
-        { id: "ALL", label: "Wszystkie kategorie", icon: "🏬" },
-        { id: "DRIVERY", label: "Drivery", icon: "🏌️" },
-        { id: "WOOD_HYB", label: "Fairway Woody & Hybrydy", icon: "🚀" },
-        { id: "IRONY", label: "Zestawy Ironów", icon: "⚙️" },
-        { id: "WEDGE", label: "Wedge (48°–60°)", icon: "🎯" },
-        { id: "PUTTERY", label: "Puttery", icon: "⛳" },
-        { id: "ZESTAWY", label: "Kompletne Zestawy", icon: "📦" },
-        { id: "PILKI", label: "Piłki Nowe & Lake Balls", icon: "⚪" },
-        { id: "TORBY", label: "Torby & Wózki", icon: "🎒" },
-        { id: "ODZIEZ", label: "Odzież & Buty", icon: "👟" },
-        { id: "GPS", label: "Dalmierze & GPS", icon: "🔭" },
-        { id: "AKCESORIA", label: "Gripy & Akcesoria", icon: "🔧" }
-      ];
-    }
+    // Pełna lista kategorii odwzorowująca menu z PilkiGolfowe.pl + GolfBrothers.pl
+    AppData.storeCategories = [
+      { id: "ALL", label: "Wszystkie kategorie", icon: "🏬" },
+      { id: "PILKI", label: "Piłki do golfa (Nowe & Lake Balls)", icon: "⚪" },
+      { id: "PERSONALIZACJA", label: "Personalizacja piłek golfowych", icon: "🖨️" },
+      { id: "KIJE_NOWE", label: "Kije golfowe (Nowe 2026)", icon: "🏌️" },
+      { id: "UZYWANE_KIJE", label: "Używane kije golfowe (CPO)", icon: "♻️" },
+      { id: "UZYWANY_SPRZET", label: "Używany sprzęt golfowy", icon: "🛠️" },
+      { id: "TRENING", label: "Trening golfowy i ćwiczenia", icon: "🏋️" },
+      { id: "PREZENTY", label: "Prezenty & Zestawy prezentowe", icon: "🎁" },
+      { id: "TORBY", label: "Torby golfowe", icon: "🎒" },
+      { id: "WOZKI", label: "Wózki golfowe", icon: "🛒" },
+      { id: "ODZIEZ", label: "Odzież golfowa & Buty", icon: "👕" },
+      { id: "GPS", label: "Elektronika (Dalmierze & GPS)", icon: "🔭" },
+      { id: "AKCESORIA", label: "Akcesoria dla golfistów", icon: "🧤" }
+    ];
+
+    // Dodatkowe produkty dla nowych kategorii z PilkiGolfowe.pl (wstrzykiwane raz, jeśli jeszcze ich nie ma)
+    const extraProducts = [
+      {
+        id: 251, section: "BALLS", cat: "PERSONALIZACJA", brand: "Titleist", flex: "N/A", hand: "ALL", loft: "Tuzin (12 szt.) + Twój Nadruk",
+        condition: "Nowe z personalizacją UV", condDetails: "Nadruk Twojego logo, inicjałów lub numeru w cenie!", tag: "PERSONALIZACJA PIŁEK", tagGold: true,
+        name: "Personalizowane Piłki Titleist Pro V1 z Twoim Logo / Tekstem (12 szt.)",
+        spec: "Trwały nadruk UV w pełnym kolorze • Czas realizacji: 48h",
+        desc: "Idealne na turnieje firmowe lub jako unikalny identyfikator na polu. Wyślij tekst lub grafikę po zakupie.",
+        oldPrice: 299, price: 249, tradeInPrice: 249, stock: 30, imgUrl: null
+      },
+      {
+        id: 252, section: "NEW", cat: "PREZENTY", brand: "Titleist", flex: "N/A", hand: "ALL", loft: "Box Prezentowy VIP",
+        condition: "Zestaw Prezentowy", condDetails: "Zapakowane w eleganckie pudełko prezentowe", tag: "POMYSŁ NA PREZENT", tagGold: true,
+        name: "Golfowy Zestaw Prezentowy VIP (Piłki Pro V1 + Pitchmark + Marker + Ręcznik)",
+        spec: "Gotowy upominek dla każdego golfisty • Możliwość dodania dedykacji",
+        desc: "Kompletny zestaw prezentowy najwyższej jakości, który ucieszy zarówno początkującego, jak i niskiego handicapowca.",
+        oldPrice: 390, price: 319, tradeInPrice: 319, stock: 12, imgUrl: null
+      },
+      {
+        id: 253, section: "NEW", cat: "TRENING", brand: "Wellputt", flex: "N/A", hand: "ALL", loft: "Długość: 3 metry",
+        condition: "Fabrycznie nowa", condDetails: "Prędkość greenu 10 / 11.5 ft • Aplikacja treningowa", tag: "TRENING W DOMU", tagGold: false,
+        name: "Mata Treningowa do Putowania Wellputt Mat 3m Pro (10/11.5 ft)",
+        spec: "Zatwierdzona przez trenera Camerona McCormicka • Ponad 50 ćwiczeń",
+        desc: "Najlepsza mata treningowa odwzorowująca realną prędkość szybkiego greenu turniejowego.",
+        oldPrice: 790, price: 649, tradeInPrice: 450, stock: 7, imgUrl: null
+      },
+      {
+        id: 254, section: "NEW", cat: "TRENING", brand: "SuperSpeed", flex: "N/A", hand: "ALL", loft: "Zestaw 3 trenażerów",
+        condition: "Fabrycznie nowy", condDetails: "Zwiększa prędkość swingu o +5% w 6 tygodni", tag: "TRENING PRĘDKOŚCI", tagGold: true,
+        name: "Trenażer Prędkości Swingu SuperSpeed Golf Training System (3 kije)",
+        spec: "3 specjalnie wyważone shafty (Lekki, Średni, Ciężki) + Program treningowy",
+        desc: "Trening overspeed pozwoli Ci przejść z obecnych 96 mph na ponad 102 mph prędkości główki drivera!",
+        oldPrice: 1090, price: 899, tradeInPrice: 590, stock: 5, imgUrl: null
+      },
+      {
+        id: 255, section: "USED", cat: "UZYWANY_SPRZET", brand: "Garmin", flex: "N/A", hand: "ALL", loft: "Launch Monitor + GPS",
+        condition: "Używany 9.0/10 (CPO)", condDetails: "Pełen komplet z futerałem i gwarancją rozruchową 12 mies.", tag: "UŻYWANY SPRZĘT CPO", tagGold: true,
+        name: "Używany Radar / Symulator Golfowy Garmin Approach R10 Launch Monitor",
+        spec: "Mierzy prędkość kija, piłki, Smash Factor, Spin i kąt natarcia • Przenośny",
+        desc: "Przetestowany egzemplarz komisowy. Pozwala grać na wirtualnych polach na driving range lub w domu.",
+        oldPrice: 2590, price: 1690, tradeInPrice: 890, stock: 1, imgUrl: null
+      },
+      {
+        id: 256, section: "NEW", cat: "AKCESORIA", brand: "FootJoy", flex: "N/A", hand: "RH", loft: "2-Pack (M / ML / L)",
+        condition: "Fabrycznie nowe", condDetails: "Na każdą pogodę • Wstawki ze skóry Cabretta", tag: "NIEZBĘDNIK GRACZA", tagGold: false,
+        name: "Rękawiczki Golfowe FootJoy WeatherSof (2-Pack) + Zestaw Tee Drewnianych",
+        spec: "Na lewą dłoń (dla praworęcznych RH) • Oddychający materiał FiberSof",
+        desc: "Najlepiej sprzedająca się rękawiczka golfowa na świecie w pakiecie z 50 drewnianymi kołeczkami tee.",
+        oldPrice: 149, price: 119, tradeInPrice: 119, stock: 25, imgUrl: null
+      }
+    ];
+
+    extraProducts.forEach(ep => {
+      if (!AppData.storeProducts.some(p => p.id === ep.id)) {
+        AppData.storeProducts.push(ep);
+      }
+    });
 
     if (!AppData.storeState) {
       AppData.storeState = {
@@ -160,20 +198,35 @@ const StoreComponent = {
       };
     }
 
-    if (typeof AppData.storeState.aiAssistantOpen === 'undefined') {
-      AppData.storeState.aiAssistantOpen = true;
+    if (typeof AppData.storeState.aiAssistantOpen === 'undefined') AppData.storeState.aiAssistantOpen = true;
+    if (typeof AppData.storeState.addProductOpen === 'undefined') AppData.storeState.addProductOpen = false;
+    if (typeof AppData.storeState.promoModalMode === 'undefined') {
+      // Pokaż automatycznie przy pierwszym wejściu okienko informacyjne "RABAT3" lub Newsletter
+      const alreadySeen = sessionStorage.getItem('tgn_promo_seen');
+      AppData.storeState.promoModalMode = alreadySeen ? null : 'RABAT3'; // null | 'NEWSLETTER' | 'RABAT3'
     }
-    if (typeof AppData.storeState.addProductOpen === 'undefined') {
-      AppData.storeState.addProductOpen = false;
+    if (typeof AppData.storeState.discountCodeApplied === 'undefined') {
+      AppData.storeState.discountCodeApplied = false;
     }
     if (!AppData.storeState.aiChatHistory) {
       AppData.storeState.aiChatHistory = [
         {
           sender: "TGN AI Pro Fitter",
-          text: "Cześć Marek! Połączyłem się z Twoim Kokpitem 3D (HCP 12.4, Swing Speed 96 mph, luka 15m na Gap Wedge'u). Kliknij jedną z szybkich podpowiedzi poniżej lub napisz, jakiego kija szukasz – automatycznie przefiltruję cały sklep!"
+          text: "Cześć Marek! Rozszerzyliśmy sklep o nowe działy: Personalizację Piłek, Prezenty dla Golfistów, Trening Golfowy oraz Używany Sprzęt CPO. Pamiętaj też o kodzie rabatowym RABAT3 (-3% jak 'Par 3')!"
         }
       ];
     }
+  },
+
+  // Inteligentne dopasowanie produktów do nowych kategorii z PilkiGolfowe.pl
+  matchesCategory: (p, selectedCat) => {
+    if (selectedCat === "ALL") return true;
+    if (p.cat === selectedCat) return true;
+    if (selectedCat === "KIJE_NOWE") return p.section === "NEW" && ["DRIVERY", "WOODS", "WOOD_HYB", "HYBRYDY", "IRONY", "WEDGE", "PUTTERY", "ZESTAWY"].includes(p.cat);
+    if (selectedCat === "UZYWANE_KIJE") return p.section === "USED" && ["DRIVERY", "WOODS", "WOOD_HYB", "HYBRYDY", "IRONY", "WEDGE", "PUTTERY"].includes(p.cat);
+    if (selectedCat === "UZYWANY_SPRZET") return p.section === "USED" || p.cat === "UZYWANY_SPRZET";
+    if (selectedCat === "WOZKI") return p.name.toLowerCase().includes("wózek") || p.cat === "WOZKI";
+    return false;
   },
 
   render: () => {
@@ -182,7 +235,7 @@ const StoreComponent = {
 
     let filtered = AppData.storeProducts.filter(p => {
       if (st.section !== "ALL" && p.section !== st.section) return false;
-      if (st.category !== "ALL" && p.cat !== st.category) return false;
+      if (!StoreComponent.matchesCategory(p, st.category)) return false;
       if (st.brand !== "ALL" && p.brand.toLowerCase() !== st.brand.toLowerCase()) return false;
       if (st.flex !== "ALL" && p.flex !== st.flex) return false;
       if (st.hand !== "ALL" && p.hand !== "ALL" && p.hand !== st.hand) return false;
@@ -202,22 +255,71 @@ const StoreComponent = {
     else if (st.sortBy === "PRICE_DESC") filtered.sort((a, b) => b.price - a.price);
 
     const totalItemsCount = AppData.cart.reduce((sum, i) => sum + (i.qty || 1), 0);
-    const totalCartValue = AppData.cart.reduce((sum, i) => sum + (i.price * (i.qty || 1)), 0);
-
-    const countAll = AppData.storeProducts.length;
-    const countNew = AppData.storeProducts.filter(p => p.section === "NEW").length;
-    const countUsed = AppData.storeProducts.filter(p => p.section === "USED").length;
-    const countBalls = AppData.storeProducts.filter(p => p.section === "BALLS").length;
+    const rawCartValue = AppData.cart.reduce((sum, i) => sum + (i.price * (i.qty || 1)), 0);
+    const discountAmount = st.discountCodeApplied ? Math.round(rawCartValue * 0.03) : 0;
+    const finalCartValue = rawCartValue - discountAmount;
 
     const brandsList = [...new Set(AppData.storeProducts.map(p => p.brand))];
 
-    // --- PANEL 1: ASYSTENT AI SKLEPU (WIDOCZNY OD RAZU NA GÓRZE SKLEPU) ---
+    // --- OKIENKO POPUP: NEWSLETTER LUB INFORMACJA O KODZIE RABAT3 ("3 JAK PAR 3") ---
+    const promoModalHTML = st.promoModalMode === 'RABAT3' ? `
+      <div class="promo-modal-backdrop" onclick="StoreComponent.closePromoModal()">
+        <div class="promo-modal-box" onclick="event.stopPropagation()">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <span style="font-size:0.85rem; font-weight:800; color:var(--accent); text-transform:uppercase; border-bottom:2px solid var(--accent); padding-bottom:2px;">Informacja</span>
+            <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="StoreComponent.closePromoModal()">✕</span>
+          </div>
+          <div class="promo-info-circle">i</div>
+          <h3 style="font-size:1.05rem; color:#fff; margin-bottom:0.5rem;">Zrób zakupy w Sklepie TGN i odbierz 3% rabatu. <span style="color:var(--accent);">3 jak "Par 3"</span></h3>
+          <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:0.4rem;">Wpisz lub kliknij kod rabatowy:</p>
+          <div class="rabat-code-pill" onclick="StoreComponent.applyRabat3Code()">RABAT3</div>
+          <p style="font-size:0.78rem; color:#cbd5e1; margin-bottom:1.1rem;">przy składaniu zamówienia i zapłać mniej za wybrany sprzęt golfowy (nowy oraz używany CPO)!</p>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
+            <button class="btn-primary" style="margin:0;" onclick="StoreComponent.applyRabat3Code()">✓ Aktywuj kod RABAT3 (-3%)</button>
+            <button class="btn-action" style="margin:0;" onclick="StoreComponent.openPromoModal('NEWSLETTER')">📩 Zapisz na Newsletter</button>
+          </div>
+        </div>
+      </div>
+    ` : (st.promoModalMode === 'NEWSLETTER' ? `
+      <div class="promo-modal-backdrop" onclick="StoreComponent.closePromoModal()">
+        <div class="promo-modal-box" onclick="event.stopPropagation()">
+          <div style="display:flex; justify-content:flex-end;">
+            <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="StoreComponent.closePromoModal()">✕</span>
+          </div>
+          <h3 style="font-size:1.25rem; color:#fff; margin-bottom:0.6rem; line-height:1.3;">Dołącz do nas, aby otrzymywać aktualizacje! 📩</h3>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.45;">
+            Zapisz się podając swój adres e-mail, aby otrzymywać powiadomienia o nowych dostawach używanych kijów CPO, piłek Lake Balls AAAA oraz kod rabatowy <strong style="color:var(--gold);">RABAT3</strong>!
+          </p>
+          <input type="email" id="newsletterEmailInput" placeholder="Twój adres e-mail..." value="${AppData.user.email || ''}" style="width:100%; background:rgba(255,255,255,0.08); border:1px solid var(--glass-border); border-radius:8px; padding:0.7rem 0.9rem; color:#fff; font-size:0.85rem; margin-bottom:0.75rem; outline:none;">
+          <button class="btn-primary" style="margin:0; padding:0.75rem;" onclick="StoreComponent.submitNewsletter()">Zapisz mnie i odbierz kod -3%</button>
+        </div>
+      </div>
+    ` : '');
+
+    // --- PASEK TRUSTED SHOPS 4,95★ + SZYBKI DOSTĘP DO NEWSLETTERA I KODU RABAT3 ---
+    const trustedPromoBarHTML = `
+      <div class="trusted-promo-bar">
+        <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+          <span class="trusted-badge-pill">🛡️ TRUSTED SHOP GUARANTEE • 4,95 ★</span>
+          <span style="font-size:0.76rem; color:var(--text-main);">
+            🎁 Akcja <strong style="color:var(--gold);">"3 jak Par 3"</strong> – odbierz <strong>3% rabatu</strong> z kodem <strong style="color:var(--accent); cursor:pointer; text-decoration:underline;" onclick="StoreComponent.applyRabat3Code()">RABAT3</strong>
+            ${st.discountCodeApplied ? '<span style="color:var(--accent); font-weight:800; margin-left:6px;">(✓ AKTYWNY W KOSZYKU!)</span>' : ''}
+          </span>
+        </div>
+        <div style="display:flex; gap:0.45rem;">
+          <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.openPromoModal('RABAT3')">🏷️ Info o rabacie -3%</button>
+          <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.openPromoModal('NEWSLETTER')">📩 Newsletter TGN</button>
+        </div>
+      </div>
+    `;
+
+    // --- PANEL ASYSTENTA AI SKLEPU ---
     const aiAssistantHTML = st.aiAssistantOpen ? `
       <div class="store-ai-assistant-box">
         <div class="store-ai-header">
           <div style="display:flex; align-items:center; gap:0.6rem;">
             <span class="ai-pulse-dot"></span>
-            <strong style="color:#38bdf8; font-size:0.9rem; letter-spacing:0.5px;">🤖 ASYSTENT AI SKLEPU & PRO FITTER (AKTYWNY)</strong>
+            <strong style="color:#38bdf8; font-size:0.9rem; letter-spacing:0.5px;">🤖 ASYSTENT AI SKLEPU & PRO FITTER</strong>
           </div>
           <span style="font-size:0.72rem; color:var(--gold); font-weight:700;">Twoja telemetria: HCP ${AppData.user.hcp} | Swing ${AppData.user.swingSpeed} | Luka: 52°</span>
         </div>
@@ -231,21 +333,21 @@ const StoreComponent = {
         </div>
 
         <div class="store-ai-quick-prompts">
-          <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.askAiPrompt('LUKA_52')">🎯 Dobierz Wedge 52° pod moją lukę 15m</button>
-          <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.askAiPrompt('SWING_96')">⚡ Kije pod mój Swing 96 mph (Stiff)</button>
-          <button class="btn-mini-tool" onclick="StoreComponent.askAiPrompt('OKAZJE_CPO')">♻️ Używane okazje CPO</button>
-          <button class="btn-mini-tool" onclick="StoreComponent.askAiPrompt('LAKE_BALLS')">⚪ Piłki Lake Balls AAAA</button>
-          <button class="btn-mini-tool" onclick="StoreComponent.askAiPrompt('LEWORECZNE')">🤚 Kije leworęczne (LH)</button>
+          <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.askAiPrompt('LUKA_52')">🎯 Wedge 52° pod moją lukę 15m</button>
+          <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.askAiPrompt('SWING_96')">⚡ Kije pod Swing 96 mph (Stiff)</button>
+          <button class="btn-mini-tool" onclick="StoreComponent.askAiPrompt('PERSONALIZACJA')">🖨️ Personalizacja piłek z logo</button>
+          <button class="btn-mini-tool" onclick="StoreComponent.askAiPrompt('PREZENTY')">🎁 Pomysł na prezent dla golfisty</button>
+          <button class="btn-mini-tool" onclick="StoreComponent.askAiPrompt('TRENING')">🏋️ Trenażery i maty do domu</button>
         </div>
 
         <div class="store-ai-input-row">
-          <input type="text" id="storeAiInput" placeholder="Napisz do Asystenta AI (np. 'Pokaż drivery', 'Szukam puttera', 'Co polecasz z używanych?')..." onkeypress="if(event.key==='Enter') StoreComponent.sendCustomAiQuestion()">
+          <input type="text" id="storeAiInput" placeholder="Zapytaj AI (np. 'Szukam prezentu do 350 zł', 'Chcę piłki z własnym logo', 'Pokaż używane drivery')..." onkeypress="if(event.key==='Enter') StoreComponent.sendCustomAiQuestion()">
           <button onclick="StoreComponent.sendCustomAiQuestion()">Zapytaj AI & Filtruj</button>
         </div>
       </div>
     ` : '';
 
-    // --- PANEL 2: KREATOR DODAWANIA NOWEGO ASORTYMENTU DO SKLEPU ---
+    // --- KREATOR DODAWANIA NOWEGO PRODUKTU ---
     const defaultPreviewImg = ClubImageEngine.buildDirectSearchPhotoUrl("Titleist TSR3 Driver", 0);
     const addProductModalHTML = st.addProductOpen ? `
       <div class="store-admin-add-box">
@@ -274,8 +376,8 @@ const StoreComponent = {
             <label>Dział sklepu</label>
             <select id="addProdSection">
               <option value="NEW">🏆 Nowy Sprzęt (Pro Shop)</option>
-              <option value="USED">♻️ Używany Kij CPO (Komis)</option>
-              <option value="BALLS">⚪ Piłki / Lake Balls</option>
+              <option value="USED">♻️ Używany Kij / Sprzęt CPO</option>
+              <option value="BALLS">⚪ Piłki / Personalizacja</option>
             </select>
           </div>
           <div>
@@ -303,7 +405,7 @@ const StoreComponent = {
           </div>
           <div>
             <label>Loft / Rozmiar</label>
-            <input type="text" id="addProdLoft" value="10.5°">
+            <input type="text" id="addProdLoft" value="Standard">
           </div>
           <div>
             <label>Stan (np. Nowy lub 9/10 CPO)</label>
@@ -311,11 +413,11 @@ const StoreComponent = {
           </div>
           <div>
             <label>Cena w sklepie (PLN)</label>
-            <input type="number" id="addProdPrice" value="1890">
+            <input type="number" id="addProdPrice" value="990">
           </div>
           <div>
             <label>Cena katalogowa (PLN)</label>
-            <input type="number" id="addProdOldPrice" value="2390">
+            <input type="number" id="addProdOldPrice" value="1290">
           </div>
         </div>
 
@@ -328,18 +430,18 @@ const StoreComponent = {
       </div>
     ` : '';
 
-    // --- PANEL 3: KOSZYK ---
+    // --- KOSZYK Z OBSŁUGĄ KODU RABATOWEGO RABAT3 (-3%) ---
     const cartDrawerHTML = (st.cartOpen || AppData.cart.length > 0) ? `
       <div class="cart-summary-bar" style="flex-direction:column; align-items:stretch;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
           <div>
             <strong style="color:var(--accent); font-size:0.92rem;">🛒 Twój Koszyk Pro Shop (${totalItemsCount} szt.)</strong>
-            <span style="font-size:0.72rem; color:var(--text-muted); margin-left:8px;">Darmowa wysyłka od 300 PLN</span>
+            ${st.discountCodeApplied ? `<span style="font-size:0.72rem; color:var(--gold); margin-left:8px; font-weight:700;">🏷️ Kod RABAT3 aktywny (-${discountAmount} PLN)</span>` : ''}
           </div>
           <div style="display:flex; align-items:center; gap:0.75rem;">
-            <strong style="font-size:1.15rem; color:var(--gold);">Razem: ${totalCartValue} PLN</strong>
+            <strong style="font-size:1.15rem; color:var(--gold);">Do zapłaty: ${finalCartValue} PLN</strong>
             <button class="btn-mini-tool" onclick="StoreComponent.toggleCartDrawer()">
-              ${st.cartOpen ? '▲ Zwiń szczegóły' : '▼ Rozwiń koszyk (' + AppData.cart.length + ')'}
+              ${st.cartOpen ? '▲ Zwiń koszyk' : '▼ Rozwiń koszyk (' + AppData.cart.length + ')'}
             </button>
           </div>
         </div>
@@ -362,17 +464,22 @@ const StoreComponent = {
               </div>
             `).join('')}
 
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-top:0.5rem; padding-top:0.5rem; border-top:1px solid rgba(255,255,255,0.08);">
-              <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; font-size:0.75rem;">
-                <span style="color:var(--text-muted);">Opcja odbioru:</span>
-                <select onchange="StoreComponent.setDelivery(this.value)" style="background:rgba(0,0,0,0.5); color:#fff; border:1px solid var(--glass-border); padding:0.35rem 0.6rem; border-radius:6px; font-size:0.75rem;">
+            <!-- Pole na kod rabatowy RABAT3 ("3 jak Par 3") -->
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem; margin-top:0.4rem; padding-top:0.5rem; border-top:1px solid rgba(255,255,255,0.08);">
+              <div style="display:flex; gap:0.4rem; align-items:center;">
+                <input type="text" id="cartPromoCodeInput" placeholder="Kod rabatowy (np. RABAT3)" value="${st.discountCodeApplied ? 'RABAT3' : ''}" style="background:rgba(0,0,0,0.45); border:1px solid var(--gold); border-radius:6px; padding:0.35rem 0.65rem; color:#fff; font-size:0.75rem; width:165px;">
+                <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.checkCartPromoCode()">Zastosuj kod (-3%)</button>
+              </div>
+
+              <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
+                <select onchange="StoreComponent.setDelivery(this.value)" style="background:rgba(0,0,0,0.5); color:#fff; border:1px solid var(--glass-border); padding:0.4rem 0.6rem; border-radius:6px; font-size:0.75rem;">
                   <option value="KURIER" ${st.deliveryMethod === 'KURIER' ? 'selected' : ''}>📦 Kurier DPD / InPost (0 PLN)</option>
                   <option value="FITTING" ${st.deliveryMethod === 'FITTING' ? 'selected' : ''}>🎯 Odbiór ze sprawdzeniem na TrackManie</option>
                 </select>
+                <button class="btn-primary" style="width:auto; margin:0; padding:0.55rem 1.3rem;" onclick="app.checkoutStore()">
+                  ✓ Zamawiam (${finalCartValue} PLN)
+                </button>
               </div>
-              <button class="btn-primary" style="width:auto; margin:0; padding:0.55rem 1.3rem;" onclick="app.checkoutStore()">
-                ✓ Potwierdź i złóż zamówienie (${totalCartValue} PLN)
-              </button>
             </div>
           </div>
         ` : ''}
@@ -382,8 +489,8 @@ const StoreComponent = {
     // --- KARTY PRODUKTÓW ---
     let productsHTML = filtered.length === 0 ? `
       <div style="grid-column: 1 / -1; text-align:center; padding: 2.5rem; background:rgba(0,0,0,0.25); border-radius:14px; border:1px dashed rgba(255,255,255,0.15);">
-        <p style="font-size:0.95rem; color:var(--text-main); margin-bottom:0.5rem;">Brak produktów spełniających wybrane filtry.</p>
-        <button class="btn-action" style="width:auto; padding:0.45rem 1.2rem;" onclick="StoreComponent.resetFilters()">Wyczyść wszystkie filtry</button>
+        <p style="font-size:0.95rem; color:var(--text-main); margin-bottom:0.5rem;">Brak produktów w tym widoku.</p>
+        <button class="btn-action" style="width:auto; padding:0.45rem 1.2rem;" onclick="StoreComponent.resetFilters()">Pokaż cały asortyment sklepu</button>
       </div>
     ` : filtered.map(prod => {
       const imgId = `store_prod_img_${prod.id}`;
@@ -391,7 +498,7 @@ const StoreComponent = {
       const fallbackSrc = ClubImageEngine.getFallbackPhoto(prod.name);
       const safeName = prod.name.replace(/'/g, "");
       const isUsed = prod.section === "USED";
-      const isBalls = prod.section === "BALLS";
+      const isBallsOrAcc = prod.section === "BALLS" || ["PREZENTY", "AKCESORIA", "PERSONALIZACJA"].includes(prod.cat);
       const savings = prod.oldPrice && prod.oldPrice > prod.price ? (prod.oldPrice - prod.price) : 0;
 
       return `
@@ -442,7 +549,7 @@ const StoreComponent = {
               </div>
             </div>
 
-            ${!isBalls ? `
+            ${!isBallsOrAcc ? `
               <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.55rem;">
                 <span style="font-size:0.68rem; color:var(--gold);">W rozliczeniu Trade-In (Twój kij):</span>
                 <strong style="font-size:0.86rem; color:var(--gold);">dopłata od ${prod.tradeInPrice} PLN</strong>
@@ -452,7 +559,7 @@ const StoreComponent = {
                 <button class="btn-action" style="margin:0; padding:0.48rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="StoreComponent.addItem(${prod.id}, true)">🔄 Kup w Trade-In</button>
               </div>
             ` : `
-              <button class="btn-action" style="margin:0.3rem 0 0; padding:0.5rem;" onclick="StoreComponent.addItem(${prod.id}, false)">🛒 Dodaj pakiet do koszyka</button>
+              <button class="btn-action" style="margin:0.3rem 0 0; padding:0.5rem;" onclick="StoreComponent.addItem(${prod.id}, false)">🛒 Dodaj do koszyka</button>
             `}
           </div>
         </div>
@@ -461,46 +568,46 @@ const StoreComponent = {
 
     return `
       <section class="panel-3d" style="grid-column: span 2;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem; margin-bottom:1rem;">
+        ${promoModalHTML}
+
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem; margin-bottom:0.85rem;">
           <h2 style="margin:0;">
             <span>🛍️ TGN Pro Shop & Komis CPO (${AppData.storeProducts.length} produktów)</span>
           </h2>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button class="btn-action" style="width:auto; margin:0; padding:0.45rem 0.9rem; border-color:#38bdf8; color:#38bdf8; background:rgba(56,189,248,0.15);" onclick="StoreComponent.toggleAiAssistant()">
-              🤖 ${st.aiAssistantOpen ? 'Ukryj Asystenta AI' : 'Otwórz Asystenta AI Sklepu'}
+            <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.85rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.12);" onclick="StoreComponent.openPromoModal('NEWSLETTER')">
+              📩 Newsletter & Kod -3%
             </button>
-            <button class="btn-action" style="width:auto; margin:0; padding:0.45rem 0.95rem; background:var(--accent); color:#052e16;" onclick="StoreComponent.toggleAddProduct()">
-              ➕ Dodaj nowy produkt do sklepu
+            <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.85rem; border-color:#38bdf8; color:#38bdf8; background:rgba(56,189,248,0.15);" onclick="StoreComponent.toggleAiAssistant()">
+              🤖 ${st.aiAssistantOpen ? 'Ukryj Asystenta AI' : 'Asystent AI Sklepu'}
+            </button>
+            <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.9rem; background:var(--accent); color:#052e16;" onclick="StoreComponent.toggleAddProduct()">
+              ➕ Dodaj produkt do sklepu
             </button>
           </div>
         </div>
 
+        ${trustedPromoBarHTML}
         ${aiAssistantHTML}
         ${addProductModalHTML}
-
-        <div class="store-main-sections">
-          <button class="store-sec-btn ${st.section === 'ALL' ? 'active' : ''}" onclick="StoreComponent.setSection('ALL')">
-            <strong>🏬 Cały Asortyment (${countAll})</strong>
-            <span>Wszystkie działy sklepu</span>
-          </button>
-          <button class="store-sec-btn ${st.section === 'NEW' ? 'active' : ''}" onclick="StoreComponent.setSection('NEW')">
-            <strong>🏆 Nowy Sprzęt 2026 (${countNew})</strong>
-            <span>Pro Shop: Kije, Torby, GPS, Buty</span>
-          </button>
-          <button class="store-sec-btn used ${st.section === 'USED' ? 'active' : ''}" onclick="StoreComponent.setSection('USED')">
-            <strong>♻️ Używane Kije CPO (${countUsed})</strong>
-            <span>Drivery, Irony, Hybrydy z gwarancją</span>
-          </button>
-          <button class="store-sec-btn ${st.section === 'BALLS' ? 'active' : ''}" onclick="StoreComponent.setSection('BALLS')">
-            <strong>⚪ Piłki & Lake Balls (${countBalls})</strong>
-            <span>Pakiety AAAA Pearl / AAA</span>
-          </button>
-        </div>
-
         ${cartDrawerHTML}
 
+        <!-- SIATKA WSZYSTKICH KATEGORII W STYLU MENU PILKIGOLFOWE.PL -->
+        <div class="category-Accordion-list">
+          ${AppData.storeCategories.map(catObj => {
+            const countInCat = AppData.storeProducts.filter(p => StoreComponent.matchesCategory(p, catObj.id)).length;
+            return `
+              <button class="cat-menu-item ${st.category === catObj.id ? 'active' : ''}" onclick="StoreComponent.setCategory('${catObj.id}')">
+                <span>${catObj.icon} ${catObj.label} (${countInCat})</span>
+                <span class="arrow">❯</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+
+        <!-- Pasek wyszukiwania i filtrów technicznych -->
         <div class="store-MultiFilter-bar">
-          <input type="text" id="storeSearchInput" placeholder="🔍 Szukaj modelu (np. Qi10, Paradym, G425, Vokey 52, Pro V1, Leworęczny)..." value="${st.search}" oninput="StoreComponent.setSearch(this.value)">
+          <input type="text" id="storeSearchInput" placeholder="🔍 Szukaj produktu (np. Qi10, Personalizowane Pro V1, Prezent, Mata Wellputt, Garmin R10)..." value="${st.search}" oninput="StoreComponent.setSearch(this.value)">
           
           <select onchange="StoreComponent.setBrand(this.value)">
             <option value="ALL" ${st.brand === 'ALL' ? 'selected' : ''}>Wszystkie marki (${brandsList.length})</option>
@@ -527,19 +634,6 @@ const StoreComponent = {
           </select>
         </div>
 
-        <div class="forum-filters" style="margin-bottom:1rem;">
-          ${AppData.storeCategories.map(catObj => {
-            const countInCat = catObj.id === 'ALL'
-              ? AppData.storeProducts.length
-              : AppData.storeProducts.filter(p => p.cat === catObj.id).length;
-            return `
-              <button class="filter-pill ${st.category === catObj.id ? 'active' : ''}" onclick="StoreComponent.setCategory('${catObj.id}')">
-                ${catObj.icon} ${catObj.label} (${countInCat})
-              </button>
-            `;
-          }).join('')}
-        </div>
-
         <div class="store-grid">
           ${productsHTML}
         </div>
@@ -547,6 +641,54 @@ const StoreComponent = {
     `;
   },
 
+  // --- OBSŁUGA NEWSLETTERA I KODU RABATOWEGO RABAT3 ---
+  openPromoModal: (mode) => {
+    StoreComponent.ensureStoreDataInitialized();
+    AppData.storeState.promoModalMode = mode;
+    app.switchTab('sklep');
+  },
+
+  closePromoModal: () => {
+    sessionStorage.setItem('tgn_promo_seen', '1');
+    AppData.storeState.promoModalMode = null;
+    app.switchTab('sklep');
+  },
+
+  applyRabat3Code: () => {
+    sessionStorage.setItem('tgn_promo_seen', '1');
+    AppData.storeState.discountCodeApplied = true;
+    AppData.storeState.promoModalMode = null;
+    app.switchTab('sklep');
+    app.showToast('🎉 Aktywowano kod RABAT3! Otrzymujesz 3% rabatu ("3 jak Par 3") na całe zamówienie!');
+  },
+
+  checkCartPromoCode: () => {
+    const inp = document.getElementById('cartPromoCodeInput');
+    const code = inp ? inp.value.trim().toUpperCase() : '';
+    if (code === 'RABAT3' || code === 'PAR3' || code === 'TGN3') {
+      AppData.storeState.discountCodeApplied = true;
+      app.switchTab('sklep');
+      app.showToast('🎉 Kod RABAT3 przyjęty! Naliczono 3% zniżki w koszyku.');
+    } else {
+      app.showToast('Wpisz kod: RABAT3 aby odebrać 3% zniżki!');
+    }
+  },
+
+  submitNewsletter: () => {
+    const inp = document.getElementById('newsletterEmailInput');
+    const email = inp ? inp.value.trim() : '';
+    if (!email || !email.includes('@')) {
+      app.showToast('Podaj poprawny adres e-mail!');
+      return;
+    }
+    localStorage.setItem('tgn_newsletter_email', email);
+    AppData.storeState.discountCodeApplied = true;
+    AppData.storeState.promoModalMode = 'RABAT3';
+    app.switchTab('sklep');
+    app.showToast(`📩 Zapisano ${email} do Newslettera! Twój kod RABAT3 (-3%) został aktywowany!`);
+  },
+
+  // --- LOGIKA ASYSTENTA AI SKLEPU ---
   toggleAiAssistant: () => {
     StoreComponent.ensureStoreDataInitialized();
     AppData.storeState.aiAssistantOpen = !AppData.storeState.aiAssistantOpen;
@@ -562,33 +704,31 @@ const StoreComponent = {
       st.category = "WEDGE";
       st.aiChatHistory.push(
         { sender: "Ty", text: "Dobierz kij pod moją lukę 15m z Gapping AI." },
-        { sender: "TGN AI Pro Fitter", text: "Wyfiltrowałem kategorię 🎯 Wedge! Przy Twoich ironach Mizuno JPX 923 najlepszym wyborem na lukę 100–115m będzie nowy Titleist Vokey SM10 52° (z dopłatą Trade-In za 340 PLN) lub używany Cleveland RTX 6 ZipCore za 420 PLN." }
+        { sender: "TGN AI Pro Fitter", text: "Wyfiltrowałem kategorię 🎯 Wedge! Najlepszym wyborem na lukę 100–115m będzie nowy Titleist Vokey SM10 52° lub używany Cleveland RTX 6 ZipCore." }
       );
     } else if (promptType === "SWING_96") {
       st.flex = "Stiff";
       st.aiChatHistory.push(
-        { sender: "Ty", text: "Pokaż kije dopasowane do mojej prędkości swingu 96 mph." },
-        { sender: "TGN AI Pro Fitter", text: "Przy prędkości 96 mph optymalną kontrolę dyspersji daje shaft Stiff (S). Wyfiltrowałem wszystkie Drivery, Woody i Irony ze sztywnością Stiff!" }
+        { sender: "Ty", text: "Pokaż kije pod mój Swing Speed 96 mph." },
+        { sender: "TGN AI Pro Fitter", text: "Przy 96 mph optymalną kontrolę daje shaft Stiff (S). Wyfiltrowałem wszystkie kije ze sztywnością Stiff!" }
       );
-    } else if (promptType === "OKAZJE_CPO") {
-      st.section = "USED";
-      st.sortBy = "PRICE_ASC";
+    } else if (promptType === "PERSONALIZACJA") {
+      st.category = "PERSONALIZACJA";
       st.aiChatHistory.push(
-        { sender: "Ty", text: "Pokaż najlepsze używane okazje CPO." },
-        { sender: "TGN AI Pro Fitter", text: "Przełączyłem widok na dział ♻️ Używane Kije CPO posortowany od najniższej ceny! Zwróć uwagę na Hybrydę Ping G425 (690 PLN) oraz Drivera Callaway Paradym Ai Smoke w stanie Mint 9/10." }
+        { sender: "Ty", text: "Chcę zamówić piłki z własnym nadrukiem / logo." },
+        { sender: "TGN AI Pro Fitter", text: "Otworzyłem dział 🖨️ Personalizacja piłek golfowych! Możesz zamówić tuzin Titleist Pro V1 z trwałym nadrukiem UV Twojego logo lub inicjałów." }
       );
-    } else if (promptType === "LAKE_BALLS") {
-      st.section = "BALLS";
-      st.category = "PILKI";
+    } else if (promptType === "PREZENTY") {
+      st.category = "PREZENTY";
       st.aiChatHistory.push(
-        { sender: "Ty", text: "Jakie piłki Lake Balls polecasz do mojego HCP 12.4?" },
-        { sender: "TGN AI Pro Fitter", text: "Dla HCP 12.4 potrzebujesz piłki uretanowej. Wyfiltrowałem pakiety Titleist Pro V1 (Klasa AAAA Pearl za 219 PLN / 24 szt.) oraz TaylorMade TP5!" }
+        { sender: "Ty", text: "Szukam prezentu dla golfisty." },
+        { sender: "TGN AI Pro Fitter", text: "Wyfiltrowałem dział 🎁 Prezenty & Zestawy prezentowe! Sprawdź nasz Zestaw Prezentowy VIP z piłkami Pro V1, ręcznikiem i pitchmarkiem." }
       );
-    } else if (promptType === "LEWORECZNE") {
-      st.hand = "LH";
+    } else if (promptType === "TRENING") {
+      st.category = "TRENING";
       st.aiChatHistory.push(
-        { sender: "Ty", text: "Pokaż sprzęt dla graczy leworęcznych (LH)." },
-        { sender: "TGN AI Pro Fitter", text: "Ustawiłem filtr Ręka: Leworęczne (LH). Mamy w dziale CPO świetną hybrydę Titleist TSR2 #3 (19°) LH w stanie 9/10!" }
+        { sender: "Ty", text: "Pokaż sprzęt do treningu w domu i ćwiczeń." },
+        { sender: "TGN AI Pro Fitter", text: "Włączyłem kategorię 🏋️ Trening golfowy i ćwiczenia! Polecam 3-metrową matę Wellputt oraz trenażer prędkości swingu SuperSpeed Golf." }
       );
     }
 
@@ -608,27 +748,24 @@ const StoreComponent = {
     st.section = "ALL"; st.category = "ALL"; st.brand = "ALL"; st.flex = "ALL"; st.hand = "ALL"; st.search = "";
 
     let reply = "";
-    if (lower.includes("driver")) {
-      st.category = "DRIVERY";
-      reply = "Wyfiltrowałem wszystkie Drivery. Przy Twoim swingu 96 mph polecam Ping G430 Max 10K lub używanego Callaway Paradym Ai Smoke!";
-    } else if (lower.includes("iron") || lower.includes("żelaz") || lower.includes("mizuno")) {
-      st.category = "IRONY";
-      reply = "Wyświetlam zestawy Ironów! Spójrz na kute Mizuno Pro 245 lub używane Titleist T200 (5-PW).";
-    } else if (lower.includes("putter") || lower.includes("odyssey") || lower.includes("scotty")) {
-      st.category = "PUTTERY";
-      reply = "Wyfiltrowałem dział Putterów (Scotty Cameron Newport 2 oraz używany Odyssey White Hot OG #7).";
-    } else if (lower.includes("wedge") || lower.includes("52") || lower.includes("56")) {
-      st.category = "WEDGE";
-      reply = "Otworzyłem kategorię Wedge! Model Vokey SM10 52° idealnie zamknie lukę 15m w Twojej torbie.";
-    } else if (lower.includes("piłk") || lower.includes("pilk") || lower.includes("lake")) {
-      st.section = "BALLS"; st.category = "PILKI";
-      reply = "Przełączyłem sklep na dział Piłek Golfowych i pakietów Lake Balls AAAA/AAA!";
+    if (lower.includes("prezent") || lower.includes("upominek")) {
+      st.category = "PREZENTY";
+      reply = "Wyfiltrowałem dział 🎁 Prezenty dla golfistów i zestawy prezentowe!";
+    } else if (lower.includes("logo") || lower.includes("nadruk") || lower.includes("personaliz")) {
+      st.category = "PERSONALIZACJA";
+      reply = "Otworzyłem dział 🖨️ Personalizacja piłek golfowych!";
+    } else if (lower.includes("trening") || lower.includes("mata") || lower.includes("ćwicz") || lower.includes("cwicz")) {
+      st.category = "TRENING";
+      reply = "Wyświetlam akcesoria z działu 🏋️ Trening golfowy i ćwiczenia!";
     } else if (lower.includes("używan") || lower.includes("uzywan") || lower.includes("cpo")) {
-      st.section = "USED";
-      reply = "Włączyłem dział ♻️ Używanych Kijów CPO z pełną oceną stanu technicznego.";
+      st.category = "UZYWANE_KIJE";
+      reply = "Włączyłem dział ♻️ Używanych kijów i sprzętu golfowego CPO!";
+    } else if (lower.includes("rabat") || lower.includes("kod") || lower.includes("zniżk")) {
+      StoreComponent.applyRabat3Code();
+      return;
     } else {
       st.search = text;
-      reply = `Przeszukuję katalog sklepu pod kątem frazy: "${text}". Sprawdź wyfiltrowane produkty poniżej!`;
+      reply = `Przeszukuję katalog sklepu pod kątem frazy: "${text}". Sprawdź wyniki poniżej!`;
     }
 
     st.aiChatHistory.push({ sender: "TGN AI Pro Fitter", text: reply });
@@ -699,12 +836,7 @@ const StoreComponent = {
     app.showToast(`✓ Dodano nowy produkt do sklepu: ${name}`);
   },
 
-  setSection: (sec) => {
-    AppData.storeState.section = sec;
-    if (sec === "BALLS") AppData.storeState.category = "PILKI";
-    else if (AppData.storeState.category === "PILKI") AppData.storeState.category = "ALL";
-    app.switchTab('sklep');
-  },
+  setSection: (sec) => { AppData.storeState.section = sec; app.switchTab('sklep'); },
   setCategory: (cat) => { AppData.storeState.category = cat; app.switchTab('sklep'); },
   setBrand: (brand) => { AppData.storeState.brand = brand; app.switchTab('sklep'); },
   setFlex: (flex) => { AppData.storeState.flex = flex; app.switchTab('sklep'); },
