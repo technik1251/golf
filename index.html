@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#070f14">
-  <title>TGN Global Golf - Spatial 3D HUD Ultimate</title>
-  <link rel="stylesheet" href="./style.css">
+  <title>TGN Global Golf – Oficjalny Sklep Golfowy, Komis CPO & Forum</title>
+  <link rel="stylesheet" href="./style.css?v=15.0">
 </head>
 <body>
 
@@ -15,50 +15,56 @@
       <div class="logo" id="logoBtn">
         <span>TGN</span> GLOBAL GOLF
       </div>
-      <div id="headerRightInfo" style="display:flex; align-items:center; gap:0.75rem;">
-        <span style="font-size: 0.7rem; color: var(--text-muted);">Modular Architecture v11.0</span>
+      <div id="headerRightInfo" style="display:flex; align-items:center; gap:0.65rem;">
+        <span style="font-size: 0.7rem; color: var(--text-muted);">Sklep Pro Shop & Społeczność</span>
       </div>
     </div>
     <nav id="mainNav" style="display:none;">
-      <button class="active" data-tab="profile">👤 Kokpit 3D & Torba</button>
+      <button class="active" data-tab="sklep">🛍️ Sklep & Komis CPO</button>
+      <button data-tab="forum">💬 Forum Golfowe</button>
+      <button data-tab="profile">👤 Moje Konto & Torba 3D</button>
       <button data-tab="pola">⛳ Pola w Polsce</button>
-      <button data-tab="wydarzenia">📅 Wydarzenia 2027</button>
-      <button data-tab="sklep">🛍️ Sklep TGN 2026</button>
-      <button data-tab="forum">💬 Forum (2021–2026)</button>
-      <button data-tab="cpo">⚡ Skup TGN CPO</button>
-      <button data-tab="marketplace">🤝 Marketplace C2C</button>
-      <button data-tab="chat">💬 Czat ze sprzedawcą</button>
+      <button data-tab="wydarzenia">📅 Kalendarz 2027</button>
+      <button data-tab="cpo">⚡ Wyceń swój kij (Skup)</button>
+      <button data-tab="marketplace">🤝 Giełda Graczy C2C</button>
+      <button data-tab="chat">💬 Wiadomości</button>
+      <button data-tab="admin" id="navAdminBtn" style="display:none; border:1px solid var(--gold); color:var(--gold);">⚙️ Panel Admina</button>
     </nav>
   </header>
 
-  <!-- Ekran Logowania i Rejestracji -->
+  <!-- Ekran Logowania i Rejestracji (Produkcyjny) -->
   <div id="authScreen" class="auth-wrapper">
     <div class="auth-panel">
       <div style="text-align: center; margin-bottom: 1.2rem;">
         <div style="font-size: 1.3rem; font-weight: 800; letter-spacing: 0.5px;">
-          <span style="color: var(--accent); border: 1px solid var(--accent); padding: 2px 7px; border-radius: 5px; margin-right: 6px;">TGN</span>ID PORTAL 3D
+          <span style="color: var(--accent); border: 1px solid var(--accent); padding: 2px 7px; border-radius: 5px; margin-right: 6px;">TGN</span>PORTAL & PRO SHOP
         </div>
-        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem;">Zaloguj się do swojego przestrzennego kokpitu golfowego</p>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem;">Zaloguj się do sklepu, forum oraz swojej cyfrowej torby</p>
       </div>
 
       <div class="auth-tabs">
         <button id="tabLoginBtn" class="auth-tab-btn active" onclick="auth.switchAuthMode('login')">Logowanie</button>
-        <button id="tabRegisterBtn" class="auth-tab-btn" onclick="auth.switchAuthMode('register')">Rejestracja</button>
+        <button id="tabRegisterBtn" class="auth-tab-btn" onclick="auth.switchAuthMode('register')">Załóż konto</button>
       </div>
 
+      <!-- Logowanie -->
       <div id="loginForm">
         <div class="form-group">
-          <label>Adres E-mail lub Login TGN</label>
-          <input type="email" id="loginEmail" value="marek.kowalski@tgngolf.pl">
+          <label>Adres E-mail</label>
+          <input type="email" id="loginEmail" placeholder="twoj@email.pl" value="marek.kowalski@tgngolf.pl">
         </div>
         <div class="form-group">
           <label>Hasło</label>
-          <input type="password" id="loginPass" value="********">
+          <input type="password" id="loginPass" placeholder="••••••••" value="********">
         </div>
-        <button class="btn-primary" onclick="auth.handleLogin()">Zaloguj się do Kokpitu 3D</button>
-        <button class="btn-demo" onclick="auth.loginDemo()">⚡ Szybkie wejście Demo (Marek Kowalski • HCP 12.4)</button>
+        <button class="btn-primary" onclick="auth.handleLogin()">Zaloguj się</button>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-top:0.75rem;">
+          <button class="btn-demo" style="margin:0; font-size:0.72rem;" onclick="auth.loginAsClient()">👤 Wejdź jako Klient</button>
+          <button class="btn-demo" style="margin:0; font-size:0.72rem; border-color:var(--accent); color:var(--accent); background:rgba(74,222,128,0.1);" onclick="auth.loginAsAdmin()">🔑 Wejdź jako Właściciel (Admin)</button>
+        </div>
       </div>
 
+      <!-- Rejestracja -->
       <div id="registerForm" style="display:none;">
         <div class="form-group">
           <label>Imię i Nazwisko</label>
@@ -66,11 +72,11 @@
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;">
           <div class="form-group">
-            <label>Handicap (HCP)</label>
+            <label>Handicap WHS (HCP)</label>
             <input type="number" step="0.1" id="regHcp" value="18.5">
           </div>
           <div class="form-group">
-            <label>Miasto</label>
+            <label>Miasto / Klub macierzysty</label>
             <input type="text" id="regCity" value="Warszawa">
           </div>
         </div>
@@ -82,38 +88,52 @@
           <label>Hasło</label>
           <input type="password" id="regPass" placeholder="Minimum 6 znaków">
         </div>
-        <button class="btn-primary" onclick="auth.handleRegister()">Utwórz Profil 3D & Cyfrową Torbę</button>
+        <button class="btn-primary" onclick="auth.handleRegister()">Utwórz Konto Gracza</button>
       </div>
     </div>
   </div>
 
-  <!-- Główna Scena 3D -->
+  <!-- Główna Scena Aplikacji -->
   <main class="spatial-stage" id="appContainer" style="display:none;"></main>
+
+  <!-- Oficjalna Stopka Sklepu i Forum (Wymogi prawne e-commerce) -->
+  <footer id="mainFooter" style="display:none; background:rgba(6, 14, 18, 0.96); border-top:1px solid var(--glass-border); padding:1.5rem 2rem; margin-top:2rem; font-size:0.75rem; color:var(--text-muted);">
+    <div style="max-width:1550px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <strong style="color:var(--text-main);">TGN GLOBAL GOLF POLSKA – Pro Shop, Komis CPO & Społeczność</strong><br>
+        <span>Bezpieczne płatności: BLIK • Przelewy24 • Visa / Mastercard • Dostawa: Kurier DPD Dłużyca / InPost Paczkomaty</span>
+      </div>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <a href="javascript:void(0)" style="color:var(--accent); text-decoration:none;" onclick="app.openLegalModal('REGULAMIN')">📜 Regulamin Sklepu i Forum</a>
+        <a href="javascript:void(0)" style="color:var(--accent); text-decoration:none;" onclick="app.openLegalModal('ZWROTY')">🔄 Zwroty i Reklamacje (14 dni)</a>
+        <a href="javascript:void(0)" style="color:var(--accent); text-decoration:none;" onclick="app.openLegalModal('RODO')">🔒 Polityka Prywatności (RODO)</a>
+        <a href="javascript:void(0)" style="color:var(--gold); text-decoration:none;" onclick="app.openLegalModal('KONTAKT')">📞 Kontakt & Serwis Fittingu</a>
+      </div>
+    </div>
+  </footer>
 
   <!-- Modal AI Gapping Assistant -->
   <div id="aiModalOverlay" class="modal-overlay">
     <div class="ai-popup-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.8rem;">
-        <h3 style="color: var(--gold); font-size: 0.95rem; text-transform:uppercase;">🌟 Wizyta w Nowej Kolekcji 2026 – Rekomendacja dla Ciebie</h3>
+        <h3 style="color: var(--gold); font-size: 0.95rem; text-transform:uppercase;">🌟 Rekomendacja Fittingu AI – Sezon 2026/2027</h3>
         <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="app.closeAiModal()">✕</span>
       </div>
       <p style="font-size: 0.82rem; color: var(--text-main); line-height: 1.55; margin-bottom: 1rem;">
-        Cześć, <strong>Marek</strong>! Twoja gra (HCP 12.4, Swing 96 mph) jest gotowa na kolejny poziom przed otwarciem sezonu turniejowego <strong>TGN Tour 2027</strong>.<br><br>
-        Najważniejsze: Nowy <strong>Pro-Wedge 52°</strong> z serii 2026 idealnie wypełnia Twoją lukę dystansową, o której informuje nasza Gapping AI, dając precyzję wokół greenu.<br>
-        Ponadto, nowa seria <strong>TGN Evolution Series 2026</strong> (Driver i Irony) oferuje większe wybaczanie błędów i lepszą aerodynamikę.<br><br>
-        Twoja obecna torba ma najwyższą wartość Trade-In (<strong>14 200 PLN</strong>). Zobacz spersonalizowaną ofertę w Oficjalnym Sklepie TGN 2026.
+        Analiza Twojej torby (HCP 12.4, Swing 96 mph) wykazała lukę dystansową 15m pomiędzy Pitching Wedge a Sand Wedge.<br><br>
+        Rekomendowany zakup: <strong>Gap Wedge 52° (Titleist Vokey SM10 lub Cleveland RTX 6 ZipCore)</strong>. Możesz obniżyć cenę zakupu oddając swój nieużywany sprzęt w rozliczeniu Trade-In.
       </p>
-      <button class="btn-action" style="background: rgba(250,204,21,0.16); border-color: var(--gold); color: var(--gold);" onclick="app.closeAiModal(); app.switchTab('sklep');">
-        [ PRZEJDŹ DO OFICJALNEGO SKLEPU KOLEKCJI 2026 I ODBIERZ ZNIŻKĘ TRADE-IN ]
+      <button class="btn-action" style="background: rgba(250,204,21,0.16); border-color: var(--gold); color: var(--gold);" onclick="app.closeAiModal(); app.switchTab('sklep'); StoreComponent.setCategory('WEDGE');">
+        [ PRZEJDŹ DO DZIAŁU WEDGE 52° W SKLEPIE ]
       </button>
     </div>
   </div>
 
-  <!-- Modal powiększenia prawdziwego zdjęcia kija HD -->
+  <!-- Modal powiększenia zdjęcia kija HD -->
   <div id="photoZoomModal" class="modal-overlay" onclick="app.closePhotoZoom()">
     <div class="ai-popup-card" style="max-width:460px; border-color:var(--accent); text-align:center;" onclick="event.stopPropagation()">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
-        <h3 id="zoomClubTitle" style="color:var(--accent); font-size:0.9rem;">Zdjęcie Produktowe Kija HD</h3>
+        <h3 id="zoomClubTitle" style="color:var(--accent); font-size:0.9rem;">Karta Produktu HD</h3>
         <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="app.closePhotoZoom()">✕</span>
       </div>
       <div style="width:100%; height:270px; border-radius:14px; overflow:hidden; border:2px solid var(--glass-border); background:#ffffff; margin-bottom:0.8rem; position:relative; display:flex; align-items:center; justify-content:center;">
@@ -121,22 +141,33 @@
       </div>
       <p id="zoomClubMeta" style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.75rem;"></p>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
-        <button class="btn-action" style="margin:0;" onclick="app.regenerateModalAiPhoto()">📷 Następne zdjęcie z sieci</button>
-        <button class="btn-action" style="margin:0; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="app.openGoogleImagesForModal()">🔎 Otwórz w Google Grafika ↗</button>
+        <button class="btn-action" style="margin:0;" onclick="app.regenerateModalAiPhoto()">📷 Następne zdjęcie produktu</button>
+        <button class="btn-action" style="margin:0; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="app.openGoogleImagesForModal()">🔎 Zobacz w Google Grafika ↗</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal Dokumentów Prawnych (Regulamin / Zwroty / RODO) -->
+  <div id="legalModalOverlay" class="modal-overlay" onclick="app.closeLegalModal()">
+    <div class="ai-popup-card" style="max-width:620px; border-color:var(--accent);" onclick="event.stopPropagation()">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+        <h3 id="legalModalTitle" style="color:var(--accent); font-size:0.95rem;">Dokumenty Sklepu TGN</h3>
+        <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="app.closeLegalModal()">✕</span>
+      </div>
+      <div id="legalModalBody" style="font-size:0.78rem; color:var(--text-main); line-height:1.55; max-height:65vh; overflow-y:auto; padding-right:6px;"></div>
     </div>
   </div>
 
   <div id="toast">Powiadomienie</div>
 
-  <!-- Ładowanie poszczególnych modułów projektu -->
-  <script src="./js/data.js"></script>
-  <script src="./js/profile.js"></script>
-  <script src="./js/courses.js"></script>
-  <script src="./js/events.js"></script>
-  <script src="./js/store.js"></script>
-  <script src="./js/forum.js"></script>
-  <script src="./js/market.js"></script>
-  <script src="./js/app.js"></script>
+  <!-- Ładowanie modułów produkcyjnych (v15.0) -->
+  <script src="./js/data.js?v=15.0"></script>
+  <script src="./js/profile.js?v=15.0"></script>
+  <script src="./js/courses.js?v=15.0"></script>
+  <script src="./js/events.js?v=15.0"></script>
+  <script src="./js/store.js?v=15.0"></script>
+  <script src="./js/forum.js?v=15.0"></script>
+  <script src="./js/market.js?v=15.0"></script>
+  <script src="./js/app.js?v=15.0"></script>
 </body>
 </html>
