@@ -1,12 +1,7 @@
 /* =========================================================================
    GŁÓWNY KONTROLER PRODUKCYJNY TGN v16.0 (js/app.js)
-   - Obsługa wysuwanej Szuflady Koszyka (Slide-Over Cart Drawer) z każdego miejsca
-   - Rozróżnienie konta Klienta i Właściciela (Admin CMS)
-   - Panel Zarządzania Zamówieniami + Eksport / Import bazy JSON pod serwer Online
-   - Trwały zapis wątków i komentarzy na Forum (LocalDB)
    ========================================================================= */
 
-// Inicjalizacja trwałej bazy Forum oraz Koszyka przy starcie aplikacji
 (function initPersistentDatabase() {
   try {
     const savedForum = localStorage.getItem('tgn_forum_posts_db');
@@ -26,7 +21,6 @@ const saveForumToDB = () => {
   } catch (e) {}
 };
 
-// Komponent Panelu Administratora (TGN CMS - zarządzanie sklepem, zamówieniami i bazą)
 const AdminDashboardComponent = {
   render: () => {
     const orders = JSON.parse(localStorage.getItem('tgn_orders_db') || '[]');
@@ -96,7 +90,6 @@ const AdminDashboardComponent = {
   }
 };
 
-// Moduł Autoryzacji i Ról Użytkownika (Klient / Administrator)
 const auth = {
   switchAuthMode: (mode) => {
     document.getElementById('tabLoginBtn').classList.toggle('active', mode === 'login');
@@ -105,10 +98,7 @@ const auth = {
     document.getElementById('registerForm').style.display = mode === 'register' ? 'block' : 'none';
   },
 
-  loginDemo: () => {
-    auth.loginAsClient();
-  },
-
+  loginDemo: () => { auth.loginAsClient(); },
   loginAsClient: () => {
     AppData.user = { ...DefaultUser, role: 'CLIENT' };
     localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
@@ -162,9 +152,14 @@ const auth = {
     AppData.user.role = AppData.user.role === 'ADMIN' ? 'CLIENT' : 'ADMIN';
     localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
     auth.updateHeaderBar();
-    const currentTab = document.querySelector('#mainNav button.active')?.dataset?.tab || 'sklep';
-    app.switchTab(currentTab === 'admin' && AppData.user.role !== 'ADMIN' ? 'sklep' : currentTab);
-    app.showToast(AppData.user.role === 'ADMIN' ? '🔑 Włączono tryb Administratora (Edycja sklepu i CMS aktywne)' : '👤 Przełączono na widok Klienta');
+
+    if (AppData.user.role === 'ADMIN') {
+      app.switchTab('admin');
+      app.showToast('🔑 Włączono tryb Administratora – otwarto Panel CMS!');
+    } else {
+      app.switchTab('sklep');
+      app.showToast('👤 Przełączono na widok Klienta.');
+    }
   },
 
   enterApp: (msg) => {
@@ -186,7 +181,7 @@ const auth = {
     if (adminNavBtn) adminNavBtn.style.display = isAdmin ? 'inline-block' : 'none';
 
     document.getElementById('headerRightInfo').innerHTML = `
-      <button class="btn-mini-tool" style="border-color:${isAdmin ? 'var(--gold)' : 'rgba(255,255,255,0.2)'}; color:${isAdmin ? 'var(--gold)' : 'var(--text-muted)'};" onclick="auth.toggleAdminRoleQuick()">
+      <button class="btn-mini-tool" style="border-color:${isAdmin ? 'var(--gold)' : 'rgba(255,255,255,0.2)'}; color:${isAdmin ? 'var(--gold)' : 'var(--text-muted)'}; font-weight:800;" onclick="auth.toggleAdminRoleQuick()">
         ${isAdmin ? '⚙️ Tryb: ADMIN' : '👤 Widok: KLIENT'}
       </button>
       <span style="font-size: 0.76rem; color: var(--gold); font-weight:800; cursor:pointer; background:rgba(250,204,21,0.14); padding:4px 10px; border-radius:6px; border:1px solid rgba(250,204,21,0.45);" onclick="StoreComponent.openCartDrawer()">
@@ -219,7 +214,6 @@ const auth = {
   }
 };
 
-// Główny obiekt sterujący aplikacją
 const app = {
   previewTimer: null,
 
@@ -257,7 +251,6 @@ const app = {
     }
   },
 
-  // Zmiana statusu realizacji zamówienia w Panelu Admina
   changeOrderStatus: (orderIdx) => {
     try {
       const orders = JSON.parse(localStorage.getItem('tgn_orders_db') || '[]');
@@ -271,7 +264,6 @@ const app = {
     } catch (e) {}
   },
 
-  // Eksport całej przygotowanej bazy (produkty, wątki forum, zamówienia) do pliku JSON
   exportDatabaseJson: () => {
     const dbDump = {
       exportedAt: new Date().toISOString(),
@@ -289,7 +281,6 @@ const app = {
     app.showToast('💾 Pobrano pełną bazę danych sklepu i forum (.json)!');
   },
 
-  // Import bazy danych z pliku JSON
   importDatabaseJson: (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -424,7 +415,6 @@ const app = {
     app.showToast(ev.registered ? `Zapisano na: ${ev.title} (${ev.xpReward})` : `Wypisano z wydarzenia: ${ev.title}`);
   },
 
-  // Aliasy dla kompatybilności wstecznej ze sklepem
   filterStore: (cat) => {
     if (typeof StoreComponent !== 'undefined') StoreComponent.setCategory(cat);
   },
