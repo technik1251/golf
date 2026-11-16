@@ -1,11 +1,14 @@
 /* =========================================================================
-   MODUŁ SKLEPU TGN v13.0: PEŁNE KATEGORIE PILKIGOLFOWE.PL + NEWSLETTER + KOD RABAT3 + AI FITTER
+   MODUŁ SKLEPU TGN v14.0: POPRAWIONY MODAL MOBILNY (BEZ SCROLLOWANIA) + KATEGORIE + AI FITTER
    ========================================================================= */
 
-(function injectStoreV13Styles() {
-  if (document.getElementById('tgnStoreV13Styles')) return;
+(function injectStoreV14Styles() {
+  const oldStyle = document.getElementById('tgnStoreV13Styles');
+  if (oldStyle) oldStyle.remove();
+  if (document.getElementById('tgnStoreV14Styles')) return;
+
   const style = document.createElement('style');
-  style.id = 'tgnStoreV13Styles';
+  style.id = 'tgnStoreV14Styles';
   style.textContent = `
     .store-ai-assistant-box {
       background: linear-gradient(145deg, rgba(16, 38, 44, 0.96), rgba(8, 20, 24, 0.98));
@@ -39,7 +42,6 @@
       font-size: 0.76rem; font-weight: 800; cursor: pointer; white-space: nowrap;
     }
 
-    /* Pasek zaufania Trusted Shops + Baner Kod Rabatowy RABAT3 */
     .trusted-promo-bar {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;
       background: linear-gradient(90deg, rgba(250, 204, 21, 0.14), rgba(74, 222, 128, 0.12));
@@ -50,7 +52,6 @@
       border: 1px solid rgba(250, 204, 21, 0.5); padding: 4px 10px; border-radius: 20px; font-size: 0.74rem; font-weight: 800; color: #facc15;
     }
 
-    /* Rozwijana Szuflada Kategorii w stylu menu mobilnego PilkiGolfowe.pl */
     .category-Accordion-list {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.45rem; margin-bottom: 1.1rem;
     }
@@ -64,26 +65,46 @@
     }
     .cat-menu-item span.arrow { opacity: 0.6; font-size: 0.7rem; }
 
-    /* Modal Newslettera i Kodu Rabatowego RABAT3 ("3 jak Par 3") */
-    .promo-modal-backdrop {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.78); backdrop-filter: blur(8px);
-      display: flex; align-items: center; justify-content: center; z-index: 350; padding: 1rem;
+    /* Modal przyklejony bezpośrednio do ekranu telefonu (w body, poza panelem z backdrop-filter) */
+    #tgnGlobalPromoOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 1rem;
     }
     .promo-modal-box {
-      width: 100%; max-width: 430px; background: linear-gradient(160deg, #102428, #081317);
-      border: 2px solid #4ade80; border-radius: 20px; padding: 1.75rem 1.5rem; text-align: center;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), inset 0 0 25px rgba(74, 222, 128, 0.15);
+      width: 100%;
+      max-width: 400px;
+      max-height: 88dvh;
+      overflow-y: auto;
+      background: linear-gradient(160deg, #102428, #081317);
+      border: 2px solid #4ade80;
+      border-radius: 20px;
+      padding: 1.4rem 1.25rem;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), inset 0 0 25px rgba(74, 222, 128, 0.15);
       position: relative;
+      margin: auto;
     }
     .promo-info-circle {
-      width: 64px; height: 64px; border-radius: 50%; border: 3px solid #38bdf8; color: #38bdf8;
-      display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800;
-      margin: 0 auto 1rem; background: rgba(56, 189, 248, 0.1);
+      width: 54px; height: 54px; border-radius: 50%; border: 3px solid #38bdf8; color: #38bdf8;
+      display: flex; align-items: center; justify-content: center; font-size: 1.7rem; font-weight: 800;
+      margin: 0 auto 0.75rem; background: rgba(56, 189, 248, 0.1);
     }
     .rabat-code-pill {
       display: inline-block; background: rgba(250, 204, 21, 0.18); border: 2px dashed #facc15;
-      color: #facc15; font-size: 1.2rem; font-weight: 900; padding: 0.45rem 1.2rem; border-radius: 10px;
-      letter-spacing: 1.5px; margin: 0.6rem 0; cursor: pointer;
+      color: #facc15; font-size: 1.15rem; font-weight: 900; padding: 0.4rem 1.1rem; border-radius: 10px;
+      letter-spacing: 1.5px; margin: 0.5rem 0; cursor: pointer;
     }
 
     .store-admin-add-box {
@@ -107,6 +128,7 @@
       .store-add-grid { grid-template-columns: 1fr; }
       .store-ai-input-row { flex-direction: column; }
       .store-ai-input-row button { padding: 0.55rem; }
+      .promo-modal-box { padding: 1.15rem 1rem; max-width: 92vw; }
     }
   `;
   document.head.appendChild(style);
@@ -116,7 +138,6 @@ const StoreComponent = {
   previewTimer: null,
 
   ensureStoreDataInitialized: () => {
-    // Pełna lista kategorii odwzorowująca menu z PilkiGolfowe.pl + GolfBrothers.pl
     AppData.storeCategories = [
       { id: "ALL", label: "Wszystkie kategorie", icon: "🏬" },
       { id: "PILKI", label: "Piłki do golfa (Nowe & Lake Balls)", icon: "⚪" },
@@ -133,7 +154,6 @@ const StoreComponent = {
       { id: "AKCESORIA", label: "Akcesoria dla golfistów", icon: "🧤" }
     ];
 
-    // Dodatkowe produkty dla nowych kategorii z PilkiGolfowe.pl (wstrzykiwane raz, jeśli jeszcze ich nie ma)
     const extraProducts = [
       {
         id: 251, section: "BALLS", cat: "PERSONALIZACJA", brand: "Titleist", flex: "N/A", hand: "ALL", loft: "Tuzin (12 szt.) + Twój Nadruk",
@@ -201,9 +221,8 @@ const StoreComponent = {
     if (typeof AppData.storeState.aiAssistantOpen === 'undefined') AppData.storeState.aiAssistantOpen = true;
     if (typeof AppData.storeState.addProductOpen === 'undefined') AppData.storeState.addProductOpen = false;
     if (typeof AppData.storeState.promoModalMode === 'undefined') {
-      // Pokaż automatycznie przy pierwszym wejściu okienko informacyjne "RABAT3" lub Newsletter
       const alreadySeen = sessionStorage.getItem('tgn_promo_seen');
-      AppData.storeState.promoModalMode = alreadySeen ? null : 'RABAT3'; // null | 'NEWSLETTER' | 'RABAT3'
+      AppData.storeState.promoModalMode = alreadySeen ? null : 'RABAT3';
     }
     if (typeof AppData.storeState.discountCodeApplied === 'undefined') {
       AppData.storeState.discountCodeApplied = false;
@@ -218,7 +237,61 @@ const StoreComponent = {
     }
   },
 
-  // Inteligentne dopasowanie produktów do nowych kategorii z PilkiGolfowe.pl
+  // Renderuje okienko reklamowe bezpośrednio w document.body, dzięki czemu na telefonie jest zawsze na środku ekranu bez scrollowania!
+  syncGlobalPromoModal: () => {
+    let overlay = document.getElementById('tgnGlobalPromoOverlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'tgnGlobalPromoOverlay';
+      overlay.onclick = () => StoreComponent.closePromoModal();
+      document.body.appendChild(overlay);
+    }
+
+    const st = AppData.storeState;
+    const isStoreActive = document.querySelector('#mainNav button.active')?.dataset?.tab === 'sklep';
+
+    if (!st || !st.promoModalMode || !isStoreActive) {
+      overlay.style.display = 'none';
+      return;
+    }
+
+    if (st.promoModalMode === 'RABAT3') {
+      overlay.innerHTML = `
+        <div class="promo-modal-box" onclick="event.stopPropagation()">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <span style="font-size:0.82rem; font-weight:800; color:var(--accent); text-transform:uppercase; border-bottom:2px solid var(--accent); padding-bottom:2px;">Informacja</span>
+            <button style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:30px; height:30px; border-radius:50%; font-size:1rem; cursor:pointer;" onclick="StoreComponent.closePromoModal()">✕</button>
+          </div>
+          <div class="promo-info-circle">i</div>
+          <h3 style="font-size:1rem; color:#fff; margin-bottom:0.45rem; line-height:1.35;">Zrób zakupy w Sklepie TGN i odbierz 3% rabatu. <span style="color:var(--accent);">3 jak "Par 3"</span></h3>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.25rem;">Wpisz lub kliknij kod rabatowy:</p>
+          <div class="rabat-code-pill" onclick="StoreComponent.applyRabat3Code()">RABAT3</div>
+          <p style="font-size:0.75rem; color:#cbd5e1; margin-bottom:1rem; line-height:1.4;">przy składaniu zamówienia i zapłać mniej za wybrany sprzęt golfowy!</p>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
+            <button class="btn-primary" style="margin:0; padding:0.6rem;" onclick="StoreComponent.applyRabat3Code()">OK (Aktywuj -3%)</button>
+            <button class="btn-action" style="margin:0; padding:0.6rem;" onclick="StoreComponent.openPromoModal('NEWSLETTER')">📩 Newsletter</button>
+          </div>
+        </div>
+      `;
+      overlay.style.display = 'flex';
+    } else if (st.promoModalMode === 'NEWSLETTER') {
+      overlay.innerHTML = `
+        <div class="promo-modal-box" onclick="event.stopPropagation()">
+          <div style="display:flex; justify-content:flex-end; margin-bottom:0.2rem;">
+            <button style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:30px; height:30px; border-radius:50%; font-size:1rem; cursor:pointer;" onclick="StoreComponent.closePromoModal()">✕</button>
+          </div>
+          <h3 style="font-size:1.15rem; color:#fff; margin-bottom:0.5rem; line-height:1.3;">Dołącz do nas, aby otrzymywać aktualizacje! 📩</h3>
+          <p style="font-size:0.76rem; color:var(--text-muted); margin-bottom:0.9rem; line-height:1.45;">
+            Zapisz się podając swój adres e-mail, aby otrzymywać powiadomienia o dostawach używanych kijów CPO, piłek Lake Balls AAAA oraz kod <strong style="color:var(--gold);">RABAT3</strong>!
+          </p>
+          <input type="email" id="newsletterEmailInput" placeholder="Adres e-mail..." value="${AppData.user.email || ''}" style="width:100%; background:rgba(255,255,255,0.08); border:1px solid var(--glass-border); border-radius:8px; padding:0.65rem 0.85rem; color:#fff; font-size:0.82rem; margin-bottom:0.7rem; outline:none;">
+          <button class="btn-primary" style="margin:0; padding:0.65rem;" onclick="StoreComponent.submitNewsletter()">Zapisz mnie</button>
+        </div>
+      `;
+      overlay.style.display = 'flex';
+    }
+  },
+
   matchesCategory: (p, selectedCat) => {
     if (selectedCat === "ALL") return true;
     if (p.cat === selectedCat) return true;
@@ -232,6 +305,9 @@ const StoreComponent = {
   render: () => {
     StoreComponent.ensureStoreDataInitialized();
     const st = AppData.storeState;
+
+    // Zsynchronizuj okienko reklamowe bezpośrednio na ekranie telefonu (w body)
+    setTimeout(() => StoreComponent.syncGlobalPromoModal(), 10);
 
     let filtered = AppData.storeProducts.filter(p => {
       if (st.section !== "ALL" && p.section !== st.section) return false;
@@ -261,49 +337,13 @@ const StoreComponent = {
 
     const brandsList = [...new Set(AppData.storeProducts.map(p => p.brand))];
 
-    // --- OKIENKO POPUP: NEWSLETTER LUB INFORMACJA O KODZIE RABAT3 ("3 JAK PAR 3") ---
-    const promoModalHTML = st.promoModalMode === 'RABAT3' ? `
-      <div class="promo-modal-backdrop" onclick="StoreComponent.closePromoModal()">
-        <div class="promo-modal-box" onclick="event.stopPropagation()">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-            <span style="font-size:0.85rem; font-weight:800; color:var(--accent); text-transform:uppercase; border-bottom:2px solid var(--accent); padding-bottom:2px;">Informacja</span>
-            <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="StoreComponent.closePromoModal()">✕</span>
-          </div>
-          <div class="promo-info-circle">i</div>
-          <h3 style="font-size:1.05rem; color:#fff; margin-bottom:0.5rem;">Zrób zakupy w Sklepie TGN i odbierz 3% rabatu. <span style="color:var(--accent);">3 jak "Par 3"</span></h3>
-          <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:0.4rem;">Wpisz lub kliknij kod rabatowy:</p>
-          <div class="rabat-code-pill" onclick="StoreComponent.applyRabat3Code()">RABAT3</div>
-          <p style="font-size:0.78rem; color:#cbd5e1; margin-bottom:1.1rem;">przy składaniu zamówienia i zapłać mniej za wybrany sprzęt golfowy (nowy oraz używany CPO)!</p>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
-            <button class="btn-primary" style="margin:0;" onclick="StoreComponent.applyRabat3Code()">✓ Aktywuj kod RABAT3 (-3%)</button>
-            <button class="btn-action" style="margin:0;" onclick="StoreComponent.openPromoModal('NEWSLETTER')">📩 Zapisz na Newsletter</button>
-          </div>
-        </div>
-      </div>
-    ` : (st.promoModalMode === 'NEWSLETTER' ? `
-      <div class="promo-modal-backdrop" onclick="StoreComponent.closePromoModal()">
-        <div class="promo-modal-box" onclick="event.stopPropagation()">
-          <div style="display:flex; justify-content:flex-end;">
-            <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="StoreComponent.closePromoModal()">✕</span>
-          </div>
-          <h3 style="font-size:1.25rem; color:#fff; margin-bottom:0.6rem; line-height:1.3;">Dołącz do nas, aby otrzymywać aktualizacje! 📩</h3>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.45;">
-            Zapisz się podając swój adres e-mail, aby otrzymywać powiadomienia o nowych dostawach używanych kijów CPO, piłek Lake Balls AAAA oraz kod rabatowy <strong style="color:var(--gold);">RABAT3</strong>!
-          </p>
-          <input type="email" id="newsletterEmailInput" placeholder="Twój adres e-mail..." value="${AppData.user.email || ''}" style="width:100%; background:rgba(255,255,255,0.08); border:1px solid var(--glass-border); border-radius:8px; padding:0.7rem 0.9rem; color:#fff; font-size:0.85rem; margin-bottom:0.75rem; outline:none;">
-          <button class="btn-primary" style="margin:0; padding:0.75rem;" onclick="StoreComponent.submitNewsletter()">Zapisz mnie i odbierz kod -3%</button>
-        </div>
-      </div>
-    ` : '');
-
-    // --- PASEK TRUSTED SHOPS 4,95★ + SZYBKI DOSTĘP DO NEWSLETTERA I KODU RABAT3 ---
     const trustedPromoBarHTML = `
       <div class="trusted-promo-bar">
         <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
           <span class="trusted-badge-pill">🛡️ TRUSTED SHOP GUARANTEE • 4,95 ★</span>
           <span style="font-size:0.76rem; color:var(--text-main);">
             🎁 Akcja <strong style="color:var(--gold);">"3 jak Par 3"</strong> – odbierz <strong>3% rabatu</strong> z kodem <strong style="color:var(--accent); cursor:pointer; text-decoration:underline;" onclick="StoreComponent.applyRabat3Code()">RABAT3</strong>
-            ${st.discountCodeApplied ? '<span style="color:var(--accent); font-weight:800; margin-left:6px;">(✓ AKTYWNY W KOSZYKU!)</span>' : ''}
+            ${st.discountCodeApplied ? '<span style="color:var(--accent); font-weight:800; margin-left:6px;">(✓ AKTYWNY!)</span>' : ''}
           </span>
         </div>
         <div style="display:flex; gap:0.45rem;">
@@ -313,7 +353,6 @@ const StoreComponent = {
       </div>
     `;
 
-    // --- PANEL ASYSTENTA AI SKLEPU ---
     const aiAssistantHTML = st.aiAssistantOpen ? `
       <div class="store-ai-assistant-box">
         <div class="store-ai-header">
@@ -347,7 +386,6 @@ const StoreComponent = {
       </div>
     ` : '';
 
-    // --- KREATOR DODAWANIA NOWEGO PRODUKTU ---
     const defaultPreviewImg = ClubImageEngine.buildDirectSearchPhotoUrl("Titleist TSR3 Driver", 0);
     const addProductModalHTML = st.addProductOpen ? `
       <div class="store-admin-add-box">
@@ -430,7 +468,6 @@ const StoreComponent = {
       </div>
     ` : '';
 
-    // --- KOSZYK Z OBSŁUGĄ KODU RABATOWEGO RABAT3 (-3%) ---
     const cartDrawerHTML = (st.cartOpen || AppData.cart.length > 0) ? `
       <div class="cart-summary-bar" style="flex-direction:column; align-items:stretch;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
@@ -464,7 +501,6 @@ const StoreComponent = {
               </div>
             `).join('')}
 
-            <!-- Pole na kod rabatowy RABAT3 ("3 jak Par 3") -->
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem; margin-top:0.4rem; padding-top:0.5rem; border-top:1px solid rgba(255,255,255,0.08);">
               <div style="display:flex; gap:0.4rem; align-items:center;">
                 <input type="text" id="cartPromoCodeInput" placeholder="Kod rabatowy (np. RABAT3)" value="${st.discountCodeApplied ? 'RABAT3' : ''}" style="background:rgba(0,0,0,0.45); border:1px solid var(--gold); border-radius:6px; padding:0.35rem 0.65rem; color:#fff; font-size:0.75rem; width:165px;">
@@ -486,7 +522,6 @@ const StoreComponent = {
       </div>
     ` : '';
 
-    // --- KARTY PRODUKTÓW ---
     let productsHTML = filtered.length === 0 ? `
       <div style="grid-column: 1 / -1; text-align:center; padding: 2.5rem; background:rgba(0,0,0,0.25); border-radius:14px; border:1px dashed rgba(255,255,255,0.15);">
         <p style="font-size:0.95rem; color:var(--text-main); margin-bottom:0.5rem;">Brak produktów w tym widoku.</p>
@@ -568,8 +603,6 @@ const StoreComponent = {
 
     return `
       <section class="panel-3d" style="grid-column: span 2;">
-        ${promoModalHTML}
-
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem; margin-bottom:0.85rem;">
           <h2 style="margin:0;">
             <span>🛍️ TGN Pro Shop & Komis CPO (${AppData.storeProducts.length} produktów)</span>
@@ -592,7 +625,6 @@ const StoreComponent = {
         ${addProductModalHTML}
         ${cartDrawerHTML}
 
-        <!-- SIATKA WSZYSTKICH KATEGORII W STYLU MENU PILKIGOLFOWE.PL -->
         <div class="category-Accordion-list">
           ${AppData.storeCategories.map(catObj => {
             const countInCat = AppData.storeProducts.filter(p => StoreComponent.matchesCategory(p, catObj.id)).length;
@@ -605,7 +637,6 @@ const StoreComponent = {
           }).join('')}
         </div>
 
-        <!-- Pasek wyszukiwania i filtrów technicznych -->
         <div class="store-MultiFilter-bar">
           <input type="text" id="storeSearchInput" placeholder="🔍 Szukaj produktu (np. Qi10, Personalizowane Pro V1, Prezent, Mata Wellputt, Garmin R10)..." value="${st.search}" oninput="StoreComponent.setSearch(this.value)">
           
@@ -641,25 +672,25 @@ const StoreComponent = {
     `;
   },
 
-  // --- OBSŁUGA NEWSLETTERA I KODU RABATOWEGO RABAT3 ---
   openPromoModal: (mode) => {
     StoreComponent.ensureStoreDataInitialized();
     AppData.storeState.promoModalMode = mode;
-    app.switchTab('sklep');
+    StoreComponent.syncGlobalPromoModal();
   },
 
   closePromoModal: () => {
     sessionStorage.setItem('tgn_promo_seen', '1');
     AppData.storeState.promoModalMode = null;
-    app.switchTab('sklep');
+    StoreComponent.syncGlobalPromoModal();
   },
 
   applyRabat3Code: () => {
     sessionStorage.setItem('tgn_promo_seen', '1');
     AppData.storeState.discountCodeApplied = true;
     AppData.storeState.promoModalMode = null;
+    StoreComponent.syncGlobalPromoModal();
     app.switchTab('sklep');
-    app.showToast('🎉 Aktywowano kod RABAT3! Otrzymujesz 3% rabatu ("3 jak Par 3") na całe zamówienie!');
+    app.showToast('🎉 Aktywowano kod RABAT3! Otrzymujesz 3% rabatu ("3 jak Par 3")!');
   },
 
   checkCartPromoCode: () => {
@@ -684,11 +715,10 @@ const StoreComponent = {
     localStorage.setItem('tgn_newsletter_email', email);
     AppData.storeState.discountCodeApplied = true;
     AppData.storeState.promoModalMode = 'RABAT3';
-    app.switchTab('sklep');
-    app.showToast(`📩 Zapisano ${email} do Newslettera! Twój kod RABAT3 (-3%) został aktywowany!`);
+    StoreComponent.syncGlobalPromoModal();
+    app.showToast(`📩 Zapisano ${email}! Twój kod RABAT3 (-3%) został aktywowany!`);
   },
 
-  // --- LOGIKA ASYSTENTA AI SKLEPU ---
   toggleAiAssistant: () => {
     StoreComponent.ensureStoreDataInitialized();
     AppData.storeState.aiAssistantOpen = !AppData.storeState.aiAssistantOpen;
