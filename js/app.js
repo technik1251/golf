@@ -1,13 +1,21 @@
 /* =========================================================================
-   GŁÓWNY KONTROLER PRODUKCYJNY TGN v15.0 (AUTH + ADMIN CMS + TRWAŁA BAZA LOCALDB)
+   GŁÓWNY KONTROLER PRODUKCYJNY TGN v16.0 (js/app.js)
+   - Obsługa wysuwanej Szuflady Koszyka (Slide-Over Cart Drawer) z każdego miejsca
+   - Rozróżnienie konta Klienta i Właściciela (Admin CMS)
+   - Panel Zarządzania Zamówieniami + Eksport / Import bazy JSON pod serwer Online
+   - Trwały zapis wątków i komentarzy na Forum (LocalDB)
    ========================================================================= */
 
-// Wczytaj zapisane wątki z lokalnej bazy danych przy starcie
-(function initPersistentForumDB() {
+// Inicjalizacja trwałej bazy Forum oraz Koszyka przy starcie aplikacji
+(function initPersistentDatabase() {
   try {
     const savedForum = localStorage.getItem('tgn_forum_posts_db');
     if (savedForum) {
       AppData.forumPosts = JSON.parse(savedForum);
+    }
+    const savedCart = localStorage.getItem('tgn_persistent_cart');
+    if (savedCart) {
+      AppData.cart = JSON.parse(savedCart);
     }
   } catch (e) {}
 })();
@@ -18,7 +26,7 @@ const saveForumToDB = () => {
   } catch (e) {}
 };
 
-// Komponent Panelu Administratora (Widoczny tylko dla właściciela sklepu)
+// Komponent Panelu Administratora (TGN CMS - zarządzanie sklepem, zamówieniami i bazą)
 const AdminDashboardComponent = {
   render: () => {
     const orders = JSON.parse(localStorage.getItem('tgn_orders_db') || '[]');
@@ -26,21 +34,27 @@ const AdminDashboardComponent = {
     const totalRevenue = orders.reduce((s, o) => s + (o.total || 0), 0);
 
     const ordersHTML = orders.length === 0 ? `
-      <p style="font-size:0.8rem; color:var(--text-muted); padding:1rem; background:rgba(0,0,0,0.25); border-radius:8px;">Brak złożonych zamówień w bazie. Złóż testowe zamówienie w zakładce Sklep, aby zobaczyć je tutaj.</p>
+      <div style="font-size:0.8rem; color:var(--text-muted); padding:1.2rem; background:rgba(0,0,0,0.25); border-radius:10px; border:1px dashed rgba(255,255,255,0.12);">
+        Brak złożonych zamówień w bazie. Dodaj dowolny produkt do koszyka w zakładce <strong>🛍️ Sklep</strong> i przejdź przez formularz zamówienia, aby przetestować obieg dokumentów.
+      </div>
     ` : orders.map((o, idx) => `
       <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:1rem; margin-bottom:0.75rem;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.4rem;">
           <strong style="color:var(--gold); font-size:0.9rem;">Zamówienie #${o.orderId} • ${o.date}</strong>
-          <span style="background:rgba(74,222,128,0.18); color:var(--accent); padding:3px 9px; border-radius:6px; font-size:0.72rem; font-weight:700;">${o.status}</span>
+          <div style="display:flex; gap:0.4rem; align-items:center;">
+            <span style="background:rgba(74,222,128,0.18); color:var(--accent); padding:3px 9px; border-radius:6px; font-size:0.72rem; font-weight:700;">${o.status}</span>
+            <button class="btn-mini-tool" onclick="app.changeOrderStatus(${idx})">🔄 Zmień status</button>
+          </div>
         </div>
         <p style="font-size:0.78rem; color:var(--text-main);"><strong>Klient:</strong> ${o.customerName} | <strong>Tel:</strong> ${o.phone} | <strong>E-mail:</strong> ${o.email}</p>
         <p style="font-size:0.76rem; color:var(--text-muted);"><strong>Adres dostawy:</strong> ${o.address} (${o.delivery}) | <strong>Faktura NIP:</strong> ${o.nip}</p>
-        <p style="font-size:0.75rem; color:var(--accent); margin-top:0.35rem;">
-          <strong>Zakupione pozycje:</strong> ${o.items.map(i => `${i.name} (${i.qty || 1}x ${i.price} PLN)`).join(', ')}
-        </p>
+        <div style="font-size:0.75rem; color:var(--accent); margin-top:0.45rem; background:rgba(0,0,0,0.3); padding:0.5rem 0.75rem; border-radius:8px;">
+          <strong>Zakupione pozycje:</strong><br>
+          ${o.items.map(i => `• ${i.name} [${i.variant || 'Standard'}] ${i.customPrint ? `(Nadruk: "${i.customPrint}")` : ''} — ${i.qty || 1} szt. x ${i.price} PLN`).join('<br>')}
+        </div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem; padding-top:0.4rem; border-top:1px solid rgba(255,255,255,0.06);">
-          <span style="font-size:0.72rem; color:var(--text-muted);">Uwagi klienta: ${o.notes}</span>
-          <strong style="font-size:1rem; color:var(--gold);">Kwota: ${o.total} PLN</strong>
+          <span style="font-size:0.72rem; color:var(--text-muted);">Uwagi: ${o.notes}</span>
+          <strong style="font-size:1.05rem; color:var(--gold);">Suma: ${o.total} PLN</strong>
         </div>
       </div>
     `).join('');
@@ -48,18 +62,26 @@ const AdminDashboardComponent = {
     return `
       <section class="panel-3d" style="grid-column: span 2; border-color:var(--gold);">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1.2rem;">
-          <h2 style="margin:0; color:var(--gold);">⚙️ PANEL ADMINISTRATORA SKLEPU & FORUM (TGN CMS)</h2>
+          <h2 style="margin:0; color:var(--gold);">⚙️ PANEL ADMINISTRATORA SKLEPU & FORUM (TGN CMS v16.0)</h2>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button class="btn-action" style="width:auto; margin:0; padding:0.45rem 0.9rem;" onclick="app.switchTab('sklep'); setTimeout(() => StoreComponent.toggleAddProduct(), 80);">➕ Dodaj nowy produkt</button>
-            <button class="btn-action" style="width:auto; margin:0; padding:0.45rem 0.9rem; border-color:var(--gold); color:var(--gold);" onclick="app.exportDatabaseJson()">💾 Eksportuj bazę do pliku JSON (Pod serwer Online)</button>
+            <button class="btn-action" style="width:auto; margin:0; padding:0.45rem 0.9rem; background:var(--accent); color:#052e16;" onclick="app.switchTab('sklep'); setTimeout(() => StoreComponent.startAddNewProduct(), 60);">
+              ➕ Dodaj nowy produkt do sklepu
+            </button>
+            <button class="btn-action" style="width:auto; margin:0; padding:0.45rem 0.9rem; border-color:var(--gold); color:var(--gold);" onclick="app.exportDatabaseJson()">
+              💾 Eksportuj bazę JSON (Backup)
+            </button>
+            <label class="btn-action" style="width:auto; margin:0; padding:0.45rem 0.9rem; border-color:#38bdf8; color:#38bdf8; cursor:pointer; display:inline-block;">
+              📂 Wgraj bazę JSON
+              <input type="file" accept=".json" style="display:none;" onchange="app.importDatabaseJson(event)">
+            </label>
           </div>
         </div>
 
         <div class="forum-stats-bar">
-          <div><div class="forum-stat-num">${AppData.storeProducts.length}</div><div class="forum-stat-lbl">Produktów w sklepie</div></div>
+          <div><div class="forum-stat-num">${AppData.storeProducts.length}</div><div class="forum-stat-lbl">Produktów w katalogu</div></div>
           <div><div class="forum-stat-num" style="color:var(--gold);">${orders.length}</div><div class="forum-stat-lbl">Złożonych zamówień</div></div>
-          <div><div class="forum-stat-num">${totalRevenue} PLN</div><div class="forum-stat-lbl">Suma sprzedaży</div></div>
-          <div><div class="forum-stat-num" style="color:#38bdf8;">${subscribers.length}</div><div class="forum-stat-lbl">Zapisanych na Newsletter</div></div>
+          <div><div class="forum-stat-num">${totalRevenue} PLN</div><div class="forum-stat-lbl">Przychód ze sprzedaży</div></div>
+          <div><div class="forum-stat-num" style="color:#38bdf8;">${subscribers.length}</div><div class="forum-stat-lbl">Subskrybentów Newslettera</div></div>
         </div>
 
         <h3 style="color:var(--accent); font-size:0.88rem; margin-bottom:0.65rem; text-transform:uppercase;">📦 Lista Zamówień Klientów (${orders.length})</h3>
@@ -74,12 +96,17 @@ const AdminDashboardComponent = {
   }
 };
 
+// Moduł Autoryzacji i Ról Użytkownika (Klient / Administrator)
 const auth = {
   switchAuthMode: (mode) => {
     document.getElementById('tabLoginBtn').classList.toggle('active', mode === 'login');
     document.getElementById('tabRegisterBtn').classList.toggle('active', mode === 'register');
     document.getElementById('loginForm').style.display = mode === 'login' ? 'block' : 'none';
     document.getElementById('registerForm').style.display = mode === 'register' ? 'block' : 'none';
+  },
+
+  loginDemo: () => {
+    auth.loginAsClient();
   },
 
   loginAsClient: () => {
@@ -137,7 +164,7 @@ const auth = {
     auth.updateHeaderBar();
     const currentTab = document.querySelector('#mainNav button.active')?.dataset?.tab || 'sklep';
     app.switchTab(currentTab === 'admin' && AppData.user.role !== 'ADMIN' ? 'sklep' : currentTab);
-    app.showToast(AppData.user.role === 'ADMIN' ? '🔑 Włączono tryb Administratora (Edycja sklepu aktywna)' : '👤 Przełączono na widok Klienta');
+    app.showToast(AppData.user.role === 'ADMIN' ? '🔑 Włączono tryb Administratora (Edycja sklepu i CMS aktywne)' : '👤 Przełączono na widok Klienta');
   },
 
   enterApp: (msg) => {
@@ -153,7 +180,7 @@ const auth = {
   },
 
   updateHeaderBar: () => {
-    const cartCount = AppData.cart.reduce((s, i) => s + (i.qty || 1), 0);
+    const cartCount = (AppData.cart || []).reduce((s, i) => s + (i.qty || 1), 0);
     const isAdmin = AppData.user && AppData.user.role === 'ADMIN';
     const adminNavBtn = document.getElementById('navAdminBtn');
     if (adminNavBtn) adminNavBtn.style.display = isAdmin ? 'inline-block' : 'none';
@@ -162,10 +189,16 @@ const auth = {
       <button class="btn-mini-tool" style="border-color:${isAdmin ? 'var(--gold)' : 'rgba(255,255,255,0.2)'}; color:${isAdmin ? 'var(--gold)' : 'var(--text-muted)'};" onclick="auth.toggleAdminRoleQuick()">
         ${isAdmin ? '⚙️ Tryb: ADMIN' : '👤 Widok: KLIENT'}
       </button>
-      <span style="font-size: 0.74rem; color: var(--gold); font-weight:800; cursor:pointer;" onclick="app.switchTab('sklep'); StoreComponent.toggleCartDrawer();">🛒 Koszyk (${cartCount})</span>
+      <span style="font-size: 0.76rem; color: var(--gold); font-weight:800; cursor:pointer; background:rgba(250,204,21,0.14); padding:4px 10px; border-radius:6px; border:1px solid rgba(250,204,21,0.45);" onclick="StoreComponent.openCartDrawer()">
+        🛒 Koszyk (${cartCount})
+      </span>
       <span style="font-size: 0.72rem; color: var(--accent); font-weight:700;">● ${AppData.user.name.split(' ')[0]}</span>
       <button class="btn-logout" onclick="auth.logout()">Wyloguj</button>
     `;
+
+    if (typeof StoreComponent !== 'undefined' && StoreComponent.syncGlobalCartDrawer) {
+      StoreComponent.syncGlobalCartDrawer();
+    }
   },
 
   logout: () => {
@@ -177,11 +210,16 @@ const auth = {
     if (footer) footer.style.display = 'none';
     const promoOverlay = document.getElementById('tgnGlobalPromoOverlay');
     if (promoOverlay) promoOverlay.style.display = 'none';
+    const cartBackdrop = document.getElementById('tgnCartDrawerBackdrop');
+    if (cartBackdrop) cartBackdrop.style.display = 'none';
+    const fab = document.getElementById('tgnFloatingCartBtn');
+    if (fab) fab.style.display = 'none';
     document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Sklep Pro Shop & Społeczność</span>`;
     app.showToast('Wylogowano z portalu TGN');
   }
 };
 
+// Główny obiekt sterujący aplikacją
 const app = {
   previewTimer: null,
 
@@ -213,8 +251,27 @@ const app = {
     document.querySelectorAll('#mainNav button').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.tab === tabName);
     });
+
+    if (typeof StoreComponent !== 'undefined' && StoreComponent.syncGlobalCartDrawer) {
+      StoreComponent.syncGlobalCartDrawer();
+    }
   },
 
+  // Zmiana statusu realizacji zamówienia w Panelu Admina
+  changeOrderStatus: (orderIdx) => {
+    try {
+      const orders = JSON.parse(localStorage.getItem('tgn_orders_db') || '[]');
+      if (!orders[orderIdx]) return;
+      const statuses = ['Opłacone (W przygotowaniu)', 'Wysłane Kurierem DPD', 'Gotowe do odbioru (TrackMan)', 'Zrealizowane ✓'];
+      const currIdx = statuses.indexOf(orders[orderIdx].status);
+      orders[orderIdx].status = statuses[(currIdx + 1) % statuses.length];
+      localStorage.setItem('tgn_orders_db', JSON.stringify(orders));
+      app.switchTab('admin');
+      app.showToast(`Zmieniono status zamówienia #${orders[orderIdx].orderId} na: ${orders[orderIdx].status}`);
+    } catch (e) {}
+  },
+
+  // Eksport całej przygotowanej bazy (produkty, wątki forum, zamówienia) do pliku JSON
   exportDatabaseJson: () => {
     const dbDump = {
       exportedAt: new Date().toISOString(),
@@ -227,9 +284,37 @@ const app = {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `tgn_database_backup_${Date.now()}.json`;
+    a.download = `tgn_baza_sklep_forum_${Date.now()}.json`;
     a.click();
-    app.showToast('💾 Pobrano pełną bazę danych sklepu i forum (.json) gotową do migracji online!');
+    app.showToast('💾 Pobrano pełną bazę danych sklepu i forum (.json)!');
+  },
+
+  // Import bazy danych z pliku JSON
+  importDatabaseJson: (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        if (parsed.products && Array.isArray(parsed.products)) {
+          AppData.storeProducts = parsed.products;
+          localStorage.setItem('tgn_custom_store_products', JSON.stringify(parsed.products));
+        }
+        if (parsed.forumPosts && Array.isArray(parsed.forumPosts)) {
+          AppData.forumPosts = parsed.forumPosts;
+          saveForumToDB();
+        }
+        if (parsed.orders && Array.isArray(parsed.orders)) {
+          localStorage.setItem('tgn_orders_db', JSON.stringify(parsed.orders));
+        }
+        app.switchTab('admin');
+        app.showToast('✅ Pomyślnie wgrano bazę produktów i postów z pliku JSON!');
+      } catch (err) {
+        app.showToast('⚠️ Błąd odczytu pliku JSON!');
+      }
+    };
+    reader.readAsText(file);
   },
 
   openLegalModal: (docType) => {
@@ -337,6 +422,17 @@ const app = {
     auth.updateHeaderBar();
     app.switchTab('wydarzenia');
     app.showToast(ev.registered ? `Zapisano na: ${ev.title} (${ev.xpReward})` : `Wypisano z wydarzenia: ${ev.title}`);
+  },
+
+  // Aliasy dla kompatybilności wstecznej ze sklepem
+  filterStore: (cat) => {
+    if (typeof StoreComponent !== 'undefined') StoreComponent.setCategory(cat);
+  },
+  addToCart: (prodId, useTradeIn) => {
+    if (typeof StoreComponent !== 'undefined') StoreComponent.addItem(prodId, useTradeIn);
+  },
+  checkoutStore: () => {
+    if (typeof StoreComponent !== 'undefined') StoreComponent.openCartDrawer();
   },
 
   toggleAddClubLive: () => {
@@ -500,6 +596,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (savedSession) {
     try {
       AppData.user = JSON.parse(savedSession);
+      if (!AppData.user.role) AppData.user.role = 'CLIENT';
       auth.enterApp();
     } catch (e) {}
   }
