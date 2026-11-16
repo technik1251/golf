@@ -1,24 +1,158 @@
 /* =========================================================================
-   MODUŁ SKLEPU TGN v15.0 (PRODUKCYJNY): PEŁNY CHECKOUT + GABARYTY + UKRYTY ADMIN + AI FITTER
+   PRODUKCYJNY MODUŁ SKLEPU TGN v16.0:
+   - Wysuwana Szuflada Koszyka (Slide-Over Drawer) działająca zawsze i wszędzie
+   - Wybór wariantów (Loft / Flex / Rozmiar / Nadruk) przed dodaniem do koszyka
+   - Pełny Checkout (Adres, InPost/DPD Dłużyca, BLIK/P24, Kod RABAT3 -3%)
+   - Menedżer Asortymentu CMS (Dodawanie + Edycja + Usuwanie + Eksport/Import)
    ========================================================================= */
 
-(function injectStoreV15Styles() {
-  ['tgnStoreAiStyles', 'tgnStoreV13Styles', 'tgnStoreV14Styles'].forEach(id => {
+(function injectStoreV16Styles() {
+  ['tgnStoreAiStyles', 'tgnStoreV13Styles', 'tgnStoreV14Styles', 'tgnStoreV15Styles'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.remove();
   });
-  if (document.getElementById('tgnStoreV15Styles')) return;
+  if (document.getElementById('tgnStoreV16Styles')) return;
 
   const style = document.createElement('style');
-  style.id = 'tgnStoreV15Styles';
+  style.id = 'tgnStoreV16Styles';
   style.textContent = `
+    /* Wysuwana Szuflada Koszyka (Slide-Over Cart Drawer) */
+    #tgnCartDrawerBackdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 9990;
+      display: none;
+      justify-content: flex-end;
+    }
+    .cart-drawer-panel {
+      width: 100%;
+      max-width: 480px;
+      height: 100vh;
+      height: 100dvh;
+      background: linear-gradient(165deg, #0d1f24, #061014);
+      border-left: 2px solid var(--accent);
+      display: flex;
+      flex-direction: column;
+      box-shadow: -15px 0 50px rgba(0, 0, 0, 0.9);
+      animation: slideInRight 0.25s ease-out;
+    }
+    @keyframes slideInRight {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    .cart-drawer-header {
+      padding: 1.1rem 1.25rem;
+      background: rgba(0, 0, 0, 0.45);
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .cart-drawer-footer {
+      padding: 1rem 1.25rem;
+      background: rgba(5, 14, 18, 0.96);
+      border-top: 1px solid var(--glass-border);
+    }
+    .cart-item-row {
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 0.75rem;
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    .cart-item-thumb {
+      width: 60px;
+      height: 60px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--glass-border);
+    }
+    .cart-item-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 3px;
+    }
+
+    /* Pływający przycisk koszyka w prawym dolnym rogu (FAB) */
+    #tgnFloatingCartBtn {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      background: var(--accent);
+      color: #052e16;
+      border: 2px solid #ffffff;
+      border-radius: 30px;
+      padding: 0.7rem 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 900;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.75);
+      cursor: pointer;
+      z-index: 8500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.2s;
+    }
+    #tgnFloatingCartBtn:hover {
+      transform: scale(1.06);
+    }
+
+    /* Selektory wariantów na karcie produktu */
+    .prod-variant-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 0.45rem 0.6rem;
+      margin-bottom: 0.55rem;
+    }
+    .prod-variant-box label {
+      display: block;
+      font-size: 0.62rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .prod-variant-box select, .prod-variant-box input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(114, 214, 150, 0.35);
+      border-radius: 5px;
+      padding: 0.35rem 0.5rem;
+      color: #fff;
+      font-size: 0.74rem;
+      outline: none;
+    }
+    .prod-variant-box select option {
+      background: #091519;
+      color: #fff;
+    }
+
+    /* Asystent AI & Pasek Trusted Shop */
     .store-ai-assistant-box {
       background: linear-gradient(145deg, rgba(16, 38, 44, 0.96), rgba(8, 20, 24, 0.98));
       border: 2px solid rgba(56, 189, 248, 0.55);
       border-radius: 16px;
       padding: 1.1rem 1.25rem;
       margin-bottom: 1.2rem;
-      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.55), inset 0 0 22px rgba(56, 189, 248, 0.12);
     }
     .store-ai-header {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
@@ -28,7 +162,7 @@
       width: 10px; height: 10px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 12px #4ade80; display: inline-block;
     }
     .store-ai-messages {
-      max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; padding-right: 4px;
+      max-height: 140px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem;
     }
     .store-ai-msg { font-size: 0.78rem; line-height: 1.45; padding: 0.55rem 0.85rem; border-radius: 10px; }
     .store-ai-msg.bot { background: rgba(56, 189, 248, 0.12); border-left: 3px solid #38bdf8; color: #f1f5f9; }
@@ -65,9 +199,8 @@
     .cat-menu-item:hover, .cat-menu-item.active {
       background: rgba(74, 222, 128, 0.18); border-color: #4ade80; color: #4ade80; font-weight: 700;
     }
-    .cat-menu-item span.arrow { opacity: 0.6; font-size: 0.7rem; }
 
-    /* Modal przyklejony bezpośrednio do ekranu telefonu */
+    /* Modal Promocyjny */
     #tgnGlobalPromoOverlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
       background: rgba(0, 0, 0, 0.82); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -77,8 +210,7 @@
       width: 100%; max-width: 400px; max-height: 88dvh; overflow-y: auto;
       background: linear-gradient(160deg, #102428, #081317); border: 2px solid #4ade80;
       border-radius: 20px; padding: 1.4rem 1.25rem; text-align: center;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), inset 0 0 25px rgba(74, 222, 128, 0.15);
-      position: relative; margin: auto;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9); position: relative; margin: auto;
     }
     .promo-info-circle {
       width: 54px; height: 54px; border-radius: 50%; border: 3px solid #38bdf8; color: #38bdf8;
@@ -91,29 +223,7 @@
       letter-spacing: 1.5px; margin: 0.5rem 0; cursor: pointer;
     }
 
-    /* Formularz Checkoutu (Produkcyjny Koszyk i Zamówienie) */
-    .checkout-form-box {
-      background: rgba(5, 14, 18, 0.95);
-      border: 2px solid var(--accent);
-      border-radius: 14px;
-      padding: 1.2rem;
-      margin-top: 0.9rem;
-    }
-    .checkout-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.7rem;
-      margin-bottom: 0.8rem;
-    }
-    .checkout-grid label {
-      display: block; font-size: 0.66rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 3px;
-    }
-    .checkout-grid input, .checkout-grid select {
-      width: 100%; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 7px; padding: 0.55rem 0.7rem; color: #fff; font-size: 0.78rem; outline: none;
-    }
-    .checkout-grid input:focus, .checkout-grid select:focus { border-color: var(--accent); }
-
+    /* Kreator dodawania/edycji towaru */
     .store-admin-add-box {
       background: rgba(8, 22, 26, 0.98); border: 2px solid var(--gold); border-radius: 16px;
       padding: 1.15rem; margin-bottom: 1.25rem; box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
@@ -124,17 +234,18 @@
       width: 100%; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 6px; padding: 0.45rem 0.6rem; color: #fff; font-size: 0.75rem; outline: none;
     }
-    .store-add-grid select option, .checkout-grid select option { background: #091519; color: #fff; }
+    .store-add-grid select option { background: #091519; color: #fff; }
 
     @media (max-width: 1024px) {
       .category-Accordion-list { grid-template-columns: repeat(2, 1fr); }
-      .store-add-grid, .checkout-grid { grid-template-columns: repeat(2, 1fr); }
+      .store-add-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 768px) {
-      .category-Accordion-list, .store-add-grid, .checkout-grid { grid-template-columns: 1fr; gap: 0.4rem; }
+      .category-Accordion-list, .store-add-grid { grid-template-columns: 1fr; gap: 0.4rem; }
       .store-ai-input-row { flex-direction: column; }
       .store-ai-input-row button { padding: 0.55rem; }
-      .promo-modal-box { padding: 1.15rem 1rem; max-width: 92vw; }
+      .cart-drawer-panel { max-width: 100vw; }
+      #tgnFloatingCartBtn { bottom: 15px; right: 15px; padding: 0.6rem 1rem; font-size: 0.78rem; }
     }
   `;
   document.head.appendChild(style);
@@ -142,6 +253,7 @@
 
 const StoreComponent = {
   previewTimer: null,
+  editingProductId: null,
 
   ensureStoreDataInitialized: () => {
     AppData.storeCategories = [
@@ -166,8 +278,9 @@ const StoreComponent = {
         condition: "Nowe z personalizacją UV", condDetails: "Nadruk Twojego logo, inicjałów lub numeru w cenie!", tag: "PERSONALIZACJA PIŁEK", tagGold: true,
         name: "Personalizowane Piłki Titleist Pro V1 z Twoim Logo / Tekstem (12 szt.)",
         spec: "Trwały nadruk UV w pełnym kolorze • Czas realizacji: 48h",
-        desc: "Idealne na turnieje firmowe lub jako unikalny identyfikator na polu. Wyślij tekst lub grafikę po zakupie.",
-        oldPrice: 299, price: 249, tradeInPrice: 249, stock: 30, imgUrl: null
+        desc: "Idealne na turnieje firmowe lub jako unikalny identyfikator na polu. Wpisz tekst nadruku przed dodaniem do koszyka.",
+        oldPrice: 299, price: 249, tradeInPrice: 249, stock: 30, imgUrl: null,
+        variants: ["Pro V1 (Białe)", "Pro V1x (Białe)", "Pro V1 High Optic Yellow"]
       },
       {
         id: 252, section: "NEW", cat: "PREZENTY", brand: "Titleist", flex: "N/A", hand: "ALL", loft: "Box Prezentowy VIP",
@@ -175,15 +288,17 @@ const StoreComponent = {
         name: "Golfowy Zestaw Prezentowy VIP (Piłki Pro V1 + Pitchmark + Marker + Ręcznik)",
         spec: "Gotowy upominek dla każdego golfisty • Możliwość dodania dedykacji",
         desc: "Kompletny zestaw prezentowy najwyższej jakości, który ucieszy zarówno początkującego, jak i niskiego handicapowca.",
-        oldPrice: 390, price: 319, tradeInPrice: 319, stock: 12, imgUrl: null
+        oldPrice: 390, price: 319, tradeInPrice: 319, stock: 12, imgUrl: null,
+        variants: ["Zestaw Standard VIP", "Zestaw VIP + Kartka z dedykacją"]
       },
       {
-        id: 253, section: "NEW", cat: "TRENING", brand: "Wellputt", flex: "N/A", hand: "ALL", loft: "Długość: 3 metry",
+        id: 253, section: "NEW", cat: "TRENING", brand: "Wellputt", flex: "N/A", hand: "ALL", loft: "Długość: 3m / 4m",
         condition: "Fabrycznie nowa", condDetails: "Prędkość greenu 10 / 11.5 ft • Aplikacja treningowa", tag: "TRENING W DOMU", tagGold: false,
-        name: "Mata Treningowa do Putowania Wellputt Mat 3m Pro (10/11.5 ft)",
+        name: "Mata Treningowa do Putowania Wellputt Mat Pro (10/11.5 ft)",
         spec: "Zatwierdzona przez trenera Camerona McCormicka • Ponad 50 ćwiczeń",
         desc: "Najlepsza mata treningowa odwzorowująca realną prędkość szybkiego greenu turniejowego.",
-        oldPrice: 790, price: 649, tradeInPrice: 450, stock: 7, imgUrl: null
+        oldPrice: 790, price: 649, tradeInPrice: 450, stock: 7, imgUrl: null,
+        variants: ["Długość 3 metry (649 PLN)", "Długość 4 metry Pro"]
       },
       {
         id: 254, section: "NEW", cat: "TRENING", brand: "SuperSpeed", flex: "N/A", hand: "ALL", loft: "Zestaw 3 trenażerów",
@@ -191,7 +306,8 @@ const StoreComponent = {
         name: "Trenażer Prędkości Swingu SuperSpeed Golf Training System (3 kije)",
         spec: "3 specjalnie wyważone shafty (Lekki, Średni, Ciężki) + Program treningowy",
         desc: "Trening overspeed pozwoli Ci przejść z obecnych 96 mph na ponad 102 mph prędkości główki drivera!",
-        oldPrice: 1090, price: 899, tradeInPrice: 590, stock: 5, imgUrl: null
+        oldPrice: 1090, price: 899, tradeInPrice: 590, stock: 5, imgUrl: null,
+        variants: ["Zestaw Męski (Men's Set)", "Zestaw Senior / Damski"]
       },
       {
         id: 255, section: "USED", cat: "UZYWANY_SPRZET", brand: "Garmin", flex: "N/A", hand: "ALL", loft: "Launch Monitor + GPS",
@@ -199,7 +315,8 @@ const StoreComponent = {
         name: "Używany Radar / Symulator Golfowy Garmin Approach R10 Launch Monitor",
         spec: "Mierzy prędkość kija, piłki, Smash Factor, Spin i kąt natarcia • Przenośny",
         desc: "Przetestowany egzemplarz komisowy. Pozwala grać na wirtualnych polach na driving range lub w domu.",
-        oldPrice: 2590, price: 1690, tradeInPrice: 890, stock: 1, imgUrl: null
+        oldPrice: 2590, price: 1690, tradeInPrice: 890, stock: 1, imgUrl: null,
+        variants: ["Egzemplarz CPO #1 (Stan 9/10)"]
       },
       {
         id: 256, section: "NEW", cat: "AKCESORIA", brand: "FootJoy", flex: "N/A", hand: "RH", loft: "2-Pack (M / ML / L)",
@@ -207,7 +324,8 @@ const StoreComponent = {
         name: "Rękawiczki Golfowe FootJoy WeatherSof (2-Pack) + Zestaw Tee Drewnianych",
         spec: "Na lewą dłoń (dla praworęcznych RH) • Oddychający materiał FiberSof",
         desc: "Najlepiej sprzedająca się rękawiczka golfowa na świecie w pakiecie z 50 drewnianymi kołeczkami tee.",
-        oldPrice: 149, price: 119, tradeInPrice: 119, stock: 25, imgUrl: null
+        oldPrice: 149, price: 119, tradeInPrice: 119, stock: 25, imgUrl: null,
+        variants: ["Rozmiar S (Na lewą dłoń RH)", "Rozmiar M (Na lewą dłoń RH)", "Rozmiar ML (Na lewą dłoń RH)", "Rozmiar L (Na lewą dłoń RH)", "Rozmiar XL (Na lewą dłoń RH)"]
       }
     ];
 
@@ -217,13 +335,17 @@ const StoreComponent = {
       }
     });
 
-    // Wczytaj zapisane lokalnie produkty dodane przez Admina oraz zaktualizowane stany magazynowe
+    // Wczytaj zapisany koszyk z localStorage, aby nie znikał po odświeżeniu strony
     try {
+      const savedCart = localStorage.getItem('tgn_persistent_cart');
+      if (savedCart && (!AppData.cart || AppData.cart.length === 0)) {
+        AppData.cart = JSON.parse(savedCart);
+      }
       const savedCustom = JSON.parse(localStorage.getItem('tgn_custom_store_products') || '[]');
       savedCustom.forEach(cp => {
-        if (!AppData.storeProducts.some(p => p.id === cp.id)) {
-          AppData.storeProducts.unshift(cp);
-        }
+        const existingIdx = AppData.storeProducts.findIndex(p => p.id === cp.id);
+        if (existingIdx >= 0) AppData.storeProducts[existingIdx] = cp;
+        else AppData.storeProducts.unshift(cp);
       });
       const deletedIds = JSON.parse(localStorage.getItem('tgn_deleted_prod_ids') || '[]');
       if (deletedIds.length > 0) {
@@ -252,10 +374,209 @@ const StoreComponent = {
       AppData.storeState.aiChatHistory = [
         {
           sender: "TGN AI Pro Fitter",
-          text: "Witaj w oficjalnym sklepie TGN! Pomogę Ci dobrać sprzęt pod Twój Handicap i prędkość swingu. Kliknij jedną z kategorii poniżej lub zapytaj mnie o dowolny kij."
+          text: "Witaj w oficjalnym sklepie TGN! Wybierz wariant produktu i dodaj go do koszyka – szuflada zamówienia otworzy się automatycznie po prawej stronie."
         }
       ];
     }
+  },
+
+  saveCartToStorage: () => {
+    try {
+      localStorage.setItem('tgn_persistent_cart', JSON.stringify(AppData.cart || []));
+    } catch (e) {}
+  },
+
+  // Domyślne warianty dla każdego typu produktu w sklepie
+  getProductVariants: (prod) => {
+    if (prod.variants && Array.isArray(prod.variants) && prod.variants.length > 0) return prod.variants;
+    if (prod.section === "USED") return [`Egzemplarz CPO (${prod.loft} • ${prod.flex} • ${prod.hand})`];
+    if (prod.cat === "DRIVERY") return [`${prod.loft} • Shaft Stiff (S) • RH`, `9.0° • Shaft Stiff (S) • RH`, `10.5° • Shaft Regular (R) • RH`];
+    if (prod.cat === "WEDGE") return [`52° / 12F Gap Wedge`, `56° / 10S Sand Wedge`, `60° / 08M Lob Wedge`];
+    if (prod.cat === "IRONY") return [`Zestaw 5-PW • Shaft Stiff (S)`, `Zestaw 5-PW • Shaft Regular (R)`];
+    if (prod.cat === "PUTTERY") return [`Długość 34 cale (Standard)`, `Długość 35 cali`, `Długość 33 cale`];
+    if (prod.cat === "PILKI") return [`Klasa AAAA Pearl (${prod.loft})`, `Klasa AAA Treningowe`];
+    if (prod.cat === "ODZIEZ") return [`Rozmiar 42 EU`, `Rozmiar 43 EU`, `Rozmiar 44 EU`, `Rozmiar 45 EU`];
+    return [`Wersja Standard (${prod.loft})`];
+  },
+
+  // Renderuje globalną szufladę koszyka (Slide-Over Drawer) oraz pływający przycisk koszyka
+  syncGlobalCartDrawer: () => {
+    StoreComponent.ensureStoreDataInitialized();
+    const st = AppData.storeState;
+
+    // 1. Pływający przycisk koszyka w prawym dolnym rogu
+    let fab = document.getElementById('tgnFloatingCartBtn');
+    if (!fab) {
+      fab = document.createElement('button');
+      fab.id = 'tgnFloatingCartBtn';
+      fab.onclick = () => StoreComponent.openCartDrawer();
+      document.body.appendChild(fab);
+    }
+
+    const totalItemsCount = (AppData.cart || []).reduce((sum, i) => sum + (i.qty || 1), 0);
+    const rawCartValue = (AppData.cart || []).reduce((sum, i) => sum + (i.price * (i.qty || 1)), 0);
+    const discountAmount = st.discountCodeApplied ? Math.round(rawCartValue * 0.03) : 0;
+    const hasOversize = StoreComponent.cartHasOversizeClub();
+    const shippingCost = rawCartValue >= 300 || rawCartValue === 0 ? 0 : (hasOversize ? 29 : 16);
+    const finalCartValue = Math.max(0, rawCartValue - discountAmount + shippingCost);
+
+    const isLoggedIn = document.getElementById('mainNav')?.style.display !== 'none';
+    fab.style.display = isLoggedIn ? 'flex' : 'none';
+    fab.innerHTML = `🛒 Koszyk (${totalItemsCount}) • ${finalCartValue} PLN`;
+
+    // 2. Szuflada Koszyka
+    let backdrop = document.getElementById('tgnCartDrawerBackdrop');
+    if (!backdrop) {
+      backdrop = document.createElement('div');
+      backdrop.id = 'tgnCartDrawerBackdrop';
+      backdrop.onclick = () => StoreComponent.closeCartDrawer();
+      document.body.appendChild(backdrop);
+    }
+
+    if (!st.cartOpen) {
+      backdrop.style.display = 'none';
+      return;
+    }
+
+    const itemsHTML = AppData.cart.length === 0 ? `
+      <div style="text-align:center; padding:3rem 1rem; color:var(--text-muted);">
+        <div style="font-size:3rem; margin-bottom:0.8rem;">🛒</div>
+        <strong style="color:var(--text-main); font-size:0.95rem; display:block; margin-bottom:0.4rem;">Twój koszyk w sklepie TGN jest pusty</strong>
+        <p style="font-size:0.78rem; margin-bottom:1.2rem;">Wybierz nowy sprzęt, używane kije CPO lub pakiet piłek Lake Balls i kliknij „Do koszyka”.</p>
+        <button class="btn-primary" style="width:auto; padding:0.6rem 1.4rem;" onclick="StoreComponent.closeCartDrawer(); app.switchTab('sklep');">Przeglądaj asortyment sklepu</button>
+      </div>
+    ` : AppData.cart.map((item, idx) => {
+      const thumbUrl = ClubImageEngine.getClubVisualUrl(item.name, item.imgUrl);
+      const fallbackUrl = ClubImageEngine.getFallbackPhoto(item.name);
+      return `
+        <div class="cart-item-row">
+          <div class="cart-item-thumb">
+            <img src="${thumbUrl}" alt="${item.name}" onerror="this.onerror=null; this.src='${fallbackUrl}';">
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px;">
+              <strong style="font-size:0.8rem; color:var(--text-main); line-height:1.25;">${item.name}</strong>
+              <button class="btn-mini-tool" style="color:#fca5a5; border-color:rgba(239,68,68,0.35); padding:1px 6px;" onclick="StoreComponent.removeItem(${idx})">✕</button>
+            </div>
+            <p style="font-size:0.68rem; color:var(--accent); margin:3px 0;">Wariant: ${item.variant || 'Standard'} ${item.modeLabel || ''}</p>
+            ${item.customPrint ? `<p style="font-size:0.66rem; color:var(--gold);">🖨️ Nadruk UV: "${item.customPrint}"</p>` : ''}
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.4rem;">
+              <div style="display:flex; align-items:center; gap:0.4rem;">
+                <button class="btn-mini-tool" onclick="StoreComponent.changeQty(${idx}, -1)">-</button>
+                <strong style="font-size:0.78rem;">${item.qty || 1} szt.</strong>
+                <button class="btn-mini-tool" onclick="StoreComponent.changeQty(${idx}, 1)">+</button>
+              </div>
+              <strong style="font-size:0.88rem; color:var(--gold);">${item.price * (item.qty || 1)} PLN</strong>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const checkoutSectionHTML = (AppData.cart.length > 0 && st.checkoutStep) ? `
+      <div style="background:rgba(0,0,0,0.45); border:1px solid var(--accent); border-radius:12px; padding:1rem; margin-top:0.5rem;">
+        <h4 style="color:var(--accent); font-size:0.84rem; margin-bottom:0.7rem; text-transform:uppercase;">📦 Dane odbiorcy i dostawa</h4>
+        <div style="display:flex; flex-direction:column; gap:0.55rem;">
+          <input type="text" id="chkName" value="${AppData.user.name || ''}" placeholder="Imię i Nazwisko *" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+            <input type="tel" id="chkPhone" placeholder="Telefon dla kuriera *" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
+            <input type="email" id="chkEmail" value="${AppData.user.email || ''}" placeholder="E-mail do faktury *" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
+          </div>
+          <input type="text" id="chkAddress" placeholder="Ulica i nr domu / Kod Paczkomatu InPost *" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+            <input type="text" id="chkCity" value="${AppData.user.city || ''}" placeholder="Kod i Miasto *" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
+            <input type="text" id="chkNip" placeholder="NIP (opcjonalnie do FV)" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.78rem;">
+          </div>
+          <select id="chkDelivery" onchange="StoreComponent.setDelivery(this.value)" style="background:#091519; border:1px solid var(--glass-border); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.76rem;">
+            <option value="KURIER_DPD">🚚 Kurier DPD Dłużyca Golf (Ubezpieczony)</option>
+            ${!hasOversize ? `<option value="INPOST">📦 Paczkomat InPost 24/7 (Piłki / Akcesoria)</option>` : ''}
+            <option value="ODBIOR_TRACKMAN">🎯 Odbiór osobisty + Test na TrackManie (0 PLN)</option>
+          </select>
+          <select id="chkPayment" style="background:#091519; border:1px solid var(--glass-border); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.76rem;">
+            <option value="BLIK">📱 Szybki BLIK (0 PLN)</option>
+            <option value="P24">🏦 Szybki przelew Przelewy24 / PayNow</option>
+            <option value="CARD">💳 Karta Visa / Mastercard / Apple Pay</option>
+            <option value="COD">💵 Płatność przy odbiorze u kuriera</option>
+          </select>
+          <input type="text" id="chkNotes" placeholder="Uwagi dla kuriera / sklepu..." style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:7px; padding:0.55rem; color:#fff; font-size:0.76rem;">
+          <label style="font-size:0.7rem; color:var(--text-muted); display:flex; align-items:center; gap:6px; margin-top:2px;">
+            <input type="checkbox" id="chkTerms" checked> Akceptuję Regulamin Sklepu TGN oraz Politykę Prywatności.
+          </label>
+        </div>
+      </div>
+    ` : '';
+
+    backdrop.innerHTML = `
+      <div class="cart-drawer-panel" onclick="event.stopPropagation()">
+        <div class="cart-drawer-header">
+          <div>
+            <strong style="color:var(--accent); font-size:0.95rem;">🛒 Twój Koszyk TGN Pro Shop (${totalItemsCount})</strong>
+            <p style="font-size:0.68rem; color:var(--text-muted);">Darmowa wysyłka od 300 PLN • Gwarancja Trusted Shop</p>
+          </div>
+          <button style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:32px; height:32px; border-radius:50%; font-size:1rem; cursor:pointer;" onclick="StoreComponent.closeCartDrawer()">✕</button>
+        </div>
+
+        <div class="cart-drawer-body">
+          ${itemsHTML}
+
+          ${AppData.cart.length > 0 ? `
+            <!-- Kod rabatowy RABAT3 -->
+            <div style="background:rgba(250,204,21,0.07); border:1px dashed rgba(250,204,21,0.4); border-radius:10px; padding:0.65rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:0.4rem;">
+                <input type="text" id="cartPromoCodeInput" placeholder="Kod rabatowy (np. RABAT3)" value="${st.discountCodeApplied ? 'RABAT3' : ''}" style="flex:1; background:rgba(0,0,0,0.5); border:1px solid var(--gold); border-radius:6px; padding:0.4rem 0.65rem; color:#fff; font-size:0.75rem;">
+                <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold); padding:0.42rem 0.75rem;" onclick="StoreComponent.checkCartPromoCode()">Aktywuj -3%</button>
+              </div>
+              ${st.discountCodeApplied ? `<span style="font-size:0.68rem; color:var(--accent); display:block; margin-top:4px;">✓ Naliczono rabat 3% ("3 jak Par 3"): -${discountAmount} PLN</span>` : ''}
+            </div>
+
+            ${hasOversize ? `
+              <div style="font-size:0.68rem; color:var(--gold); background:rgba(250,204,21,0.08); padding:0.45rem 0.65rem; border-radius:6px;">
+                📦 W koszyku znajduje się długi sprzęt golfowy (>120cm) – wysyłka ubezpieczonym kurierem dłużycowym DPD/DHL.
+              </div>
+            ` : ''}
+
+            ${checkoutSectionHTML}
+          ` : ''}
+        </div>
+
+        ${AppData.cart.length > 0 ? `
+          <div class="cart-drawer-footer">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-bottom:3px;">
+              <span>Wartość produktów:</span>
+              <span>${rawCartValue} PLN</span>
+            </div>
+            ${discountAmount > 0 ? `
+              <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--accent); margin-bottom:3px;">
+                <span>Rabat (Kod RABAT3 -3%):</span>
+                <span>-${discountAmount} PLN</span>
+              </div>
+            ` : ''}
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-bottom:0.6rem;">
+              <span>Koszt dostawy:</span>
+              <span>${shippingCost === 0 ? '0 PLN (Gratis)' : shippingCost + ' PLN'}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; padding-top:0.45rem; border-top:1px solid rgba(255,255,255,0.12);">
+              <strong style="font-size:0.9rem; color:var(--text-main);">Razem do zapłaty:</strong>
+              <strong style="font-size:1.25rem; color:var(--gold);">${finalCartValue} PLN</strong>
+            </div>
+
+            ${!st.checkoutStep ? `
+              <button class="btn-primary" style="margin:0; padding:0.75rem; font-size:0.86rem;" onclick="StoreComponent.toggleCheckoutStep()">
+                💳 Przejdź do danych dostawy i płatności →
+              </button>
+            ` : `
+              <div style="display:grid; grid-template-columns: 1fr 2fr; gap:0.5rem;">
+                <button class="btn-action" style="margin:0;" onclick="StoreComponent.toggleCheckoutStep()">← Wróć</button>
+                <button class="btn-primary" style="margin:0; padding:0.7rem;" onclick="StoreComponent.submitProductionOrder(${finalCartValue})">
+                  🔒 Zamawiam i płacę (${finalCartValue} PLN)
+                </button>
+              </div>
+            `}
+          </div>
+        ` : ''}
+      </div>
+    `;
+    backdrop.style.display = 'flex';
   },
 
   syncGlobalPromoModal: () => {
@@ -322,10 +643,9 @@ const StoreComponent = {
     return false;
   },
 
-  // Sprawdza, czy w koszyku znajduje się długi kij golfowy / torba / wózek (powyżej gabarytu Paczkomatu InPost 64cm)
   cartHasOversizeClub: () => {
     const oversizeCats = ["DRIVERY", "WOODS", "WOOD_HYB", "HYBRYDY", "IRONY", "WEDGE", "PUTTERY", "ZESTAWY", "TORBY", "WOZKI", "KIJE_NOWE", "UZYWANE_KIJE"];
-    return AppData.cart.some(item => {
+    return (AppData.cart || []).some(item => {
       const prod = AppData.storeProducts.find(p => p.id === item.id);
       return prod && oversizeCats.includes(prod.cat);
     });
@@ -336,7 +656,10 @@ const StoreComponent = {
     const st = AppData.storeState;
     const isAdmin = AppData.user && AppData.user.role === 'ADMIN';
 
-    setTimeout(() => StoreComponent.syncGlobalPromoModal(), 10);
+    setTimeout(() => {
+      StoreComponent.syncGlobalPromoModal();
+      StoreComponent.syncGlobalCartDrawer();
+    }, 10);
 
     let filtered = AppData.storeProducts.filter(p => {
       if (st.section !== "ALL" && p.section !== st.section) return false;
@@ -359,13 +682,7 @@ const StoreComponent = {
     if (st.sortBy === "PRICE_ASC") filtered.sort((a, b) => a.price - b.price);
     else if (st.sortBy === "PRICE_DESC") filtered.sort((a, b) => b.price - a.price);
 
-    const totalItemsCount = AppData.cart.reduce((sum, i) => sum + (i.qty || 1), 0);
-    const rawCartValue = AppData.cart.reduce((sum, i) => sum + (i.price * (i.qty || 1)), 0);
-    const discountAmount = st.discountCodeApplied ? Math.round(rawCartValue * 0.03) : 0;
-    const hasOversize = StoreComponent.cartHasOversizeClub();
-    const shippingCost = rawCartValue >= 300 || rawCartValue === 0 ? 0 : (hasOversize ? 29 : 16);
-    const finalCartValue = rawCartValue - discountAmount + shippingCost;
-
+    const totalItemsCount = (AppData.cart || []).reduce((sum, i) => sum + (i.qty || 1), 0);
     const brandsList = [...new Set(AppData.storeProducts.map(p => p.brand))];
 
     const trustedPromoBarHTML = `
@@ -380,6 +697,7 @@ const StoreComponent = {
         <div style="display:flex; gap:0.45rem;">
           <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.openPromoModal('RABAT3')">🏷️ Kod Rabatowy -3%</button>
           <button class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="StoreComponent.openPromoModal('NEWSLETTER')">📩 Newsletter TGN</button>
+          <button class="btn-mini-tool" style="background:var(--accent); color:#052e16; border-color:var(--accent);" onclick="StoreComponent.openCartDrawer()">🛒 Otwórz Koszyk (${totalItemsCount})</button>
         </div>
       </div>
     `;
@@ -417,26 +735,35 @@ const StoreComponent = {
       </div>
     ` : '';
 
-    // Formularz dodawania produktu (Widoczny TYLKO dla Administratora!)
-    const defaultPreviewImg = ClubImageEngine.buildDirectSearchPhotoUrl("Titleist TSR3 Driver", 0);
-    const addProductModalHTML = (isAdmin && st.addProductOpen) ? `
+    // Formularz dodawania lub edycji produktu w sklepie
+    const editProd = StoreComponent.editingProductId
+      ? AppData.storeProducts.find(p => p.id === StoreComponent.editingProductId)
+      : null;
+
+    const defaultPreviewImg = editProd
+      ? ClubImageEngine.getClubVisualUrl(editProd.name, editProd.imgUrl)
+      : ClubImageEngine.buildDirectSearchPhotoUrl("Titleist TSR3 Driver", 0);
+
+    const addProductModalHTML = st.addProductOpen ? `
       <div class="store-admin-add-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
-          <h3 style="color:var(--gold); font-size:0.9rem;">⚙️ [TRYB ADMINA] Dodaj nowy produkt do bazy sklepu</h3>
-          <button class="btn-mini-tool" onclick="StoreComponent.toggleAddProduct()">✕ Zamknij</button>
+          <h3 style="color:var(--gold); font-size:0.9rem;">
+            ${editProd ? `✏️ Edytuj produkt: ${editProd.name}` : '➕ Dodaj nowy produkt do asortymentu sklepu'}
+          </h3>
+          <button class="btn-mini-tool" onclick="StoreComponent.toggleAddProduct()">✕ Zamknij kreator</button>
         </div>
 
         <div class="live-preview-row">
           <div class="club-photo-frame" style="width:86px !important; height:86px !important;">
             <img id="newStoreProdPreviewImg" src="${defaultPreviewImg}" alt="Podgląd produktu">
-            <span class="live-photo-badge">AUTO FOTO</span>
+            <span class="live-photo-badge">FOTO</span>
           </div>
           <div style="display:grid; grid-template-columns: 1.5fr 1fr; gap:0.5rem;">
-            <input type="text" id="addProdName" placeholder="Nazwa produktu (np. Callaway Paradym Driver)" oninput="StoreComponent.updateNewProductPreview(this.value)" style="background:rgba(255,255,255,0.08); border:1px solid var(--accent); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.8rem;">
-            <input type="text" id="addProdBrand" placeholder="Marka (np. Callaway, Ping)" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.8rem;">
+            <input type="text" id="addProdName" value="${editProd ? editProd.name : ''}" placeholder="Nazwa produktu (np. Callaway Paradym Ai Smoke Driver)" oninput="StoreComponent.updateNewProductPreview(this.value)" style="background:rgba(255,255,255,0.08); border:1px solid var(--accent); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.8rem;">
+            <input type="text" id="addProdBrand" value="${editProd ? editProd.brand : ''}" placeholder="Marka (np. Callaway, Ping, Titleist)" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.8rem;">
             <div style="grid-column: span 2; display:flex; gap:0.4rem;">
               <button class="btn-mini-tool" onclick="StoreComponent.updateNewProductPreview(document.getElementById('addProdName').value || 'Callaway Paradym', true)">📷 Inne zdjęcie z sieci</button>
-              <input type="text" id="addProdCustomImg" placeholder="(Opcjonalnie) Własny link URL do zdjęcia..." style="flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); border-radius:5px; padding:0.25rem 0.5rem; color:#fff; font-size:0.72rem;">
+              <input type="text" id="addProdCustomImg" value="${editProd && editProd.imgUrl ? editProd.imgUrl : ''}" placeholder="(Opcjonalnie) Własny link URL do zdjęcia produktu..." style="flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); border-radius:5px; padding:0.25rem 0.5rem; color:#fff; font-size:0.72rem;">
             </div>
           </div>
         </div>
@@ -445,184 +772,67 @@ const StoreComponent = {
           <div>
             <label>Dział sklepu</label>
             <select id="addProdSection">
-              <option value="NEW">🏆 Nowy Sprzęt (Pro Shop)</option>
-              <option value="USED">♻️ Używany Kij / Sprzęt CPO</option>
-              <option value="BALLS">⚪ Piłki / Personalizacja</option>
+              <option value="NEW" ${editProd?.section === 'NEW' ? 'selected' : ''}>🏆 Nowy Sprzęt (Pro Shop)</option>
+              <option value="USED" ${editProd?.section === 'USED' ? 'selected' : ''}>♻️ Używany Kij / Sprzęt CPO</option>
+              <option value="BALLS" ${editProd?.section === 'BALLS' ? 'selected' : ''}>⚪ Piłki / Personalizacja</option>
             </select>
           </div>
           <div>
             <label>Kategoria produktu</label>
             <select id="addProdCat">
-              ${AppData.storeCategories.filter(c => c.id !== 'ALL').map(c => `<option value="${c.id}">${c.icon} ${c.label}</option>`).join('')}
+              ${AppData.storeCategories.filter(c => c.id !== 'ALL').map(c => `<option value="${c.id}" ${editProd?.cat === c.id ? 'selected' : ''}>${c.icon} ${c.label}</option>`).join('')}
             </select>
           </div>
           <div>
             <label>Twardość Shaftu (Flex)</label>
             <select id="addProdFlex">
-              <option value="Stiff">Stiff (S)</option>
-              <option value="Regular">Regular (R)</option>
-              <option value="Wedge">Wedge Flex</option>
-              <option value="N/A">Nie dotyczy (N/A)</option>
+              <option value="Stiff" ${editProd?.flex === 'Stiff' ? 'selected' : ''}>Stiff (S)</option>
+              <option value="Regular" ${editProd?.flex === 'Regular' ? 'selected' : ''}>Regular (R)</option>
+              <option value="Wedge" ${editProd?.flex === 'Wedge' ? 'selected' : ''}>Wedge Flex</option>
+              <option value="N/A" ${editProd?.flex === 'N/A' ? 'selected' : ''}>Nie dotyczy (N/A)</option>
             </select>
           </div>
           <div>
             <label>Ręka gracza</label>
             <select id="addProdHand">
-              <option value="RH">Praworęczny (RH)</option>
-              <option value="LH">Leworęczny (LH)</option>
-              <option value="ALL">Uniwersalny</option>
+              <option value="RH" ${editProd?.hand === 'RH' ? 'selected' : ''}>Praworęczny (RH)</option>
+              <option value="LH" ${editProd?.hand === 'LH' ? 'selected' : ''}>Leworęczny (LH)</option>
+              <option value="ALL" ${editProd?.hand === 'ALL' ? 'selected' : ''}>Uniwersalny</option>
             </select>
           </div>
           <div>
-            <label>Loft / Rozmiar</label>
-            <input type="text" id="addProdLoft" value="Standard">
+            <label>Loft / Rozmiar / Pakiet</label>
+            <input type="text" id="addProdLoft" value="${editProd ? editProd.loft : '10.5°'}">
           </div>
           <div>
             <label>Stan (np. Nowy lub 9/10 CPO)</label>
-            <input type="text" id="addProdCond" value="Fabrycznie nowy">
+            <input type="text" id="addProdCond" value="${editProd ? editProd.condition : 'Fabrycznie nowy'}">
           </div>
           <div>
-            <label>Cena w sklepie (PLN)</label>
-            <input type="number" id="addProdPrice" value="990">
+            <label>Cena sprzedaży (PLN)</label>
+            <input type="number" id="addProdPrice" value="${editProd ? editProd.price : 990}">
           </div>
           <div>
-            <label>Cena katalogowa (PLN)</label>
-            <input type="number" id="addProdOldPrice" value="1290">
+            <label>Ilość w magazynie (szt.)</label>
+            <input type="number" id="addProdStock" value="${editProd ? editProd.stock : 3}">
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-top:0.5rem; margin-bottom:0.65rem;">
-          <input type="text" id="addProdSpec" placeholder="Specyfikacja (np. Shaft Fujikura Ventus Blue 6S)" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.76rem;">
-          <input type="text" id="addProdDesc" placeholder="Krótki opis produktu..." style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.76rem;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:0.5rem; margin-top:0.5rem; margin-bottom:0.65rem;">
+          <input type="text" id="addProdSpec" value="${editProd ? editProd.spec : ''}" placeholder="Specyfikacja (np. Shaft Fujikura Ventus Blue 6S)" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.75rem;">
+          <input type="text" id="addProdDesc" value="${editProd ? editProd.desc : ''}" placeholder="Krótki opis produktu..." style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.75rem;">
+          <input type="text" id="addProdVariants" value="${editProd && editProd.variants ? editProd.variants.join(', ') : ''}" placeholder="Warianty po przecinku (np. 9.0° Stiff, 10.5° Regular)" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:0.5rem; color:#fff; font-size:0.75rem;">
         </div>
 
-        <button class="btn-primary" style="margin:0; padding:0.6rem;" onclick="StoreComponent.saveNewProductToStore()">✓ Zapisz produkt w bazie sklepu</button>
-      </div>
-    ` : '';
-
-    // --- PRODUKCYJNY KOSZYK + FORMULARZ CHECKOUTU (ADRES, INPOST/DPD, BLIK/P24, FAKTURA) ---
-    const cartDrawerHTML = (st.cartOpen || AppData.cart.length > 0) ? `
-      <div class="cart-summary-bar" style="flex-direction:column; align-items:stretch;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-          <div>
-            <strong style="color:var(--accent); font-size:0.92rem;">🛒 Twój Koszyk (${totalItemsCount} szt.)</strong>
-            ${st.discountCodeApplied ? `<span style="font-size:0.72rem; color:var(--gold); margin-left:8px; font-weight:700;">🏷️ Kod RABAT3 (-${discountAmount} PLN)</span>` : ''}
-            <span style="font-size:0.72rem; color:var(--text-muted); margin-left:8px;">
-              ${shippingCost === 0 ? '✓ Darmowa dostawa (od 300 PLN)' : `Dostawa: +${shippingCost} PLN`}
-            </span>
-          </div>
-          <div style="display:flex; align-items:center; gap:0.75rem;">
-            <strong style="font-size:1.15rem; color:var(--gold);">Do zapłaty: ${finalCartValue} PLN</strong>
-            <button class="btn-mini-tool" onclick="StoreComponent.toggleCartDrawer()">
-              ${st.cartOpen ? '▲ Zwiń koszyk' : '▼ Rozwiń koszyk i zamów (' + AppData.cart.length + ')'}
-            </button>
-          </div>
-        </div>
-
-        ${st.cartOpen && AppData.cart.length > 0 ? `
-          <div style="margin-top:0.85rem; border-top:1px solid rgba(255,255,255,0.1); padding-top:0.75rem; display:flex; flex-direction:column; gap:0.5rem;">
-            ${AppData.cart.map((item, idx) => `
-              <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.04); padding:0.5rem 0.75rem; border-radius:8px; font-size:0.78rem; flex-wrap:wrap; gap:0.5rem;">
-                <div>
-                  <strong style="color:var(--text-main);">${item.name}</strong>
-                  <span style="color:var(--accent); font-size:0.7rem; margin-left:6px;">${item.modeLabel || ''}</span>
-                </div>
-                <div style="display:flex; align-items:center; gap:0.5rem;">
-                  <button class="btn-mini-tool" onclick="StoreComponent.changeQty(${idx}, -1)">-</button>
-                  <strong>${item.qty || 1} szt.</strong>
-                  <button class="btn-mini-tool" onclick="StoreComponent.changeQty(${idx}, 1)">+</button>
-                  <strong style="color:var(--gold); min-width:75px; text-align:right;">${item.price * (item.qty || 1)} PLN</strong>
-                  <button class="btn-mini-tool" style="color:#fca5a5; border-color:rgba(239,68,68,0.4);" onclick="StoreComponent.removeItem(${idx})">✕</button>
-                </div>
-              </div>
-            `).join('')}
-
-            ${hasOversize ? `
-              <div style="font-size:0.72rem; color:var(--gold); background:rgba(250,204,21,0.08); padding:0.45rem 0.75rem; border-radius:6px; border:1px solid rgba(250,204,21,0.3);">
-                📦 <strong>Informacja gabarytowa:</strong> Koszyk zawiera kije golfowe / torbę (przesyłka dłużycowa powyżej 120 cm) – wysyłka realizowana ubezpieczonym Kurierem DPD/DHL lub odbiór osobisty.
-              </div>
-            ` : ''}
-
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.6rem; margin-top:0.4rem; padding-top:0.5rem; border-top:1px solid rgba(255,255,255,0.08);">
-              <div style="display:flex; gap:0.4rem; align-items:center;">
-                <input type="text" id="cartPromoCodeInput" placeholder="Kod rabatowy (RABAT3)" value="${st.discountCodeApplied ? 'RABAT3' : ''}" style="background:rgba(0,0,0,0.45); border:1px solid var(--gold); border-radius:6px; padding:0.4rem 0.65rem; color:#fff; font-size:0.75rem; width:165px;">
-                <button class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="StoreComponent.checkCartPromoCode()">Aktywuj kod (-3%)</button>
-              </div>
-
-              <button class="btn-primary" style="width:auto; margin:0; padding:0.55rem 1.4rem;" onclick="StoreComponent.toggleCheckoutStep()">
-                ${st.checkoutStep ? '▲ Ukryj formularz dostawy' : '💳 Przejdź do kasy i płatności (' + finalCartValue + ' PLN) →'}
-              </button>
-            </div>
-
-            ${st.checkoutStep ? `
-              <div class="checkout-form-box">
-                <h3 style="color:var(--accent); font-size:0.88rem; margin-bottom:0.75rem;">📦 Dane do wysyłki i płatności (Bezpieczny Checkout SSL)</h3>
-                <div class="checkout-grid">
-                  <div>
-                    <label>Imię i Nazwisko odbiorcy *</label>
-                    <input type="text" id="chkName" value="${AppData.user.name || ''}" placeholder="Jan Kowalski">
-                  </div>
-                  <div>
-                    <label>Telefon kontaktowy dla kuriera *</label>
-                    <input type="tel" id="chkPhone" placeholder="np. 600 100 200">
-                  </div>
-                  <div>
-                    <label>Adres E-mail (do faktury i śledzenia) *</label>
-                    <input type="email" id="chkEmail" value="${AppData.user.email || ''}">
-                  </div>
-                  <div>
-                    <label>Ulica i numer domu / Kod Paczkomatu *</label>
-                    <input type="text" id="chkAddress" placeholder="np. ul. Golfowa 12/4 lub WAW123M">
-                  </div>
-                  <div>
-                    <label>Kod pocztowy i Miasto *</label>
-                    <input type="text" id="chkCity" value="${AppData.user.city || ''}" placeholder="00-001 Warszawa">
-                  </div>
-                  <div>
-                    <label>NIP do Faktury VAT (opcjonalnie)</label>
-                    <input type="text" id="chkNip" placeholder="Wpisz NIP jeśli potrzebujesz FV">
-                  </div>
-                  <div>
-                    <label>Sposób dostawy</label>
-                    <select id="chkDelivery" onchange="StoreComponent.setDelivery(this.value)">
-                      <option value="KURIER_DPD">🚚 Kurier DPD Dłużyca Golf (Ubezpieczony)</option>
-                      ${!hasOversize ? `<option value="INPOST">📦 Paczkomat InPost 24/7 (Piłki / Akcesoria)</option>` : ''}
-                      <option value="ODBIOR_TRACKMAN">🎯 Odbiór osobisty + Test na TrackManie (0 PLN)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label>Metoda płatności</label>
-                    <select id="chkPayment">
-                      <option value="BLIK">📱 Szybki BLIK (0 PLN prowizji)</option>
-                      <option value="P24">🏦 Szybki przelew Przelewy24 / PayNow</option>
-                      <option value="CARD">💳 Karta płatnicza Visa / Mastercard / Apple Pay</option>
-                      <option value="COD">💵 Płatność przy odbiorze u kuriera</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label>Uwagi do zamówienia / Nadruk na piłkach</label>
-                    <input type="text" id="chkNotes" placeholder="np. Tekst nadruku na piłkach lub godzina dostawy">
-                  </div>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; padding-top:0.65rem; border-top:1px solid rgba(255,255,255,0.1);">
-                  <label style="font-size:0.72rem; color:var(--text-muted); display:flex; align-items:center; gap:6px; cursor:pointer;">
-                    <input type="checkbox" id="chkTerms" checked> Akceptuję Regulamin Sklepu TGN oraz Politykę Prywatności.
-                  </label>
-                  <button class="btn-primary" style="width:auto; margin:0; padding:0.65rem 1.6rem; font-size:0.85rem;" onclick="StoreComponent.submitProductionOrder(${finalCartValue})">
-                    🔒 Zamawiam z obowiązkiem zapłaty (${finalCartValue} PLN)
-                  </button>
-                </div>
-              </div>
-            ` : ''}
-          </div>
-        ` : ''}
+        <button class="btn-primary" style="margin:0; padding:0.6rem;" onclick="StoreComponent.saveNewProductToStore()">
+          ${editProd ? '💾 Zapisz zmiany w produkcie' : '✓ Dodaj i opublikuj produkt w sklepie'}
+        </button>
       </div>
     ` : '';
 
     let productsHTML = filtered.length === 0 ? `
       <div style="grid-column: 1 / -1; text-align:center; padding: 2.5rem; background:rgba(0,0,0,0.25); border-radius:14px; border:1px dashed rgba(255,255,255,0.15);">
-        <p style="font-size:0.95rem; color:var(--text-main); margin-bottom:0.5rem;">Brak produktów w tym widoku.</p>
+        <p style="font-size:0.95rem; color:var(--text-main); margin-bottom:0.5rem;">Brak produktów w wybranej kategorii.</p>
         <button class="btn-action" style="width:auto; padding:0.45rem 1.2rem;" onclick="StoreComponent.resetFilters()">Pokaż cały asortyment sklepu</button>
       </div>
     ` : filtered.map(prod => {
@@ -633,6 +843,7 @@ const StoreComponent = {
       const isUsed = prod.section === "USED";
       const isBallsOrAcc = prod.section === "BALLS" || ["PREZENTY", "AKCESORIA", "PERSONALIZACJA"].includes(prod.cat);
       const savings = prod.oldPrice && prod.oldPrice > prod.price ? (prod.oldPrice - prod.price) : 0;
+      const variantsList = StoreComponent.getProductVariants(prod);
 
       return `
         <div class="store-card ${isUsed ? 'used-cpo-card' : ''}">
@@ -660,16 +871,28 @@ const StoreComponent = {
 
             <p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 0.5rem;">${prod.desc}</p>
 
+            <!-- Wybór wariantu (Specyfikacji / Rozmiaru) przed dodaniem do koszyka -->
+            <div class="prod-variant-box">
+              <label>Wybierz wariant / specyfikację:</label>
+              <select id="variant_sel_${prod.id}">
+                ${variantsList.map(v => `<option value="${v}">${v}</option>`).join('')}
+              </select>
+              ${prod.cat === 'PERSONALIZACJA' ? `
+                <input type="text" id="custom_print_${prod.id}" placeholder="Wpisz tekst nadruku na piłkach (np. MAREK #1)..." style="margin-top:4px;">
+              ` : ''}
+            </div>
+
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.55rem;">
-              <div style="display:flex; gap:0.35rem;">
+              <div style="display:flex; gap:0.3rem; flex-wrap:wrap;">
                 <button class="btn-mini-tool" onclick="app.openPhotoZoom('${safeName}', document.getElementById('${imgId}').src, '${prod.spec}')">🔍 Powiększ</button>
+                <button class="btn-mini-tool" onclick="app.nextWebSearchPhoto('${imgId}', '${safeName}')">📷 Foto</button>
                 ${isAdmin ? `
-                  <button class="btn-mini-tool" onclick="app.nextWebSearchPhoto('${imgId}', '${safeName}')">📷 Foto</button>
-                  <button class="btn-mini-tool" style="color:#fca5a5; border-color:rgba(239,68,68,0.4);" onclick="StoreComponent.deleteProduct(${prod.id})">🗑️ Usuń</button>
+                  <button class="btn-mini-tool" style="color:var(--gold); border-color:var(--gold);" onclick="StoreComponent.startEditProduct(${prod.id})">✏️ Edytuj</button>
+                  <button class="btn-mini-tool" style="color:#fca5a5; border-color:rgba(239,68,68,0.4);" onclick="StoreComponent.deleteProduct(${prod.id})">🗑️</button>
                 ` : ''}
               </div>
               <span style="font-size:0.65rem; color:${prod.stock <= 2 ? 'var(--gold)' : 'var(--accent)'}; font-weight:700;">
-                ● Dostępność: ${prod.stock > 0 ? prod.stock + ' szt.' : 'Wyprzedane'}
+                ● Magazyn: ${prod.stock > 0 ? prod.stock + ' szt.' : 'Brak'}
               </span>
             </div>
           </div>
@@ -691,11 +914,11 @@ const StoreComponent = {
                 <strong style="font-size:0.86rem; color:var(--gold);">dopłata od ${prod.tradeInPrice} PLN</strong>
               </div>
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.4rem;">
-                <button class="btn-action" style="margin:0; padding:0.48rem;" onclick="StoreComponent.addItem(${prod.id}, false)">🛒 Do koszyka</button>
-                <button class="btn-action" style="margin:0; padding:0.48rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="StoreComponent.addItem(${prod.id}, true)">🔄 Kup w Trade-In</button>
+                <button class="btn-action" style="margin:0; padding:0.5rem;" onclick="StoreComponent.addItem(${prod.id}, false)">🛒 Do koszyka</button>
+                <button class="btn-action" style="margin:0; padding:0.5rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="StoreComponent.addItem(${prod.id}, true)">🔄 Kup w Trade-In</button>
               </div>
             ` : `
-              <button class="btn-action" style="margin:0.3rem 0 0; padding:0.5rem;" onclick="StoreComponent.addItem(${prod.id}, false)">🛒 Dodaj do koszyka</button>
+              <button class="btn-action" style="margin:0.3rem 0 0; padding:0.52rem;" onclick="StoreComponent.addItem(${prod.id}, false)">🛒 Dodaj do koszyka</button>
             `}
           </div>
         </div>
@@ -709,24 +932,21 @@ const StoreComponent = {
             <span>🛍️ Oficjalny Sklep TGN Pro Shop & Komis CPO (${AppData.storeProducts.length} produktów)</span>
           </h2>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.85rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.12);" onclick="StoreComponent.openPromoModal('NEWSLETTER')">
-              📩 Newsletter & Kod -3%
+            <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.9rem; background:var(--accent); color:#052e16;" onclick="StoreComponent.openCartDrawer()">
+              🛒 Podgląd Koszyka (${totalItemsCount})
             </button>
             <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.85rem; border-color:#38bdf8; color:#38bdf8; background:rgba(56,189,248,0.15);" onclick="StoreComponent.toggleAiAssistant()">
-              🤖 ${st.aiAssistantOpen ? 'Ukryj Doradcę AI' : 'Doradca AI Sklepu'}
+              🤖 ${st.aiAssistantOpen ? 'Ukryj Doradcę AI' : 'Doradca AI'}
             </button>
-            ${isAdmin ? `
-              <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.9rem; background:var(--gold); color:#052e16; border-color:var(--gold);" onclick="StoreComponent.toggleAddProduct()">
-                ⚙️ + Dodaj produkt (Admin)
-              </button>
-            ` : ''}
+            <button class="btn-action" style="width:auto; margin:0; padding:0.42rem 0.9rem; background:rgba(250,204,21,0.18); color:var(--gold); border-color:var(--gold);" onclick="StoreComponent.startAddNewProduct()">
+              ➕ Dodaj asortyment do sklepu
+            </button>
           </div>
         </div>
 
         ${trustedPromoBarHTML}
         ${aiAssistantHTML}
         ${addProductModalHTML}
-        ${cartDrawerHTML}
 
         <div class="category-Accordion-list">
           ${AppData.storeCategories.map(catObj => {
@@ -775,9 +995,98 @@ const StoreComponent = {
     `;
   },
 
+  // --- OTWIERANIE I ZAMYKANIE SZUFLADY KOSZYKA ---
+  openCartDrawer: () => {
+    StoreComponent.ensureStoreDataInitialized();
+    AppData.storeState.cartOpen = true;
+    StoreComponent.syncGlobalCartDrawer();
+  },
+
+  closeCartDrawer: () => {
+    StoreComponent.ensureStoreDataInitialized();
+    AppData.storeState.cartOpen = false;
+    StoreComponent.syncGlobalCartDrawer();
+  },
+
+  toggleCartDrawer: () => {
+    StoreComponent.ensureStoreDataInitialized();
+    AppData.storeState.cartOpen = !AppData.storeState.cartOpen;
+    StoreComponent.syncGlobalCartDrawer();
+  },
+
   toggleCheckoutStep: () => {
     AppData.storeState.checkoutStep = !AppData.storeState.checkoutStep;
-    app.switchTab('sklep');
+    StoreComponent.syncGlobalCartDrawer();
+  },
+
+  addItem: (prodId, useTradeIn) => {
+    StoreComponent.ensureStoreDataInitialized();
+    const prod = AppData.storeProducts.find(p => p.id === prodId);
+    if (!prod) return;
+    if (prod.stock <= 0) {
+      app.showToast('⚠️ Ten egzemplarz został już wyprzedany!');
+      return;
+    }
+
+    const varSelect = document.getElementById(`variant_sel_${prodId}`);
+    const selectedVariant = varSelect ? varSelect.value : prod.loft;
+
+    const printInput = document.getElementById(`custom_print_${prodId}`);
+    const customPrintText = printInput ? printInput.value.trim() : '';
+
+    const finalPrice = useTradeIn ? prod.tradeInPrice : prod.price;
+    const modeLabel = useTradeIn ? "[W rozliczeniu Trade-In]" : (prod.section === "USED" ? "[Używany CPO]" : "[Nowy]");
+
+    const existing = AppData.cart.find(i =>
+      i.id === prodId &&
+      i.useTradeIn === useTradeIn &&
+      i.variant === selectedVariant &&
+      i.customPrint === customPrintText
+    );
+
+    if (existing) {
+      existing.qty = (existing.qty || 1) + 1;
+    } else {
+      AppData.cart.push({
+        id: prod.id,
+        name: prod.name,
+        price: finalPrice,
+        qty: 1,
+        useTradeIn: useTradeIn,
+        modeLabel: modeLabel,
+        variant: selectedVariant,
+        customPrint: customPrintText,
+        imgUrl: prod.imgUrl
+      });
+    }
+
+    StoreComponent.saveCartToStorage();
+    AppData.storeState.cartOpen = true;
+    auth.updateHeaderBar();
+    StoreComponent.syncGlobalCartDrawer();
+    app.showToast(`🛒 Dodano do koszyka: ${prod.name}`);
+  },
+
+  changeQty: (idx, delta) => {
+    if (!AppData.cart[idx]) return;
+    AppData.cart[idx].qty = (AppData.cart[idx].qty || 1) + delta;
+    if (AppData.cart[idx].qty <= 0) {
+      AppData.cart.splice(idx, 1);
+    }
+    StoreComponent.saveCartToStorage();
+    auth.updateHeaderBar();
+    StoreComponent.syncGlobalCartDrawer();
+    const activeTab = document.querySelector('#mainNav button.active')?.dataset?.tab;
+    if (activeTab === 'sklep') app.switchTab('sklep');
+  },
+
+  removeItem: (idx) => {
+    AppData.cart.splice(idx, 1);
+    StoreComponent.saveCartToStorage();
+    auth.updateHeaderBar();
+    StoreComponent.syncGlobalCartDrawer();
+    const activeTab = document.querySelector('#mainNav button.active')?.dataset?.tab;
+    if (activeTab === 'sklep') app.switchTab('sklep');
   },
 
   submitProductionOrder: (finalTotal) => {
@@ -793,7 +1102,7 @@ const StoreComponent = {
     const terms = document.getElementById('chkTerms')?.checked;
 
     if (!name || !phone || !email || !address || !city) {
-      app.showToast('⚠️ Uzupełnij wszystkie wymagane pola adresowe i telefon dla kuriera!');
+      app.showToast('⚠️ Uzupełnij wymagane pola adresowe i telefon dla kuriera!');
       return;
     }
     if (!terms) {
@@ -818,7 +1127,6 @@ const StoreComponent = {
       status: payment === 'COD' ? 'Do wysyłki (Za pobraniem)' : 'Opłacone (' + payment + ')'
     };
 
-    // Pomniejsz stany magazynowe kupionych produktów
     AppData.cart.forEach(cartItem => {
       const prod = AppData.storeProducts.find(p => p.id === cartItem.id);
       if (prod && prod.stock > 0) {
@@ -826,7 +1134,6 @@ const StoreComponent = {
       }
     });
 
-    // Zapisz zamówienie w lokalnej bazie produkcyjnej (widoczne w Panelu Admina i w Moim Koncie)
     try {
       const orders = JSON.parse(localStorage.getItem('tgn_orders_db') || '[]');
       orders.unshift(newOrder);
@@ -834,11 +1141,106 @@ const StoreComponent = {
     } catch (e) {}
 
     AppData.cart = [];
+    StoreComponent.saveCartToStorage();
     AppData.storeState.cartOpen = false;
     AppData.storeState.checkoutStep = false;
     auth.updateHeaderBar();
+    StoreComponent.syncGlobalCartDrawer();
     app.switchTab('sklep');
-    app.showToast(`✅ Zamówienie #${orderNumber} przyjęte! Potwierdzenie wysłano na: ${email}`);
+    app.showToast(`✅ Zamówienie #${orderNumber} złożone! Sprawdź szczegóły w Panelu Admina.`);
+  },
+
+  // --- ZARZĄDZANIE ASORTYMENTEM (DODAWANIE / EDYCJA / USUWANIE) ---
+  startAddNewProduct: () => {
+    StoreComponent.editingProductId = null;
+    AppData.storeState.addProductOpen = true;
+    app.switchTab('sklep');
+  },
+
+  startEditProduct: (prodId) => {
+    StoreComponent.editingProductId = prodId;
+    AppData.storeState.addProductOpen = true;
+    app.switchTab('sklep');
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  },
+
+  toggleAddProduct: () => {
+    StoreComponent.editingProductId = null;
+    AppData.storeState.addProductOpen = !AppData.storeState.addProductOpen;
+    app.switchTab('sklep');
+  },
+
+  updateNewProductPreview: (val, nextVariant = false) => {
+    clearTimeout(StoreComponent.previewTimer);
+    StoreComponent.previewTimer = setTimeout(() => {
+      const imgEl = document.getElementById('newStoreProdPreviewImg');
+      if (!imgEl) return;
+      if (nextVariant) ClubImageEngine.searchVariantIndex += 1;
+      const query = (val && val.trim().length > 2) ? val.trim() : "Titleist TSR3 Driver";
+      imgEl.src = ClubImageEngine.buildDirectSearchPhotoUrl(query, ClubImageEngine.searchVariantIndex);
+    }, 250);
+  },
+
+  saveNewProductToStore: () => {
+    const name = document.getElementById('addProdName').value.trim();
+    const brand = document.getElementById('addProdBrand').value.trim() || "TGN Pro";
+    const section = document.getElementById('addProdSection').value;
+    const cat = document.getElementById('addProdCat').value;
+    const flex = document.getElementById('addProdFlex').value;
+    const hand = document.getElementById('addProdHand').value;
+    const loft = document.getElementById('addProdLoft').value.trim() || "Standard";
+    const condition = document.getElementById('addProdCond').value.trim() || "Fabrycznie nowy";
+    const price = parseInt(document.getElementById('addProdPrice').value, 10) || 990;
+    const stock = parseInt(document.getElementById('addProdStock').value, 10) || 1;
+    const spec = document.getElementById('addProdSpec').value.trim() || `${brand} • ${loft} • Flex: ${flex}`;
+    const desc = document.getElementById('addProdDesc').value.trim() || "Produkt dostępny od ręki w magazynie TGN Pro Shop.";
+    const customImg = document.getElementById('addProdCustomImg').value.trim();
+    const rawVariants = document.getElementById('addProdVariants').value.trim();
+
+    if (!name) {
+      app.showToast("Wpisz nazwę produktu!");
+      return;
+    }
+
+    const variants = rawVariants
+      ? rawVariants.split(',').map(s => s.trim()).filter(Boolean)
+      : [`${loft} • ${flex} (${hand})`];
+
+    const finalImgUrl = customImg || ClubImageEngine.buildDirectSearchPhotoUrl(name, ClubImageEngine.searchVariantIndex);
+
+    const productObj = {
+      id: StoreComponent.editingProductId || Date.now(),
+      section, cat, brand, flex, hand, loft, condition,
+      condDetails: section === "USED" ? "Zweryfikowany przez serwis TGN CPO" : "Gwarancja producenta 24 mies.",
+      tag: section === "USED" ? "KOMIS CPO" : "OFERTA PRO SHOP",
+      tagGold: true, name, spec, desc,
+      oldPrice: Math.round(price * 1.18),
+      price,
+      tradeInPrice: Math.max(150, Math.round(price * 0.45)),
+      stock,
+      imgUrl: finalImgUrl,
+      variants
+    };
+
+    if (StoreComponent.editingProductId) {
+      const idx = AppData.storeProducts.findIndex(p => p.id === StoreComponent.editingProductId);
+      if (idx >= 0) AppData.storeProducts[idx] = productObj;
+    } else {
+      AppData.storeProducts.unshift(productObj);
+    }
+
+    try {
+      const prevCustom = JSON.parse(localStorage.getItem('tgn_custom_store_products') || '[]');
+      const cIdx = prevCustom.findIndex(p => p.id === productObj.id);
+      if (cIdx >= 0) prevCustom[cIdx] = productObj;
+      else prevCustom.unshift(productObj);
+      localStorage.setItem('tgn_custom_store_products', JSON.stringify(prevCustom));
+    } catch (e) {}
+
+    StoreComponent.editingProductId = null;
+    AppData.storeState.addProductOpen = false;
+    app.switchTab('sklep');
+    app.showToast(`✓ Zapisano produkt w katalogu sklepu: ${name}`);
   },
 
   deleteProduct: (prodId) => {
@@ -869,6 +1271,7 @@ const StoreComponent = {
     AppData.storeState.discountCodeApplied = true;
     AppData.storeState.promoModalMode = null;
     StoreComponent.syncGlobalPromoModal();
+    StoreComponent.syncGlobalCartDrawer();
     app.switchTab('sklep');
     app.showToast('🎉 Aktywowano kod RABAT3! Otrzymujesz 3% rabatu ("3 jak Par 3")!');
   },
@@ -878,7 +1281,7 @@ const StoreComponent = {
     const code = inp ? inp.value.trim().toUpperCase() : '';
     if (code === 'RABAT3' || code === 'PAR3' || code === 'TGN3') {
       AppData.storeState.discountCodeApplied = true;
-      app.switchTab('sklep');
+      StoreComponent.syncGlobalCartDrawer();
       app.showToast('🎉 Kod RABAT3 przyjęty! Naliczono 3% zniżki w koszyku.');
     } else {
       app.showToast('Wpisz kod: RABAT3 aby odebrać 3% zniżki!');
@@ -930,7 +1333,7 @@ const StoreComponent = {
       st.category = "PERSONALIZACJA";
       st.aiChatHistory.push(
         { sender: "Ty", text: "Chcę zamówić piłki z własnym nadrukiem / logo." },
-        { sender: "TGN AI Pro Fitter", text: "Otworzyłem dział 🖨️ Personalizacja piłek golfowych! Możesz zamówić tuzin Titleist Pro V1 z trwałym nadrukiem UV Twojego logo lub inicjałów." }
+        { sender: "TGN AI Pro Fitter", text: "Otworzyłem dział 🖨️ Personalizacja piłek golfowych! Wpisz swój tekst nadruku na karcie piłek Titleist Pro V1 i dodaj je do koszyka." }
       );
     } else if (promptType === "PREZENTY") {
       st.category = "PREZENTY";
@@ -994,68 +1397,6 @@ const StoreComponent = {
     }, 40);
   },
 
-  toggleAddProduct: () => {
-    StoreComponent.ensureStoreDataInitialized();
-    AppData.storeState.addProductOpen = !AppData.storeState.addProductOpen;
-    app.switchTab('sklep');
-  },
-
-  updateNewProductPreview: (val, nextVariant = false) => {
-    clearTimeout(StoreComponent.previewTimer);
-    StoreComponent.previewTimer = setTimeout(() => {
-      const imgEl = document.getElementById('newStoreProdPreviewImg');
-      if (!imgEl) return;
-      if (nextVariant) ClubImageEngine.searchVariantIndex += 1;
-      const query = (val && val.trim().length > 2) ? val.trim() : "Titleist TSR3 Driver";
-      imgEl.src = ClubImageEngine.buildDirectSearchPhotoUrl(query, ClubImageEngine.searchVariantIndex);
-    }, 250);
-  },
-
-  saveNewProductToStore: () => {
-    const name = document.getElementById('addProdName').value.trim();
-    const brand = document.getElementById('addProdBrand').value.trim() || "TGN Pro";
-    const section = document.getElementById('addProdSection').value;
-    const cat = document.getElementById('addProdCat').value;
-    const flex = document.getElementById('addProdFlex').value;
-    const hand = document.getElementById('addProdHand').value;
-    const loft = document.getElementById('addProdLoft').value.trim() || "Standard";
-    const condition = document.getElementById('addProdCond').value.trim() || "Fabrycznie nowy";
-    const price = parseInt(document.getElementById('addProdPrice').value, 10) || 990;
-    const oldPrice = parseInt(document.getElementById('addProdOldPrice').value, 10) || (price + 300);
-    const spec = document.getElementById('addProdSpec').value.trim() || `${brand} • ${loft} • Flex: ${flex}`;
-    const desc = document.getElementById('addProdDesc').value.trim() || "Produkt dodany do oficjalnego katalogu TGN Pro Shop.";
-    const customImg = document.getElementById('addProdCustomImg').value.trim();
-
-    if (!name) {
-      app.showToast("Wpisz nazwę nowego produktu!");
-      return;
-    }
-
-    const finalImgUrl = customImg || ClubImageEngine.buildDirectSearchPhotoUrl(name, ClubImageEngine.searchVariantIndex);
-
-    const newProduct = {
-      id: Date.now(), section, cat, brand, flex, hand, loft, condition,
-      condDetails: section === "USED" ? "Zweryfikowany przez serwis TGN CPO" : "Gwarancja producenta 24 mies.",
-      tag: section === "USED" ? "NOWOŚĆ W KOMISIE CPO" : "NOWOŚĆ W SKLEPIE",
-      tagGold: true, name, spec, desc, oldPrice, price,
-      tradeInPrice: Math.max(150, Math.round(price * 0.45)),
-      stock: 3, imgUrl: finalImgUrl
-    };
-
-    AppData.storeProducts.unshift(newProduct);
-    try {
-      const prevCustom = JSON.parse(localStorage.getItem('tgn_custom_store_products') || '[]');
-      prevCustom.unshift(newProduct);
-      localStorage.setItem('tgn_custom_store_products', JSON.stringify(prevCustom));
-    } catch (e) {}
-
-    AppData.storeState.addProductOpen = false;
-    AppData.storeState.section = "ALL";
-    AppData.storeState.category = "ALL";
-    app.switchTab('sklep');
-    app.showToast(`✓ Dodano nowy produkt do bazy sklepu: ${name}`);
-  },
-
   setSection: (sec) => { AppData.storeState.section = sec; app.switchTab('sklep'); },
   setCategory: (cat) => { AppData.storeState.category = cat; app.switchTab('sklep'); },
   setBrand: (brand) => { AppData.storeState.brand = brand; app.switchTab('sklep'); },
@@ -1077,35 +1418,5 @@ const StoreComponent = {
     AppData.storeState.search = "";
     app.switchTab('sklep');
   },
-  toggleCartDrawer: () => { AppData.storeState.cartOpen = !AppData.storeState.cartOpen; app.switchTab('sklep'); },
-  setDelivery: (method) => { AppData.storeState.deliveryMethod = method; },
-  addItem: (prodId, useTradeIn) => {
-    const prod = AppData.storeProducts.find(p => p.id === prodId);
-    if (!prod) return;
-    if (prod.stock <= 0) {
-      app.showToast('⚠️ Ten egzemplarz został już wyprzedany!');
-      return;
-    }
-    const finalPrice = useTradeIn ? prod.tradeInPrice : prod.price;
-    const modeLabel = useTradeIn ? "[W rozliczeniu Trade-In]" : (prod.section === "USED" ? "[Używany CPO]" : "[Nowy]");
-    const existing = AppData.cart.find(i => i.id === prodId && i.useTradeIn === useTradeIn);
-    if (existing) existing.qty = (existing.qty || 1) + 1;
-    else AppData.cart.push({ id: prod.id, name: prod.name, price: finalPrice, qty: 1, useTradeIn, modeLabel });
-    AppData.storeState.cartOpen = true;
-    auth.updateHeaderBar();
-    app.switchTab('sklep');
-    app.showToast(`Dodano do koszyka: ${prod.name} (${finalPrice} PLN)`);
-  },
-  changeQty: (idx, delta) => {
-    if (!AppData.cart[idx]) return;
-    AppData.cart[idx].qty = (AppData.cart[idx].qty || 1) + delta;
-    if (AppData.cart[idx].qty <= 0) AppData.cart.splice(idx, 1);
-    auth.updateHeaderBar();
-    app.switchTab('sklep');
-  },
-  removeItem: (idx) => {
-    AppData.cart.splice(idx, 1);
-    auth.updateHeaderBar();
-    app.switchTab('sklep');
-  }
+  setDelivery: (method) => { AppData.storeState.deliveryMethod = method; }
 };
