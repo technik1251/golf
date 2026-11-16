@@ -1,8 +1,5 @@
 /* =========================================================================
-   MODUŁ SKLEPU TGN v18.0 (ELITE MOBILE UI):
-   - Poziomy, przewijany pasek kategorii (Slider) oszczędzający miejsce na telefonie
-   - Czysty, minimalistyczny nagłówek i siatka produktowa klasy Premium
-   - Szuflada koszyka i wybór wariantów
+   MODUŁ SKLEPU TGN v18.0 (ELITE MOBILE UI)
    ========================================================================= */
 
 (function injectStoreV18Styles() {
@@ -15,7 +12,6 @@
   const style = document.createElement('style');
   style.id = 'tgnStoreV18Styles';
   style.textContent = `
-    /* Koszyk szufladowy (Slide-Over) */
     #tgnCartDrawerBackdrop {
       position: fixed; inset: 0; background: rgba(0, 0, 0, 0.78); backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px); z-index: 9990; display: none; justify-content: flex-end;
@@ -68,49 +64,19 @@
     }
     .prod-variant-box select option { background: #091519; color: #fff; }
 
-    /* Nowy, kompaktowy i elegancki poziomy slider kategorii na telefonie */
     .store-category-slider {
-      display: flex;
-      gap: 0.5rem;
-      overflow-x: auto;
-      padding-bottom: 0.5rem;
-      margin-bottom: 1rem;
-      scrollbar-width: thin;
-      scrollbar-color: var(--accent) rgba(0,0,0,0.2);
+      display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; margin-bottom: 1rem;
+      scrollbar-width: thin; scrollbar-color: var(--accent) rgba(0,0,0,0.2);
     }
-    .store-category-slider::-webkit-scrollbar {
-      height: 4px;
-    }
-    .store-category-slider::-webkit-scrollbar-thumb {
-      background: var(--accent);
-      border-radius: 4px;
-    }
+    .store-category-slider::-webkit-scrollbar { height: 4px; }
+    .store-category-slider::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
     .cat-pill-chip {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: var(--text-main);
-      padding: 0.45rem 0.95rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      white-space: nowrap;
-      cursor: pointer;
-      transition: 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); color: var(--text-main);
+      padding: 0.45rem 0.95rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; white-space: nowrap;
+      cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px;
     }
-    .cat-pill-chip:hover {
-      background: rgba(74, 222, 128, 0.15);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    .cat-pill-chip.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #052e16;
-      font-weight: 800;
-    }
+    .cat-pill-chip:hover { background: rgba(74, 222, 128, 0.15); border-color: var(--accent); color: var(--accent); }
+    .cat-pill-chip.active { background: var(--accent); border-color: var(--accent); color: #052e16; font-weight: 800; }
 
     .elite-store-bar {
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;
@@ -623,7 +589,6 @@ const StoreComponent = {
     const totalItemsCount = (AppData.cart || []).reduce((sum, i) => sum + (i.qty || 1), 0);
     const brandsList = [...new Set(AppData.storeProducts.map(p => p.brand))];
 
-    // Profesjonalna belka elitarna w stylu PGA Tour Elite
     const eliteStoreBarHTML = `
       <div class="elite-store-bar">
         <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
