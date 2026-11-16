@@ -279,7 +279,7 @@ h2 {
 .course-specs-bar span { display: block; font-size: 0.6rem; color: var(--text-muted); }
 .course-specs-bar strong { color: var(--text-main); }
 
-/* Sklep Premium */
+/* Sklep Premium & Poziomy Slider Kategorii */
 .store-banner {
   background: linear-gradient(135deg, rgba(74, 222, 128, 0.16), rgba(56, 189, 248, 0.1));
   border: 1px solid var(--glass-border); border-radius: 14px; padding: 1.1rem 1.3rem; margin-bottom: 1.2rem;
@@ -306,6 +306,53 @@ h2 {
 .cart-summary-bar {
   background: rgba(0, 0, 0, 0.5); border: 1px solid var(--accent); border-radius: 12px; padding: 0.9rem 1.2rem;
   margin-bottom: 1.2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;
+}
+
+/* Poziomy Slider Kategorii w Sklepie (Wymuszenie 1 linii w poziomie) */
+.store-category-slider {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.6rem;
+  margin-bottom: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) rgba(0,0,0,0.2);
+  -webkit-overflow-scrolling: touch;
+}
+.store-category-slider::-webkit-scrollbar {
+  height: 4px;
+}
+.store-category-slider::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 4px;
+}
+.cat-pill-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--text-main);
+  padding: 0.45rem 0.95rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.cat-pill-chip:hover {
+  background: rgba(74, 222, 128, 0.15);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.cat-pill-chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #052e16;
+  font-weight: 800;
 }
 
 /* Wydarzenia 2027 */
