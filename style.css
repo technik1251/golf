@@ -1,8 +1,8 @@
 :root {
-  --glass-bg: rgba(14, 26, 30, 0.90);
-  --glass-border: rgba(114, 214, 150, 0.4);
+  --glass-bg: rgba(12, 22, 26, 0.94);
+  --glass-border: rgba(114, 214, 150, 0.35);
   --accent: #4ade80;
-  --accent-glow: rgba(74, 222, 128, 0.25);
+  --accent-glow: rgba(74, 222, 128, 0.2);
   --gold: #facc15;
   --blue: #38bdf8;
   --text-main: #f1f5f9;
@@ -28,7 +28,7 @@ body {
 }
 
 header {
-  background: rgba(8, 16, 20, 0.95);
+  background: rgba(8, 16, 20, 0.96);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--glass-border);
@@ -279,9 +279,9 @@ h2 {
 .course-specs-bar span { display: block; font-size: 0.6rem; color: var(--text-muted); }
 .course-specs-bar strong { color: var(--text-main); }
 
-/* Sklep */
+/* Sklep Premium */
 .store-banner {
-  background: linear-gradient(135deg, rgba(74, 222, 128, 0.16), rgba(250, 204, 21, 0.1));
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.16), rgba(56, 189, 248, 0.1));
   border: 1px solid var(--glass-border); border-radius: 14px; padding: 1.1rem 1.3rem; margin-bottom: 1.2rem;
   display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
 }
