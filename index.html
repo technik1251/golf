@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#070f14">
   <title>TGN Global Golf – Oficjalny Sklep Golfowy, Komis CPO & Forum</title>
-  <link rel="stylesheet" href="./style.css?v=15.0">
+  <link rel="stylesheet" href="./style.css?v=16.0">
 </head>
 <body>
 
@@ -28,11 +28,11 @@
       <button data-tab="cpo">⚡ Wyceń swój kij (Skup)</button>
       <button data-tab="marketplace">🤝 Giełda Graczy C2C</button>
       <button data-tab="chat">💬 Wiadomości</button>
-      <button data-tab="admin" id="navAdminBtn" style="display:none; border:1px solid var(--gold); color:var(--gold);">⚙️ Panel Admina</button>
+      <button data-tab="admin" id="navAdminBtn" style="display:none; background:rgba(250,204,21,0.2); border:1px solid var(--gold); color:var(--gold); font-weight:800;">⚙️ Panel Admina (CMS)</button>
     </nav>
   </header>
 
-  <!-- Ekran Logowania i Rejestracji (Produkcyjny) -->
+  <!-- Ekran Logowania i Rejestracji -->
   <div id="authScreen" class="auth-wrapper">
     <div class="auth-panel">
       <div style="text-align: center; margin-bottom: 1.2rem;">
@@ -47,7 +47,6 @@
         <button id="tabRegisterBtn" class="auth-tab-btn" onclick="auth.switchAuthMode('register')">Załóż konto</button>
       </div>
 
-      <!-- Logowanie -->
       <div id="loginForm">
         <div class="form-group">
           <label>Adres E-mail</label>
@@ -64,7 +63,6 @@
         </div>
       </div>
 
-      <!-- Rejestracja -->
       <div id="registerForm" style="display:none;">
         <div class="form-group">
           <label>Imię i Nazwisko</label>
@@ -96,7 +94,7 @@
   <!-- Główna Scena Aplikacji -->
   <main class="spatial-stage" id="appContainer" style="display:none;"></main>
 
-  <!-- Oficjalna Stopka Sklepu i Forum (Wymogi prawne e-commerce) -->
+  <!-- Oficjalna Stopka Sklepu i Forum -->
   <footer id="mainFooter" style="display:none; background:rgba(6, 14, 18, 0.96); border-top:1px solid var(--glass-border); padding:1.5rem 2rem; margin-top:2rem; font-size:0.75rem; color:var(--text-muted);">
     <div style="max-width:1550px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
       <div>
@@ -147,7 +145,7 @@
     </div>
   </div>
 
-  <!-- Modal Dokumentów Prawnych (Regulamin / Zwroty / RODO) -->
+  <!-- Modal Dokumentów Prawnych -->
   <div id="legalModalOverlay" class="modal-overlay" onclick="app.closeLegalModal()">
     <div class="ai-popup-card" style="max-width:620px; border-color:var(--accent);" onclick="event.stopPropagation()">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
@@ -160,14 +158,14 @@
 
   <div id="toast">Powiadomienie</div>
 
-  <!-- Ładowanie modułów produkcyjnych (v15.0) -->
-  <script src="./js/data.js?v=15.0"></script>
-  <script src="./js/profile.js?v=15.0"></script>
-  <script src="./js/courses.js?v=15.0"></script>
-  <script src="./js/events.js?v=15.0"></script>
-  <script src="./js/store.js?v=15.0"></script>
-  <script src="./js/forum.js?v=15.0"></script>
-  <script src="./js/market.js?v=15.0"></script>
-  <script src="./js/app.js?v=15.0"></script>
+  <!-- Ładowanie modułów produkcyjnych (v16.0) -->
+  <script src="./js/data.js?v=16.0"></script>
+  <script src="./js/profile.js?v=16.0"></script>
+  <script src="./js/courses.js?v=16.0"></script>
+  <script src="./js/events.js?v=16.0"></script>
+  <script src="./js/store.js?v=16.0"></script>
+  <script src="./js/forum.js?v=16.0"></script>
+  <script src="./js/market.js?v=16.0"></script>
+  <script src="./js/app.js?v=16.0"></script>
 </body>
 </html>
