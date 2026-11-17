@@ -1,48 +1,73 @@
 /* =========================================================================
-   GŁÓWNY KONTROLER PRODUKCYJNY TGN v23.0 (js/app.js)
-   - Wbudowany Ekran Startowy (HomeComponent - Portal Hub TGN.pl)
-   - Obsługa bezpośrednich wejść (#sklep -> sklep.tgn.pl, #forum -> forum.tgn.pl)
-   - Pełna obsługa Logowania, Roli Admina, Szuflady Koszyka i Bazy JSON
+   GŁÓWNY KONTROLER PRODUKCYJNY TGN v24.0 (js/app.js)
+   - Odporny na duplikaty deklaracji (window.HomeComponent, window.auth, window.app)
+   - Wbudowany Ekran Startowy TGN.pl (z kafelkami do sklep.tgn.pl i forum.tgn.pl)
+   - Podwójne bindowanie przycisków logowania (onclick + addEventListener)
    ========================================================================= */
+
+// Zabezpieczenie na wypadek, gdyby DefaultUser lub AppData nie były jeszcze zainicjalizowane
+window.DefaultUser = window.DefaultUser || {
+  name: "Marek Kowalski",
+  email: "marek.kowalski@tgngolf.pl",
+  hcp: 12.4,
+  level: "Średniozaawansowany",
+  city: "Warszawa",
+  swingSpeed: "96 mph",
+  lastRound: "82 (Modry Las)",
+  role: "CLIENT"
+};
+
+if (typeof window.AppData === 'undefined') {
+  window.AppData = {
+    user: { ...window.DefaultUser },
+    cart: [],
+    storeProducts: [],
+    forumPosts: [],
+    events2027: [],
+    bag: [],
+    chatMessages: []
+  };
+}
 
 // 1. Inicjalizacja trwałej bazy danych przy starcie
 (function initPersistentDatabase() {
   try {
     const savedForum = localStorage.getItem('tgn_forum_posts_db');
-    if (savedForum && typeof AppData !== 'undefined') {
-      AppData.forumPosts = JSON.parse(savedForum);
+    if (savedForum && window.AppData) {
+      window.AppData.forumPosts = JSON.parse(savedForum);
     }
     const savedCart = localStorage.getItem('tgn_persistent_cart');
-    if (savedCart && typeof AppData !== 'undefined') {
-      AppData.cart = JSON.parse(savedCart);
+    if (savedCart && window.AppData) {
+      window.AppData.cart = JSON.parse(savedCart);
     }
   } catch (e) {}
 })();
 
-const saveForumToDB = () => {
+window.saveForumToDB = function() {
   try {
-    localStorage.setItem('tgn_forum_posts_db', JSON.stringify(AppData.forumPosts));
+    localStorage.setItem('tgn_forum_posts_db', JSON.stringify(window.AppData.forumPosts || []));
   } catch (e) {}
 };
 
 // 2. Wbudowany moduł Strony Głównej / Ekranu Startowego (TGN.pl Hub)
-const HomeComponent = {
-  render: () => {
-    const userName = (AppData.user && AppData.user.name) ? AppData.user.name : "Gracz TGN";
-    const userHcp = (AppData.user && AppData.user.hcp) ? AppData.user.hcp : 12.4;
-    const userCity = (AppData.user && AppData.user.city) ? AppData.user.city : "Warszawa";
-    const cartCount = (AppData.cart || []).reduce((sum, i) => sum + (i.qty || 1), 0);
-    const regEventsCount = (AppData.events2027 || []).filter(e => e.registered).length;
-    const bagCount = (AppData.bag || []).length;
-    const productsCount = (AppData.storeProducts || []).length;
-    const forumTotal = (AppData.forumPosts || []).length;
-    const recentPosts = (AppData.forumPosts || []).slice(0, 3);
+window.HomeComponent = {
+  render: function() {
+    const userObj = (window.AppData && window.AppData.user) ? window.AppData.user : window.DefaultUser;
+    const userName = userObj.name || "Gracz TGN";
+    const userHcp = userObj.hcp || 12.4;
+    const userCity = userObj.city || "Warszawa";
+    const cartCount = (window.AppData.cart || []).reduce((sum, i) => sum + (i.qty || 1), 0);
+    const regEventsCount = (window.AppData.events2027 || []).filter(e => e.registered).length;
+    const bagCount = (window.AppData.bag || []).length;
+    const productsCount = (window.AppData.storeProducts || []).length;
+    const forumTotal = (window.AppData.forumPosts || []).length;
+    const recentPosts = (window.AppData.forumPosts || []).slice(0, 3);
 
     const recentPostsHTML = recentPosts.map(post => `
-      <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.85rem; margin-bottom:0.6rem; cursor:pointer; transition:0.2s;" onclick="app.switchTab('forum')">
+      <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.85rem; margin-bottom:0.6rem; cursor:pointer; transition:0.2s;" onclick="window.app.switchTab('forum')">
         <div style="display:flex; justify-content:space-between; font-size:0.68rem; color:var(--accent); margin-bottom:0.2rem;">
-          <span>${post.category}</span>
-          <span style="color:var(--text-muted);">${post.date}</span>
+          <span>${post.category || 'Dyskusja'}</span>
+          <span style="color:var(--text-muted);">${post.date || '2026'}</span>
         </div>
         <strong style="font-size:0.85rem; color:var(--text-main); display:block; margin-bottom:0.2rem;">${post.title}</strong>
         <span style="font-size:0.72rem; color:var(--text-muted);">Autor: ${post.author} • 💬 ${(post.comments || []).length} odpowiedzi</span>
@@ -68,7 +93,7 @@ const HomeComponent = {
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1.1rem; margin-bottom:1.6rem;">
           
           <!-- Kafel 1: SKLEP.TGN.PL -->
-          <div style="background:linear-gradient(155deg, rgba(74,222,128,0.15), rgba(8,20,24,0.95)); border:2px solid var(--accent); border-radius:18px; padding:1.4rem; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer;" onclick="app.switchTab('sklep')">
+          <div style="background:linear-gradient(155deg, rgba(74,222,128,0.15), rgba(8,20,24,0.95)); border:2px solid var(--accent); border-radius:18px; padding:1.4rem; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer;" onclick="window.app.switchTab('sklep')">
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
                 <span style="font-size:2rem;">🛍️</span>
@@ -79,11 +104,11 @@ const HomeComponent = {
                 ${productsCount} produktów w katalogu: nowe kije 2026, zweryfikowany sprzęt używany CPO, personalizacja piłek oraz kod rabatowy <strong style="color:var(--gold);">RABAT3 (-3%)</strong>.
               </p>
             </div>
-            <button class="btn-primary" style="margin:0; padding:0.6rem;">Wejdź do Sklepu →</button>
+            <button type="button" class="btn-primary" style="margin:0; padding:0.6rem;">Wejdź do Sklepu →</button>
           </div>
 
           <!-- Kafel 2: FORUM.TGN.PL -->
-          <div style="background:linear-gradient(155deg, rgba(56,189,248,0.15), rgba(8,20,24,0.95)); border:2px solid var(--blue); border-radius:18px; padding:1.4rem; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer;" onclick="app.switchTab('forum')">
+          <div style="background:linear-gradient(155deg, rgba(56,189,248,0.15), rgba(8,20,24,0.95)); border:2px solid var(--blue); border-radius:18px; padding:1.4rem; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer;" onclick="window.app.switchTab('forum')">
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
                 <span style="font-size:2rem;">💬</span>
@@ -94,11 +119,11 @@ const HomeComponent = {
                 Baza wiedzy (${forumTotal} aktywnych tematów), recenzje kijów, porady trenerów PGA Pro, umawianie wspólnych rund i dyskusje turniejowe.
               </p>
             </div>
-            <button class="btn-action" style="margin:0; padding:0.6rem; border-color:var(--blue); color:#041e2b; background:var(--blue); font-weight:800;">Wejdź na Forum →</button>
+            <button type="button" class="btn-action" style="margin:0; padding:0.6rem; border-color:var(--blue); color:#041e2b; background:var(--blue); font-weight:800;">Wejdź na Forum →</button>
           </div>
 
           <!-- Kafel 3: KOKPIT 3D & POZOSTAŁE MODUŁY -->
-          <div style="background:linear-gradient(155deg, rgba(250,204,21,0.13), rgba(8,20,24,0.95)); border:1px solid rgba(250,204,21,0.5); border-radius:18px; padding:1.4rem; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer;" onclick="app.switchTab('profile')">
+          <div style="background:linear-gradient(155deg, rgba(250,204,21,0.13), rgba(8,20,24,0.95)); border:1px solid rgba(250,204,21,0.5); border-radius:18px; padding:1.4rem; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer;" onclick="window.app.switchTab('profile')">
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
                 <span style="font-size:2rem;">👤</span>
@@ -109,7 +134,7 @@ const HomeComponent = {
                 Twój profil WHS (HCP ${userHcp} • ${userCity}), cyfrowa torba (${bagCount}/14 kijów), analiza luk dystansowych Gapping AI oraz wycena Trade-In.
               </p>
             </div>
-            <button class="btn-action" style="margin:0; padding:0.6rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.14);">Otwórz Kokpit Gracza →</button>
+            <button type="button" class="btn-action" style="margin:0; padding:0.6rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.14);">Otwórz Kokpit Gracza →</button>
           </div>
 
         </div>
@@ -119,19 +144,19 @@ const HomeComponent = {
           <div>
             <h3 style="font-size:0.85rem; text-transform:uppercase; color:var(--accent); margin-bottom:0.75rem;">⚡ Pozostałe działy portalu TGN</h3>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem;">
-              <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.85rem; cursor:pointer;" onclick="app.switchTab('pola')">
+              <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.85rem; cursor:pointer;" onclick="window.app.switchTab('pola')">
                 <strong style="color:#fff; font-size:0.82rem; display:block;">⛳ Pola w Polsce</strong>
                 <span style="font-size:0.68rem; color:var(--text-muted);">25 pól i rezerwacje Tee Time</span>
               </div>
-              <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.85rem; cursor:pointer;" onclick="app.switchTab('wydarzenia')">
+              <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.85rem; cursor:pointer;" onclick="window.app.switchTab('wydarzenia')">
                 <strong style="color:#fff; font-size:0.82rem; display:block;">📅 Kalendarz 2027</strong>
                 <span style="font-size:0.68rem; color:var(--text-muted);">Turnieje i zapisy (${regEventsCount}/6)</span>
               </div>
-              <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.85rem; cursor:pointer;" onclick="app.switchTab('cpo')">
+              <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.85rem; cursor:pointer;" onclick="window.app.switchTab('cpo')">
                 <strong style="color:#fff; font-size:0.82rem; display:block;">🔄 Skup Kijów CPO</strong>
-                <span style="font-size:0.68rem; color:var(--text-muted);">Odamej sprzęt za gotówkę</span>
+                <span style="font-size:0.68rem; color:var(--text-muted);">Sprzedaj sprzęt od ręki</span>
               </div>
-              <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.85rem; cursor:pointer;" onclick="app.switchTab('marketplace')">
+              <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.85rem; cursor:pointer;" onclick="window.app.switchTab('marketplace')">
                 <strong style="color:#fff; font-size:0.82rem; display:block;">🤝 Giełda C2C</strong>
                 <span style="font-size:0.68rem; color:var(--text-muted);">Ogłoszenia prywatne graczy</span>
               </div>
@@ -141,7 +166,7 @@ const HomeComponent = {
           <div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
               <h3 style="font-size:0.85rem; text-transform:uppercase; color:var(--accent); margin:0;">🔥 Najnowsze dyskusje z Forum</h3>
-              <button class="btn-mini-tool" onclick="app.switchTab('forum')">Wszystkie →</button>
+              <button type="button" class="btn-mini-tool" onclick="window.app.switchTab('forum')">Wszystkie →</button>
             </div>
             ${recentPostsHTML}
           </div>
@@ -152,8 +177,8 @@ const HomeComponent = {
 };
 
 // 3. Komponent Panelu Administratora (CMS)
-const AdminDashboardComponent = {
-  render: () => {
+window.AdminDashboardComponent = {
+  render: function() {
     const orders = JSON.parse(localStorage.getItem('tgn_orders_db') || '[]');
     const subscribers = JSON.parse(localStorage.getItem('tgn_newsletter_list') || '[]');
     const totalRevenue = orders.reduce((s, o) => s + (o.total || 0), 0);
@@ -168,14 +193,14 @@ const AdminDashboardComponent = {
           <strong style="color:var(--gold); font-size:0.9rem;">Zamówienie #${o.orderId} • ${o.date}</strong>
           <div style="display:flex; gap:0.4rem; align-items:center;">
             <span style="background:rgba(74,222,128,0.18); color:var(--accent); padding:3px 9px; border-radius:6px; font-size:0.72rem; font-weight:700;">${o.status}</span>
-            <button class="btn-mini-tool" onclick="app.changeOrderStatus(${idx})">🔄 Zmień status</button>
+            <button type="button" class="btn-mini-tool" onclick="window.app.changeOrderStatus(${idx})">🔄 Zmień status</button>
           </div>
         </div>
         <p style="font-size:0.78rem; color:var(--text-main);"><strong>Klient:</strong> ${o.customerName} | <strong>Tel:</strong> ${o.phone} | <strong>E-mail:</strong> ${o.email}</p>
         <p style="font-size:0.76rem; color:var(--text-muted);"><strong>Adres dostawy:</strong> ${o.address} (${o.delivery}) | <strong>Faktura NIP:</strong> ${o.nip}</p>
         <div style="font-size:0.75rem; color:var(--accent); margin-top:0.45rem; background:rgba(0,0,0,0.3); padding:0.5rem 0.75rem; border-radius:8px;">
           <strong>Zakupione pozycje:</strong><br>
-          ${o.items.map(i => `• ${i.name} [${i.variant || 'Standard'}] — ${i.qty || 1} szt. x ${i.price} PLN`).join('<br>')}
+          ${(o.items || []).map(i => `• ${i.name} [${i.variant || 'Standard'}] — ${i.qty || 1} szt. x ${i.price} PLN`).join('<br>')}
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem; padding-top:0.4rem; border-top:1px solid rgba(255,255,255,0.06);">
           <span style="font-size:0.72rem; color:var(--text-muted);">Uwagi: ${o.notes}</span>
@@ -189,21 +214,21 @@ const AdminDashboardComponent = {
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1.2rem;">
           <h2 style="margin:0; color:var(--gold);">⚙️ PANEL ADMINISTRATORA SKLEPU & FORUM (TGN CMS)</h2>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button class="btn-action" style="width:auto; margin:0; padding:0.45rem 0.9rem; background:var(--accent); color:#052e16;" onclick="app.switchTab('sklep'); setTimeout(() => StoreComponent.startAddNewProduct(), 60);">
+            <button type="button" class="btn-action" style="width:auto; margin:0; padding:0.45rem 0.9rem; background:var(--accent); color:#052e16;" onclick="window.app.switchTab('sklep'); setTimeout(() => window.StoreComponent && window.StoreComponent.startAddNewProduct(), 60);">
               ➕ Dodaj nowy produkt do sklepu
             </button>
-            <button class="btn-action" style="width:auto; margin:0; padding:0.45rem 0.9rem; border-color:var(--gold); color:var(--gold);" onclick="app.exportDatabaseJson()">
+            <button type="button" class="btn-action" style="width:auto; margin:0; padding:0.45rem 0.9rem; border-color:var(--gold); color:var(--gold);" onclick="window.app.exportDatabaseJson()">
               💾 Eksportuj bazę JSON (Backup)
             </button>
             <label class="btn-action" style="width:auto; margin:0; padding:0.45rem 0.9rem; border-color:#38bdf8; color:#38bdf8; cursor:pointer; display:inline-block;">
               📂 Wgraj bazę JSON
-              <input type="file" accept=".json" style="display:none;" onchange="app.importDatabaseJson(event)">
+              <input type="file" accept=".json" style="display:none;" onchange="window.app.importDatabaseJson(event)">
             </label>
           </div>
         </div>
 
         <div class="forum-stats-bar">
-          <div><div class="forum-stat-num">${AppData.storeProducts.length}</div><div class="forum-stat-lbl">Produktów w katalogu</div></div>
+          <div><div class="forum-stat-num">${(window.AppData.storeProducts || []).length}</div><div class="forum-stat-lbl">Produktów w katalogu</div></div>
           <div><div class="forum-stat-num" style="color:var(--gold);">${orders.length}</div><div class="forum-stat-lbl">Złożonych zamówień</div></div>
           <div><div class="forum-stat-num">${totalRevenue} PLN</div><div class="forum-stat-lbl">Przychód ze sprzedaży</div></div>
           <div><div class="forum-stat-num" style="color:#38bdf8;">${subscribers.length}</div><div class="forum-stat-lbl">Subskrybentów Newslettera</div></div>
@@ -221,92 +246,94 @@ const AdminDashboardComponent = {
   }
 };
 
-// 4. Moduł Logowania i Autoryzacji (auth)
-const auth = {
-  switchAuthMode: (mode) => {
-    document.getElementById('tabLoginBtn').classList.toggle('active', mode === 'login');
-    document.getElementById('tabRegisterBtn').classList.toggle('active', mode === 'register');
-    document.getElementById('loginForm').style.display = mode === 'login' ? 'block' : 'none';
-    document.getElementById('registerForm').style.display = mode === 'register' ? 'block' : 'none';
+// 4. Moduł Logowania i Autoryzacji (window.auth)
+window.auth = {
+  switchAuthMode: function(mode) {
+    const loginBtn = document.getElementById('tabLoginBtn');
+    const regBtn = document.getElementById('tabRegisterBtn');
+    const loginForm = document.getElementById('loginForm');
+    const regForm = document.getElementById('registerForm');
+    if (loginBtn) loginBtn.classList.toggle('active', mode === 'login');
+    if (regBtn) regBtn.classList.toggle('active', mode === 'register');
+    if (loginForm) loginForm.style.display = mode === 'login' ? 'block' : 'none';
+    if (regForm) regForm.style.display = mode === 'register' ? 'block' : 'none';
   },
 
-  loginDemo: () => { auth.loginAsClient(); },
+  loginDemo: function() { window.auth.loginAsClient(); },
 
-  loginAsClient: () => {
-    AppData.user = { ...DefaultUser, role: 'CLIENT' };
-    localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
-    auth.enterApp('Witaj w portalu TGN, ' + AppData.user.name + '!');
+  loginAsClient: function() {
+    window.AppData.user = { ...window.DefaultUser, role: 'CLIENT' };
+    try { localStorage.setItem('tgn_user', JSON.stringify(window.AppData.user)); } catch (e) {}
+    window.auth.enterApp('Witaj w portalu TGN, ' + window.AppData.user.name + '!');
   },
 
-  loginAsAdmin: () => {
-    AppData.user = { ...DefaultUser, name: "Właściciel TGN (Admin)", email: "admin@tgngolf.pl", role: 'ADMIN' };
-    localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
-    auth.enterApp('🔑 Zalogowano w trybie Właściciela / Administratora!');
+  loginAsAdmin: function() {
+    window.AppData.user = { ...window.DefaultUser, name: "Właściciel TGN (Admin)", email: "admin@tgngolf.pl", role: 'ADMIN' };
+    try { localStorage.setItem('tgn_user', JSON.stringify(window.AppData.user)); } catch (e) {}
+    window.auth.enterApp('🔑 Zalogowano w trybie Właściciela / Administratora!');
   },
 
-  handleLogin: () => {
+  handleLogin: function() {
     const emailEl = document.getElementById('loginEmail');
     const passEl = document.getElementById('loginPass');
-    const email = emailEl ? emailEl.value.trim() : '';
-    const pass = passEl ? passEl.value.trim() : '';
-    if (!email || !pass) {
-      app.showToast('Wpisz adres e-mail oraz hasło!');
+    const email = emailEl ? emailEl.value.trim() : 'marek.kowalski@tgngolf.pl';
+    const pass = passEl ? passEl.value.trim() : '********';
+    if (!email) {
+      window.app.showToast('Wpisz adres e-mail!');
       return;
     }
     const isAdmin = email.toLowerCase().includes('admin') || pass === 'admin123';
     const nameFromEmail = email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase());
-    AppData.user = {
-      ...DefaultUser,
-      name: isAdmin ? 'Administrator TGN' : (nameFromEmail || DefaultUser.name),
-      email,
+    window.AppData.user = {
+      ...window.DefaultUser,
+      name: isAdmin ? 'Administrator TGN' : (nameFromEmail || window.DefaultUser.name),
+      email: email,
       role: isAdmin ? 'ADMIN' : 'CLIENT'
     };
-    localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
-    auth.enterApp('Witaj w TGN Global Golf, ' + AppData.user.name + '!');
+    try { localStorage.setItem('tgn_user', JSON.stringify(window.AppData.user)); } catch (e) {}
+    window.auth.enterApp('Witaj w TGN Global Golf, ' + window.AppData.user.name + '!');
   },
 
-  handleRegister: () => {
-    const name = document.getElementById('regName').value.trim();
-    const hcp = parseFloat(document.getElementById('regHcp').value) || 24.0;
-    const city = document.getElementById('regCity').value.trim() || 'Warszawa';
-    const email = document.getElementById('regEmail').value.trim();
-    const pass = document.getElementById('regPass').value.trim();
-
-    if (!name || !email || !pass) {
-      app.showToast('Wypełnij wszystkie pola rejestracji!');
-      return;
-    }
+  handleRegister: function() {
+    const name = document.getElementById('regName')?.value.trim() || 'Nowy Gracz';
+    const hcp = parseFloat(document.getElementById('regHcp')?.value) || 24.0;
+    const city = document.getElementById('regCity')?.value.trim() || 'Warszawa';
+    const email = document.getElementById('regEmail')?.value.trim() || 'gracz@tgngolf.pl';
 
     const level = hcp <= 10 ? 'Zaawansowany' : (hcp <= 20 ? 'Średniozaawansowany' : 'Początkujący');
-    AppData.user = { ...DefaultUser, name, email, hcp, level, city, role: 'CLIENT' };
-    localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
-    auth.enterApp('Utworzono konto gracza: ' + name);
+    window.AppData.user = { ...window.DefaultUser, name, email, hcp, level, city, role: 'CLIENT' };
+    try { localStorage.setItem('tgn_user', JSON.stringify(window.AppData.user)); } catch (e) {}
+    window.auth.enterApp('Utworzono konto gracza: ' + name);
   },
 
-  toggleAdminRoleQuick: () => {
-    AppData.user.role = AppData.user.role === 'ADMIN' ? 'CLIENT' : 'ADMIN';
-    localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
-    auth.updateHeaderBar();
+  toggleAdminRoleQuick: function() {
+    if (!window.AppData.user) window.AppData.user = { ...window.DefaultUser };
+    window.AppData.user.role = window.AppData.user.role === 'ADMIN' ? 'CLIENT' : 'ADMIN';
+    try { localStorage.setItem('tgn_user', JSON.stringify(window.AppData.user)); } catch (e) {}
+    window.auth.updateHeaderBar();
 
-    if (AppData.user.role === 'ADMIN') {
-      app.switchTab('admin');
-      app.showToast('🔑 Włączono tryb Administratora – otwarto Panel CMS!');
+    if (window.AppData.user.role === 'ADMIN') {
+      window.app.switchTab('admin');
+      window.app.showToast('🔑 Włączono tryb Administratora – otwarto Panel CMS!');
     } else {
-      app.switchTab('home');
-      app.showToast('👤 Przełączono na widok Klienta.');
+      window.app.switchTab('home');
+      window.app.showToast('👤 Przełączono na widok Klienta.');
     }
   },
 
-  enterApp: (msg) => {
-    document.getElementById('authScreen').style.display = 'none';
-    document.getElementById('mainNav').style.display = 'flex';
-    document.getElementById('appContainer').style.display = 'grid';
+  enterApp: function(msg) {
+    const authScr = document.getElementById('authScreen');
+    const navBar = document.getElementById('mainNav');
+    const appCont = document.getElementById('appContainer');
     const footer = document.getElementById('mainFooter');
+
+    if (authScr) authScr.style.display = 'none';
+    if (navBar) navBar.style.display = 'flex';
+    if (appCont) appCont.style.display = 'grid';
     if (footer) footer.style.display = 'block';
 
-    auth.updateHeaderBar();
+    window.auth.updateHeaderBar();
 
-    // Sprawdź czy użytkownik wchodzi na subdomenę (sklep.tgn.pl / forum.tgn.pl) lub konkretny hash (#sklep, #forum)
     const host = window.location.hostname.toLowerCase();
     const hash = window.location.hash.replace('#', '').toLowerCase();
 
@@ -317,34 +344,38 @@ const auth = {
       startTab = hash;
     }
 
-    app.switchTab(startTab);
-    if (msg) app.showToast(msg);
+    window.app.switchTab(startTab);
+    if (msg) window.app.showToast(msg);
   },
 
-  updateHeaderBar: () => {
-    const cartCount = (AppData.cart || []).reduce((s, i) => s + (i.qty || 1), 0);
-    const isAdmin = AppData.user && AppData.user.role === 'ADMIN';
+  updateHeaderBar: function() {
+    const cartCount = (window.AppData.cart || []).reduce((s, i) => s + (i.qty || 1), 0);
+    const isAdmin = window.AppData.user && window.AppData.user.role === 'ADMIN';
     const adminNavBtn = document.getElementById('navAdminBtn');
     if (adminNavBtn) adminNavBtn.style.display = isAdmin ? 'inline-block' : 'none';
 
-    document.getElementById('headerRightInfo').innerHTML = `
-      <button class="btn-mini-tool" style="border-color:${isAdmin ? 'var(--gold)' : 'rgba(255,255,255,0.2)'}; color:${isAdmin ? 'var(--gold)' : 'var(--text-muted)'}; font-weight:800;" onclick="auth.toggleAdminRoleQuick()">
-        ${isAdmin ? '⚙️ Tryb: ADMIN' : '👤 Widok: KLIENT'}
-      </button>
-      <span style="font-size: 0.76rem; color: var(--gold); font-weight:800; cursor:pointer; background:rgba(250,204,21,0.14); padding:4px 10px; border-radius:6px; border:1px solid rgba(250,204,21,0.45);" onclick="StoreComponent.openCartDrawer()">
-        🛒 Koszyk (${cartCount})
-      </span>
-      <span style="font-size: 0.72rem; color: var(--accent); font-weight:700;">● ${AppData.user.name.split(' ')[0]}</span>
-      <button class="btn-logout" onclick="auth.logout()">Wyloguj</button>
-    `;
+    const userFirstName = (window.AppData.user && window.AppData.user.name) ? window.AppData.user.name.split(' ')[0] : 'Marek';
+    const headerInfo = document.getElementById('headerRightInfo');
+    if (headerInfo) {
+      headerInfo.innerHTML = `
+        <button type="button" class="btn-mini-tool" style="border-color:${isAdmin ? 'var(--gold)' : 'rgba(255,255,255,0.2)'}; color:${isAdmin ? 'var(--gold)' : 'var(--text-muted)'}; font-weight:800;" onclick="window.auth.toggleAdminRoleQuick()">
+          ${isAdmin ? '⚙️ Tryb: ADMIN' : '👤 Widok: KLIENT'}
+        </button>
+        <span style="font-size: 0.76rem; color: var(--gold); font-weight:800; cursor:pointer; background:rgba(250,204,21,0.14); padding:4px 10px; border-radius:6px; border:1px solid rgba(250,204,21,0.45);" onclick="window.StoreComponent && window.StoreComponent.openCartDrawer()">
+          🛒 Koszyk (${cartCount})
+        </span>
+        <span style="font-size: 0.72rem; color: var(--accent); font-weight:700;">● ${userFirstName}</span>
+        <button type="button" class="btn-logout" onclick="window.auth.logout()">Wyloguj</button>
+      `;
+    }
 
-    if (typeof StoreComponent !== 'undefined' && StoreComponent.syncGlobalCartDrawer) {
-      StoreComponent.syncGlobalCartDrawer();
+    if (typeof window.StoreComponent !== 'undefined' && window.StoreComponent.syncGlobalCartDrawer) {
+      window.StoreComponent.syncGlobalCartDrawer();
     }
   },
 
-  logout: () => {
-    localStorage.removeItem('tgn_user');
+  logout: function() {
+    try { localStorage.removeItem('tgn_user'); } catch (e) {}
     document.getElementById('authScreen').style.display = 'flex';
     document.getElementById('mainNav').style.display = 'none';
     document.getElementById('appContainer').style.display = 'none';
@@ -357,40 +388,45 @@ const auth = {
     const fab = document.getElementById('tgnFloatingCartBtn');
     if (fab) fab.style.display = 'none';
     document.getElementById('headerRightInfo').innerHTML = `<span style="font-size: 0.7rem; color: var(--text-muted);">Sklep Pro Shop & Społeczność</span>`;
-    app.showToast('Wylogowano z portalu TGN');
+    window.app.showToast('Wylogowano z portalu TGN');
   }
 };
 
-// 5. Główny router i akcje aplikacji (app)
-const app = {
+// 5. Główny router i akcje aplikacji (window.app)
+window.app = {
   previewTimer: null,
 
-  switchTab: (tabName) => {
+  switchTab: function(tabName) {
     const container = document.getElementById('appContainer');
     if (!container) return;
 
     const promoOverlay = document.getElementById('tgnGlobalPromoOverlay');
     if (promoOverlay && tabName !== 'sklep') promoOverlay.style.display = 'none';
 
-    if (tabName === 'profile') {
-      container.style.gridTemplateColumns = "1fr 1.3fr";
-      container.innerHTML = ProfileAndBagComponent.render();
-    } else {
-      container.style.gridTemplateColumns = "1fr";
-      if (tabName === 'home') container.innerHTML = HomeComponent.render();
-      else if (tabName === 'sklep') container.innerHTML = StoreComponent.render();
-      else if (tabName === 'forum') container.innerHTML = ForumComponent.render();
-      else if (tabName === 'pola') container.innerHTML = PolishCoursesComponent.render();
-      else if (tabName === 'wydarzenia') container.innerHTML = Events2027Component.render();
-      else if (tabName === 'cpo') container.innerHTML = CpoComponent.render();
-      else if (tabName === 'marketplace') container.innerHTML = MarketplaceComponent.render();
-      else if (tabName === 'admin') container.innerHTML = AdminDashboardComponent.render();
-      else if (tabName === 'chat') {
-        container.innerHTML = ChatComponent.render();
-        setTimeout(app.scrollChatToBottom, 50);
+    try {
+      if (tabName === 'profile' && typeof ProfileAndBagComponent !== 'undefined') {
+        container.style.gridTemplateColumns = "1fr 1.3fr";
+        container.innerHTML = ProfileAndBagComponent.render();
       } else {
-        container.innerHTML = HomeComponent.render();
+        container.style.gridTemplateColumns = "1fr";
+        if (tabName === 'home') container.innerHTML = window.HomeComponent.render();
+        else if (tabName === 'sklep' && typeof StoreComponent !== 'undefined') container.innerHTML = StoreComponent.render();
+        else if (tabName === 'forum' && typeof ForumComponent !== 'undefined') container.innerHTML = ForumComponent.render();
+        else if (tabName === 'pola' && typeof PolishCoursesComponent !== 'undefined') container.innerHTML = PolishCoursesComponent.render();
+        else if (tabName === 'wydarzenia' && typeof Events2027Component !== 'undefined') container.innerHTML = Events2027Component.render();
+        else if (tabName === 'cpo' && typeof CpoComponent !== 'undefined') container.innerHTML = CpoComponent.render();
+        else if (tabName === 'marketplace' && typeof MarketplaceComponent !== 'undefined') container.innerHTML = MarketplaceComponent.render();
+        else if (tabName === 'admin') container.innerHTML = window.AdminDashboardComponent.render();
+        else if (tabName === 'chat' && typeof ChatComponent !== 'undefined') {
+          container.innerHTML = ChatComponent.render();
+          setTimeout(window.app.scrollChatToBottom, 50);
+        } else {
+          container.innerHTML = window.HomeComponent.render();
+        }
       }
+    } catch (err) {
+      console.error('Błąd renderowania zakładki:', err);
+      container.innerHTML = window.HomeComponent.render();
     }
 
     document.querySelectorAll('#mainNav button').forEach(btn => {
@@ -400,10 +436,9 @@ const app = {
     if (typeof StoreComponent !== 'undefined' && StoreComponent.syncGlobalCartDrawer) {
       StoreComponent.syncGlobalCartDrawer();
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   },
 
-  changeOrderStatus: (orderIdx) => {
+  changeOrderStatus: function(orderIdx) {
     try {
       const orders = JSON.parse(localStorage.getItem('tgn_orders_db') || '[]');
       if (!orders[orderIdx]) return;
@@ -411,16 +446,16 @@ const app = {
       const currIdx = statuses.indexOf(orders[orderIdx].status);
       orders[orderIdx].status = statuses[(currIdx + 1) % statuses.length];
       localStorage.setItem('tgn_orders_db', JSON.stringify(orders));
-      app.switchTab('admin');
-      app.showToast(`Zmieniono status zamówienia #${orders[orderIdx].orderId} na: ${orders[orderIdx].status}`);
+      window.app.switchTab('admin');
+      window.app.showToast(`Zmieniono status zamówienia #${orders[orderIdx].orderId} na: ${orders[orderIdx].status}`);
     } catch (e) {}
   },
 
-  exportDatabaseJson: () => {
+  exportDatabaseJson: function() {
     const dbDump = {
       exportedAt: new Date().toISOString(),
-      products: AppData.storeProducts,
-      forumPosts: AppData.forumPosts,
+      products: window.AppData.storeProducts,
+      forumPosts: window.AppData.forumPosts,
       orders: JSON.parse(localStorage.getItem('tgn_orders_db') || '[]'),
       newsletter: JSON.parse(localStorage.getItem('tgn_newsletter_list') || '[]')
     };
@@ -430,10 +465,10 @@ const app = {
     a.href = url;
     a.download = `tgn_baza_sklep_forum_${Date.now()}.json`;
     a.click();
-    app.showToast('💾 Pobrano pełną bazę danych sklepu i forum (.json)!');
+    window.app.showToast('💾 Pobrano pełną bazę danych sklepu i forum (.json)!');
   },
 
-  importDatabaseJson: (event) => {
+  importDatabaseJson: function(event) {
     const file = event.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
@@ -441,26 +476,26 @@ const app = {
       try {
         const parsed = JSON.parse(e.target.result);
         if (parsed.products && Array.isArray(parsed.products)) {
-          AppData.storeProducts = parsed.products;
+          window.AppData.storeProducts = parsed.products;
           localStorage.setItem('tgn_custom_store_products', JSON.stringify(parsed.products));
         }
         if (parsed.forumPosts && Array.isArray(parsed.forumPosts)) {
-          AppData.forumPosts = parsed.forumPosts;
-          saveForumToDB();
+          window.AppData.forumPosts = parsed.forumPosts;
+          window.saveForumToDB();
         }
         if (parsed.orders && Array.isArray(parsed.orders)) {
           localStorage.setItem('tgn_orders_db', JSON.stringify(parsed.orders));
         }
-        app.switchTab('admin');
-        app.showToast('✅ Pomyślnie wgrano bazę produktów i postów z pliku JSON!');
+        window.app.switchTab('admin');
+        window.app.showToast('✅ Pomyślnie wgrano bazę produktów i postów z pliku JSON!');
       } catch (err) {
-        app.showToast('⚠️ Błąd odczytu pliku JSON!');
+        window.app.showToast('⚠️ Błąd odczytu pliku JSON!');
       }
     };
     reader.readAsText(file);
   },
 
-  openLegalModal: (docType) => {
+  openLegalModal: function(docType) {
     const titleEl = document.getElementById('legalModalTitle');
     const bodyEl = document.getElementById('legalModalBody');
     const modal = document.getElementById('legalModalOverlay');
@@ -468,70 +503,60 @@ const app = {
 
     if (docType === 'REGULAMIN') {
       titleEl.textContent = '📜 Regulamin Sklepu Internetowego i Forum TGN Global Golf';
-      bodyEl.innerHTML = `
-        <p><strong>§1. Postanowienia ogólne</strong><br>Sklep internetowy TGN Global Golf prowadzi sprzedaż fabrycznie nowego sprzętu golfowego, używanych kijów golfowych w programie CPO (Certified Pre-Owned) oraz piłek golfowych (nowych i wyławianych typu Lake Balls).</p><br>
-        <p><strong>§2. Program Skup CPO i Rozliczenie Trade-In</strong><br>Każdy używany kij golfowy w dziale CPO przechodzi wielopunktową weryfikację stanu główki, shaftu oraz gripu. Na sprzęt używany CPO udzielana jest 12-miesięczna rękojmia serwisowa TGN.</p><br>
-        <p><strong>§3. Zasady Forum Społeczności</strong><br>Użytkownicy zobowiązani są do kulturalnej wymiany opinii sprzętowych i sportowych. Ogłoszenia prywatnej sprzedaży pomiędzy graczami publikowane są wyłącznie w dedykowanym dziale Giełda Graczy C2C.</p>
-      `;
+      bodyEl.innerHTML = `<p><strong>§1. Postanowienia ogólne</strong><br>Sklep internetowy TGN Global Golf prowadzi sprzedaż fabrycznie nowego sprzętu golfowego, używanych kijów golfowych w programie CPO (Certified Pre-Owned) oraz piłek golfowych.</p><br><p><strong>§2. Gwarancja CPO</strong><br>Na każdy używany kij golfowy w dziale CPO udzielana jest 12-miesięczna rękojmia serwisowa TGN.</p>`;
     } else if (docType === 'ZWROTY') {
       titleEl.textContent = '🔄 Prawo do odstąpienia od umowy (Zwroty 14 dni)';
-      bodyEl.innerHTML = `
-        <p><strong>1. Zwrot bez podania przyczyny (14 dni):</strong><br>Konsument ma prawo odstąpić od umowy zakupu zawartej na odległość w terminie 14 dni od otrzymania przesyłki.</p><br>
-        <p><strong>2. Wyłączenia ustawowe:</strong><br>Prawo zwrotu nie przysługuje w przypadku produktów wykonanych na indywidualne zamówienie klienta (w szczególności: <em>Personalizowane piłki golfowe z nadrukiem logo lub tekstu klienta</em>) oraz nowych kijów, z których usunięto folię ochronną główki i użyto ich na polu/driving range.</p>
-      `;
+      bodyEl.innerHTML = `<p>Konsument ma prawo odstąpić od umowy zakupu zawartej na odległość w terminie 14 dni od otrzymania przesyłki (z wyłączeniem produktów personalizowanych, np. piłek z indywidualnym nadrukiem UV).</p>`;
     } else if (docType === 'RODO') {
       titleEl.textContent = '🔒 Polityka Prywatności i Ochrony Danych (RODO)';
-      bodyEl.innerHTML = `
-        <p>Administratorem danych osobowych jest TGN Global Golf. Dane przetwarzane są wyłącznie w celu realizacji zamówień sklepowych, obsługi konta gracza na forum oraz wysyłki zamówionego Newslettera (z kodem rabatowym RABAT3). Każdy użytkownik ma prawo wglądu, edycji oraz usunięcia swojego konta.</p>
-      `;
+      bodyEl.innerHTML = `<p>Dane osobowe przetwarzane są wyłącznie w celu realizacji zamówień sklepowych, obsługi konta gracza na forum oraz wysyłki zamówionego Newslettera.</p>`;
     } else {
       titleEl.textContent = '📞 Kontakt, Serwis Golfowy & Centrum Fittingu';
-      bodyEl.innerHTML = `
-        <p><strong>Infolinia i Doradztwo Sprzętowe PGA:</strong><br>E-mail: sklep@tgngolf.pl | Tel.: +48 600 000 000 (Pon–Pt 9:00–18:00)<br><br><strong>Punkty Partnerskie Fittingu i Odbioru:</strong><br>• Warszawa / Rajszew<br>• Szczecin / Binowo Park</p>
-      `;
+      bodyEl.innerHTML = `<p><strong>Infolinia PGA Pro Shop:</strong><br>E-mail: sklep@tgngolf.pl | Tel.: +48 600 000 000 (Pon–Pt 9:00–18:00)</p>`;
     }
     modal.style.display = 'flex';
   },
 
-  closeLegalModal: () => {
+  closeLegalModal: function() {
     const modal = document.getElementById('legalModalOverlay');
     if (modal) modal.style.display = 'none';
   },
 
-  nextWebSearchPhoto: (imgElementId, clubName) => {
+  nextWebSearchPhoto: function(imgElementId, clubName) {
     const imgEl = document.getElementById(imgElementId);
-    if (!imgEl) return;
+    if (!imgEl || typeof ClubImageEngine === 'undefined') return;
     ClubImageEngine.searchVariantIndex += 1;
     const nextPhotoUrl = ClubImageEngine.buildDirectSearchPhotoUrl(clubName, ClubImageEngine.searchVariantIndex);
     ClubImageEngine.cache[clubName] = nextPhotoUrl;
     imgEl.src = nextPhotoUrl;
-    app.showToast(`📷 Pobrano kolejne zdjęcie dla: ${clubName}`);
+    window.app.showToast(`📷 Pobrano kolejne zdjęcie dla: ${clubName}`);
   },
 
-  openGoogleImages: (clubName) => {
+  openGoogleImages: function(clubName) {
+    if (typeof ClubImageEngine === 'undefined') return;
     const gUrl = ClubImageEngine.getGoogleImagesUrl(clubName);
     window.open(gUrl, '_blank', 'noopener,noreferrer');
   },
 
-  updateLiveClubPreview: (val, nextVariant = false) => {
-    clearTimeout(app.previewTimer);
-    app.previewTimer = setTimeout(() => {
+  updateLiveClubPreview: function(val, nextVariant = false) {
+    clearTimeout(window.app.previewTimer);
+    window.app.previewTimer = setTimeout(() => {
       const imgEl = document.getElementById('livePreviewClubImg');
-      if (!imgEl) return;
+      if (!imgEl || typeof ClubImageEngine === 'undefined') return;
       if (nextVariant) ClubImageEngine.searchVariantIndex += 1;
       const modelText = (val && val.trim().length > 2) ? val.trim() : "Ping G430 Max Driver";
       imgEl.src = ClubImageEngine.buildDirectSearchPhotoUrl(modelText, ClubImageEngine.searchVariantIndex);
     }, 250);
   },
 
-  filterCourses: (filterKey) => {
-    AppData.activeCourseFilter = filterKey;
-    app.switchTab('pola');
+  filterCourses: function(filterKey) {
+    window.AppData.activeCourseFilter = filterKey;
+    window.app.switchTab('pola');
   },
 
-  searchCourses: (val) => {
-    AppData.courseSearchQuery = val;
-    app.switchTab('pola');
+  searchCourses: function(val) {
+    window.AppData.courseSearchQuery = val;
+    window.app.switchTab('pola');
     const input = document.getElementById('courseSearchInput');
     if (input) {
       input.focus();
@@ -539,50 +564,50 @@ const app = {
     }
   },
 
-  logRoundAndRedirect: (courseName, bookingUrl) => {
+  logRoundAndRedirect: function(courseName, bookingUrl) {
     const score = Math.floor(Math.random() * 6) + 79;
-    AppData.user.lastRound = `${score} (${courseName})`;
-    localStorage.setItem('tgn_user', JSON.stringify(AppData.user));
-    app.showToast(`Zapisano rundę (${score} ud.)! Przekierowanie do: ${courseName}...`);
+    window.AppData.user.lastRound = `${score} (${courseName})`;
+    try { localStorage.setItem('tgn_user', JSON.stringify(window.AppData.user)); } catch (e) {}
+    window.app.showToast(`Zapisano rundę (${score} ud.)! Przekierowanie do: ${courseName}...`);
     if (bookingUrl) window.open(bookingUrl, '_blank', 'noopener,noreferrer');
   },
 
-  openBookingSite: (courseName, bookingUrl) => {
-    app.showToast(`Otwieranie rezerwacji Tee Time: ${courseName}...`);
+  openBookingSite: function(courseName, bookingUrl) {
+    window.app.showToast(`Otwieranie rezerwacji Tee Time: ${courseName}...`);
     if (bookingUrl) window.open(bookingUrl, '_blank', 'noopener,noreferrer');
   },
 
-  filterEvents: (cat) => {
-    AppData.activeEventFilter = cat;
-    app.switchTab('wydarzenia');
+  filterEvents: function(cat) {
+    window.AppData.activeEventFilter = cat;
+    window.app.switchTab('wydarzenia');
   },
 
-  toggleEventRegistration: (evId) => {
-    const ev = AppData.events2027.find(e => e.id === evId);
+  toggleEventRegistration: function(evId) {
+    const ev = (window.AppData.events2027 || []).find(e => e.id === evId);
     if (!ev) return;
     ev.registered = !ev.registered;
     ev.spotsLeft += ev.registered ? -1 : 1;
-    auth.updateHeaderBar();
-    app.switchTab('wydarzenia');
-    app.showToast(ev.registered ? `Zapisano na: ${ev.title} (${ev.xpReward})` : `Wypisano z wydarzenia: ${ev.title}`);
+    window.auth.updateHeaderBar();
+    window.app.switchTab('wydarzenia');
+    window.app.showToast(ev.registered ? `Zapisano na: ${ev.title}` : `Wypisano z wydarzenia: ${ev.title}`);
   },
 
-  filterStore: (cat) => {
+  filterStore: function(cat) {
     if (typeof StoreComponent !== 'undefined') StoreComponent.setCategory(cat);
   },
-  addToCart: (prodId, useTradeIn) => {
+  addToCart: function(prodId, useTradeIn) {
     if (typeof StoreComponent !== 'undefined') StoreComponent.addItem(prodId, useTradeIn);
   },
-  checkoutStore: () => {
+  checkoutStore: function() {
     if (typeof StoreComponent !== 'undefined') StoreComponent.openCartDrawer();
   },
 
-  toggleAddClubLive: () => {
+  toggleAddClubLive: function() {
     const box = document.getElementById('addClubLiveBox');
     if (box) box.style.display = box.style.display === 'block' ? 'none' : 'block';
   },
 
-  addClubWithLivePhoto: () => {
+  addClubWithLivePhoto: function() {
     const nameInput = document.getElementById('newClubName');
     const specInput = document.getElementById('newClubSpec');
     const valInput = document.getElementById('newClubVal');
@@ -590,133 +615,124 @@ const app = {
 
     const name = nameInput ? nameInput.value.trim().toUpperCase() : '';
     if (!name) {
-      app.showToast('Wpisz nazwę modelu kija (np. PING G430 MAX DRIVER)!');
+      window.app.showToast('Wpisz nazwę modelu kija!');
       return;
     }
 
     const loft = (specInput && specInput.value.trim()) ? specInput.value.trim() : "Specyfikacja Custom Fit";
     const val = (valInput && valInput.value.trim()) ? valInput.value.trim() : "1 950 PLN";
     const customUrl = (customImgInput && customImgInput.value.trim()) ? customImgInput.value.trim() : "";
-    const finalImg = customUrl || ClubImageEngine.buildDirectSearchPhotoUrl(name, ClubImageEngine.searchVariantIndex);
+    const finalImg = customUrl || (typeof ClubImageEngine !== 'undefined' ? ClubImageEngine.buildDirectSearchPhotoUrl(name, ClubImageEngine.searchVariantIndex) : '');
 
-    AppData.bag.unshift({
+    window.AppData.bag.unshift({
       id: Date.now(), name, loft, val, cpoOffer: "1 500 PLN", speed: "126 mph", smash: "1.44", attack: "+1.5°", cond: "Nowy", imgUrl: finalImg
     });
-    app.switchTab('profile');
-    app.showToast('Dodano kij do Twojej torby: ' + name);
+    window.app.switchTab('profile');
+    window.app.showToast('Dodano kij do Twojej torby: ' + name);
   },
 
-  openPhotoZoom: (title, imgUrl, meta) => {
-    ClubImageEngine.currentModalClub = title;
+  openPhotoZoom: function(title, imgUrl, meta) {
+    if (typeof ClubImageEngine !== 'undefined') ClubImageEngine.currentModalClub = title;
     document.getElementById('zoomClubTitle').textContent = title;
     document.getElementById('zoomClubImg').src = imgUrl;
     document.getElementById('zoomClubMeta').textContent = meta;
     document.getElementById('photoZoomModal').style.display = 'flex';
   },
 
-  regenerateModalAiPhoto: () => {
-    if (!ClubImageEngine.currentModalClub) return;
+  regenerateModalAiPhoto: function() {
+    if (typeof ClubImageEngine === 'undefined' || !ClubImageEngine.currentModalClub) return;
     ClubImageEngine.searchVariantIndex += 1;
     const newUrl = ClubImageEngine.buildDirectSearchPhotoUrl(ClubImageEngine.currentModalClub, ClubImageEngine.searchVariantIndex);
     ClubImageEngine.cache[ClubImageEngine.currentModalClub] = newUrl;
     document.getElementById('zoomClubImg').src = newUrl;
-    app.showToast('📷 Załadowano kolejne zdjęcie tego modelu!');
+    window.app.showToast('📷 Załadowano kolejne zdjęcie tego modelu!');
   },
 
-  openGoogleImagesForModal: () => {
-    if (!ClubImageEngine.currentModalClub) return;
-    app.openGoogleImages(ClubImageEngine.currentModalClub);
+  openGoogleImagesForModal: function() {
+    if (typeof ClubImageEngine === 'undefined' || !ClubImageEngine.currentModalClub) return;
+    window.app.openGoogleImages(ClubImageEngine.currentModalClub);
   },
 
-  closePhotoZoom: () => { document.getElementById('photoZoomModal').style.display = 'none'; },
-  openAiModal: () => { document.getElementById('aiModalOverlay').style.display = 'flex'; },
-  closeAiModal: () => { document.getElementById('aiModalOverlay').style.display = 'none'; },
+  closePhotoZoom: function() { document.getElementById('photoZoomModal').style.display = 'none'; },
+  openAiModal: function() { document.getElementById('aiModalOverlay').style.display = 'flex'; },
+  closeAiModal: function() { document.getElementById('aiModalOverlay').style.display = 'none'; },
 
-  filterForum: (catKey) => {
-    AppData.activeForumFilter = catKey;
-    app.switchTab('forum');
+  filterForum: function(catKey) {
+    window.AppData.activeForumFilter = catKey;
+    window.app.switchTab('forum');
   },
 
-  toggleNewThread: () => {
+  toggleNewThread: function() {
     const box = document.getElementById('newThreadBox');
     if (box) box.style.display = box.style.display === 'block' ? 'none' : 'block';
   },
 
-  createThread: () => {
-    const catKey = document.getElementById('newThreadCat').value;
-    const title = document.getElementById('newThreadTitle').value.trim();
-    const content = document.getElementById('newThreadContent').value.trim();
+  createThread: function() {
+    const catKey = document.getElementById('newThreadCat')?.value || 'EQUIPMENT';
+    const title = document.getElementById('newThreadTitle')?.value.trim();
+    const content = document.getElementById('newThreadContent')?.value.trim();
     if (!title || !content) return;
 
-    AppData.forumPosts.unshift({
+    window.AppData.forumPosts.unshift({
       id: Date.now(), pinned: false, catKey, category: "⚙️ Dyskusja Społeczności TGN", title,
-      author: AppData.user.name, badge: "HCP " + AppData.user.hcp, badgeClass: "badge-vet",
+      author: window.AppData.user.name, badge: "HCP " + window.AppData.user.hcp, badgeClass: "badge-vet",
       date: new Date().toLocaleDateString('pl-PL'), views: "1", likes: 1, content, comments: []
     });
-    saveForumToDB();
-    AppData.activeForumFilter = "ALL";
-    app.switchTab('forum');
-    app.showToast('Opublikowano i zapisano nowy wątek na forum!');
+    window.saveForumToDB();
+    window.AppData.activeForumFilter = "ALL";
+    window.app.switchTab('forum');
+    window.app.showToast('Opublikowano i zapisano nowy wątek na forum!');
   },
 
-  likePost: (id) => {
-    const post = AppData.forumPosts.find(p => p.id === id);
+  likePost: function(id) {
+    const post = (window.AppData.forumPosts || []).find(p => p.id === id);
     if (post) {
       post.likes += 1;
-      saveForumToDB();
-      app.switchTab('forum');
-      app.showToast('Doceniono wpis (+1 pkt reputacji)');
+      window.saveForumToDB();
+      window.app.switchTab('forum');
+      window.app.showToast('Doceniono wpis (+1 pkt reputacji)');
     }
   },
 
-  addComment: (id) => {
+  addComment: function(id) {
     const input = document.getElementById('commInput_' + id);
     const text = input ? input.value.trim() : '';
     if (!text) return;
-    const post = AppData.forumPosts.find(p => p.id === id);
+    const post = (window.AppData.forumPosts || []).find(p => p.id === id);
     if (post) {
       post.comments.push({
-        author: AppData.user.name,
-        badge: "HCP " + AppData.user.hcp,
+        author: window.AppData.user.name,
+        badge: "HCP " + window.AppData.user.hcp,
         badgeClass: "badge-vet",
         date: "Dzisiaj",
         text
       });
-      saveForumToDB();
-      app.switchTab('forum');
-      app.showToast('Dodano i zapisano odpowiedź w wątku!');
+      window.saveForumToDB();
+      window.app.switchTab('forum');
+      window.app.showToast('Dodano i zapisano odpowiedź w wątku!');
     }
   },
 
-  openChat: (sellerName) => {
-    app.switchTab('chat');
-    app.showToast('Otwarto czat z: ' + sellerName);
+  openChat: function(sellerName) {
+    window.app.switchTab('chat');
+    window.app.showToast('Otwarto czat z: ' + sellerName);
   },
 
-  sendChatMessage: () => {
+  sendChatMessage: function() {
     const input = document.getElementById('chatInput');
     if (!input || !input.value.trim()) return;
-    AppData.chatMessages.push({ sender: AppData.user.name, text: input.value.trim(), type: "outgoing" });
+    window.AppData.chatMessages.push({ sender: window.AppData.user.name, text: input.value.trim(), type: "outgoing" });
     input.value = '';
     document.getElementById('appContainer').innerHTML = ChatComponent.render();
-    app.scrollChatToBottom();
-
-    setTimeout(() => {
-      AppData.chatMessages.push({ sender: "Janusz_G", text: "Dzięki za wiadomość! Odpiszę jak tylko zejdę z driving range.", type: "incoming" });
-      const activeBtn = document.querySelector('#mainNav button.active');
-      if (activeBtn && activeBtn.dataset.tab === 'chat') {
-        document.getElementById('appContainer').innerHTML = ChatComponent.render();
-        app.scrollChatToBottom();
-      }
-    }, 1200);
+    window.app.scrollChatToBottom();
   },
 
-  scrollChatToBottom: () => {
+  scrollChatToBottom: function() {
     const box = document.getElementById('chatMsgs');
     if (box) box.scrollTop = box.scrollHeight;
   },
 
-  showToast: (msg) => {
+  showToast: function(msg) {
     const toast = document.getElementById('toast');
     if (!toast) return;
     toast.textContent = msg;
@@ -725,25 +741,31 @@ const app = {
   }
 };
 
-// 6. Start po załadowaniu DOM
+// Aliasy dla globalnego dostępu
+var auth = window.auth;
+var app = window.app;
+var HomeComponent = window.HomeComponent;
+var AdminDashboardComponent = window.AdminDashboardComponent;
+
+// 6. Inicjalizacja po załadowaniu drzewa DOM
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#mainNav button').forEach(btn => {
-    btn.addEventListener('click', () => app.switchTab(btn.dataset.tab));
+    btn.addEventListener('click', () => window.app.switchTab(btn.dataset.tab));
   });
 
   const logoBtn = document.getElementById('logoBtn');
   if (logoBtn) {
     logoBtn.addEventListener('click', () => {
-      if (localStorage.getItem('tgn_user')) app.switchTab('home');
+      if (localStorage.getItem('tgn_user')) window.app.switchTab('home');
     });
   }
 
   const savedSession = localStorage.getItem('tgn_user');
   if (savedSession) {
     try {
-      AppData.user = JSON.parse(savedSession);
-      if (!AppData.user.role) AppData.user.role = 'CLIENT';
-      auth.enterApp();
+      window.AppData.user = JSON.parse(savedSession);
+      if (!window.AppData.user.role) window.AppData.user.role = 'CLIENT';
+      window.auth.enterApp();
     } catch (e) {}
   }
 });
