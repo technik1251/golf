@@ -599,3 +599,123 @@ header {
     font-size: 0.74rem !important;
   }
 }
+/* =========================================================================
+   TRYB ULTRA-KOMPAKTOWY (BEZ SCROLLOWANIA NA TELEFONIE) v29.0
+   ========================================================================= */
+
+@media (max-width: 768px) {
+  .spatial-stage {
+    padding: 0.45rem !important;
+  }
+
+  .home-compact-wrap {
+    padding: 0.55rem !important;
+  }
+
+  .home-live-ticker {
+    padding: 0.3rem 0.55rem !important;
+    margin-bottom: 0.5rem !important;
+    font-size: 0.64rem !important;
+  }
+
+  .home-hero-bento {
+    gap: 0.5rem !important;
+    margin-bottom: 0.55rem !important;
+  }
+
+  /* Kompaktowy baner powitalny */
+  .hero-main-showcase {
+    padding: 0.65rem 0.75rem !important;
+    gap: 0.45rem !important;
+  }
+  .hero-main-showcase h1 {
+    font-size: 1.05rem !important;
+    margin: 0.1rem 0 !important;
+  }
+  .hero-main-showcase p {
+    display: none !important;
+  }
+
+  /* Telemetria w 1 linii (4 kolumny) zamiast 2x2 */
+  .hero-mini-telemetry {
+    grid-template-columns: repeat(4, 1fr) !important;
+    padding: 0.3rem 0.35rem !important;
+    gap: 0.25rem !important;
+  }
+  .hero-mini-telemetry div span {
+    font-size: 0.48rem !important;
+  }
+  .hero-mini-telemetry div strong {
+    font-size: 0.68rem !important;
+  }
+
+  /* Dopasowane okno Asystenta AI / Czatu bez pustej dziury */
+  .home-ai-chat-hub {
+    padding: 0.55rem !important;
+  }
+  .hub-mode-tabs {
+    margin-bottom: 0.4rem !important;
+  }
+  .hub-tab-btn {
+    padding: 0.32rem 0.3rem !important;
+    font-size: 0.66rem !important;
+  }
+  .hub-messages-stream {
+    height: auto !important;
+    max-height: 68px !important;
+    margin-bottom: 0.4rem !important;
+  }
+  .hub-msg-bubble {
+    font-size: 0.66rem !important;
+    padding: 0.32rem 0.5rem !important;
+  }
+  .hub-quick-chips {
+    margin-bottom: 0.35rem !important;
+    padding-bottom: 0.2rem !important;
+  }
+  .hub-input-bar input {
+    padding: 0.32rem 0.5rem !important;
+    font-size: 0.68rem !important;
+  }
+
+  /* 3 Bramy Portalu (Sklep / Forum / Kokpit) w jednym rzędzie obok siebie */
+  .home-portals-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.4rem !important;
+    margin-bottom: 0.65rem !important;
+  }
+  .portal-gate-card {
+    min-height: 74px !important;
+    padding: 0.5rem 0.45rem !important;
+    border-radius: 10px !important;
+    text-align: center;
+  }
+  .portal-gate-card > div:first-child > div:first-child {
+    justify-content: center !important;
+    margin-bottom: 0.2rem !important;
+  }
+  /* Ukrycie pobocznych liczników i stopki w małych kafelkach */
+  .portal-gate-card > div:first-child > div:first-child > span:last-child,
+  .portal-gate-card > div:last-child {
+    display: none !important;
+  }
+  .portal-gate-card h3 {
+    font-size: 0.72rem !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Mniejsze odstępy w produktach dnia, żeby było je widać na pierwszym ekranie */
+  .home-spotlight-grid {
+    gap: 0.45rem !important;
+    margin-bottom: 0.65rem !important;
+  }
+  .spotlight-prod-card {
+    padding: 0.5rem !important;
+  }
+  .spotlight-img-wrap {
+    height: 64px !important;
+    margin-bottom: 0.3rem !important;
+  }
+}
+
