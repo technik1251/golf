@@ -1277,3 +1277,19 @@ const StoreComponent = {
   },
   setDelivery: (method) => { AppData.storeState.deliveryMethod = method; }
 };
+/* =========================================================================
+   FIX KOSZYKA I TRADE-IN v31.0
+   ========================================================================= */
+
+StoreComponent.cartHasOversizeClub = () => {
+  const oversizeCats = [
+    "DRIVERY", "WOODS", "WOOD_HYB", "HYBRYDY", "IRONY", "WEDGE",
+    "PUTTERY", "ZESTAWY", "TORBY", "WOZKI", "KIJE_NOWE", "UZYWANE_KIJE"
+  ];
+  return (AppData.cart || []).some(item => {
+    const prod = (AppData.storeProducts || []).find(p => p.id === item.id);
+    return prod && oversizeCats.includes(prod.cat);
+  });
+};
+
+window.StoreComponent = StoreComponent;
