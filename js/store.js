@@ -1155,3 +1155,176 @@ const StoreComponent = {
 };
 
 window.StoreComponent = StoreComponent;
+/* =========================================================================
+   WYSUWANE MENU KATEGORII (LEFT DRAWER W STYLU PILKIGOLFOWE.PL) v35.0
+   ========================================================================= */
+
+(function injectCategoryDrawerV35() {
+  if (document.getElementById('tgnCatDrawerStyles')) return;
+  const style = document.createElement('style');
+  style.id = 'tgnCatDrawerStyles';
+  style.textContent = `
+    #tgnCatDrawerBackdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 9995;
+      display: none;
+      justify-content: flex-start;
+    }
+    .cat-drawer-panel {
+      width: 82%;
+      max-width: 340px;
+      height: 100vh;
+      height: 100dvh;
+      background: linear-gradient(175deg, #0c1d22, #050e12);
+      border-right: 2px solid var(--accent);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 15px 0 45px rgba(0, 0, 0, 0.9);
+      animation: slideInLeft 0.22s ease-out;
+    }
+    @keyframes slideInLeft {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(0); }
+    }
+    .cat-drawer-header {
+      padding: 1rem 1.15rem;
+      background: rgba(0, 0, 0, 0.45);
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cat-drawer-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .cat-drawer-item {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.9rem 1.15rem;
+      color: #f1f5f9;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+      text-align: left;
+    }
+    .cat-drawer-item:hover {
+      background: rgba(74, 222, 128, 0.1);
+      color: var(--accent);
+    }
+    .cat-drawer-item.active {
+      background: rgba(74, 222, 128, 0.18);
+      color: var(--accent);
+      border-left: 4px solid var(--accent);
+    }
+    .cat-drawer-arrow {
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 400;
+      opacity: 0.85;
+    }
+    .cat-drawer-count {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-left: 6px;
+    }
+    .btn-open-cat-drawer {
+      background: rgba(74, 222, 128, 0.15);
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      padding: 0.45rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      white-space: nowrap;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .btn-open-cat-drawer:hover {
+      background: var(--accent);
+      color: #052e16;
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+StoreComponent.openCategoryDrawer = () => {
+  StoreComponent.ensureStoreDataInitialized();
+  let backdrop = document.getElementById('tgnCatDrawerBackdrop');
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.id = 'tgnCatDrawerBackdrop';
+    backdrop.onclick = () => StoreComponent.closeCategoryDrawer();
+    document.body.appendChild(backdrop);
+  }
+
+  const st = AppData.storeState;
+  const rowsHTML = (AppData.storeCategories || []).map(cat => {
+    const count = (AppData.storeProducts || []).filter(p => StoreComponent.matchesCategory(p, cat.id)).length;
+    const isActive = st.category === cat.id;
+    return `
+      <button type="button" class="cat-drawer-item ${isActive ? 'active' : ''}" onclick="StoreComponent.selectCategoryFromDrawer('${cat.id}')">
+        <span>
+          <span style="margin-right:8px;">${cat.icon}</span>
+          ${cat.label}
+          <span class="cat-drawer-count">(${count})</span>
+        </span>
+        <span class="cat-drawer-arrow">›</span>
+      </button>
+    `;
+  }).join('');
+
+  backdrop.innerHTML = `
+    <div class="cat-drawer-panel" onclick="event.stopPropagation()">
+      <div class="cat-drawer-header">
+        <strong style="color:var(--accent); font-size:0.9rem; letter-spacing:0.8px;">☰ ASORTYMENT TGN</strong>
+        <button type="button" style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:30px; height:30px; border-radius:50%; cursor:pointer;" onclick="StoreComponent.closeCategoryDrawer()">✕</button>
+      </div>
+      <div class="cat-drawer-list">
+        ${rowsHTML}
+      </div>
+    </div>
+  `;
+  backdrop.style.display = 'flex';
+};
+
+StoreComponent.closeCategoryDrawer = () => {
+  const backdrop = document.getElementById('tgnCatDrawerBackdrop');
+  if (backdrop) backdrop.style.display = 'none';
+};
+
+StoreComponent.selectCategoryFromDrawer = (catId) => {
+  StoreComponent.closeCategoryDrawer();
+  StoreComponent.setCategory(catId);
+};
+
+// Automatyczne dodanie przycisku "☰ Kategorie" na początek paska kategorii w sklepie
+const _origStoreRender = StoreComponent.render;
+StoreComponent.render = () => {
+  const html = _origStoreRender();
+  return html.replace(
+    '<div class="store-category-slider">',
+    '<div class="store-category-slider"><button type="button" class="btn-open-cat-drawer" onclick="StoreComponent.openCategoryDrawer()">☰ Kategorie</button>'
+  );
+};
+
+window.StoreComponent = StoreComponent;
+
