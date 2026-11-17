@@ -1,26 +1,28 @@
 /* =========================================================================
-   GŁÓWNY KONTROLER PRODUKCYJNY TGN v26.0 (js/app.js)
-   - Odchudzony, kompaktowy i przejrzysty Bento Grid na PC i Mobile
-   - Siatka 2-kolumnowa produktów na telefonie, mniejsze kafle na komputerze
+   GŁÓWNY KONTROLER PRODUKCYJNY TGN v27.0 (js/app.js)
+   - Wbudowany interaktywny Asystent AI + Live Czat bezpośrednio na Stronie Głównej
+   - Kompaktowy i przejrzysty układ Bento Grid na PC i telefonie
    ========================================================================= */
 
-(function injectHomeV26Styles() {
-  const old = document.getElementById('tgnHomeV25Styles');
-  if (old) old.remove();
-  if (document.getElementById('tgnHomeV26Styles')) return;
+(function injectHomeV27Styles() {
+  ['tgnHomeV25Styles', 'tgnHomeV26Styles'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  });
+  if (document.getElementById('tgnHomeV27Styles')) return;
 
   const style = document.createElement('style');
-  style.id = 'tgnHomeV26Styles';
+  style.id = 'tgnHomeV27Styles';
   style.textContent = `
     .home-compact-wrap {
       max-width: 1220px;
       margin: 0 auto;
-      padding: 1.15rem 1.35rem !important;
+      padding: 1.1rem 1.3rem !important;
     }
     .home-live-ticker {
       display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
       background: rgba(4, 12, 15, 0.9); border: 1px solid rgba(74, 222, 128, 0.28);
-      border-radius: 10px; padding: 0.4rem 0.85rem; margin-bottom: 0.9rem; font-size: 0.7rem;
+      border-radius: 10px; padding: 0.4rem 0.85rem; margin-bottom: 0.85rem; font-size: 0.7rem;
       overflow-x: auto; white-space: nowrap; scrollbar-width: none;
     }
     .home-live-ticker::-webkit-scrollbar { display: none; }
@@ -29,39 +31,86 @@
       box-shadow: 0 0 8px #4ade80; display: inline-block; margin-right: 5px;
     }
 
-    /* Kompaktowy Hero + Telemetria */
+    /* Układ Hero: Lewy Showcase + Prawy Hub (Asystent AI & Czat Live) */
     .home-hero-bento {
-      display: grid; grid-template-columns: 1.55fr 1fr; gap: 0.9rem; margin-bottom: 0.95rem;
+      display: grid; grid-template-columns: 1.25fr 1fr; gap: 0.9rem; margin-bottom: 0.95rem; align-items: stretch;
     }
     .hero-main-showcase {
-      background: linear-gradient(125deg, rgba(6, 18, 22, 0.93) 40%, rgba(10, 38, 28, 0.78) 100%),
+      background: linear-gradient(125deg, rgba(6, 18, 22, 0.94) 40%, rgba(10, 38, 28, 0.8) 100%),
                   url('https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=1000&q=80') center/cover no-repeat;
-      border: 1px solid rgba(114, 214, 150, 0.38); border-radius: 14px; padding: 1.15rem 1.3rem;
-      display: flex; flex-direction: column; justify-content: space-between; gap: 0.75rem;
+      border: 1px solid rgba(114, 214, 150, 0.38); border-radius: 14px; padding: 1.15rem 1.25rem;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 0.7rem;
     }
-    .hero-telemetry-card {
-      background: linear-gradient(155deg, rgba(14, 28, 34, 0.95), rgba(6, 14, 18, 0.98));
-      border: 1px solid rgba(250, 204, 21, 0.38); border-radius: 14px; padding: 1rem 1.15rem;
+    .hero-mini-telemetry {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem;
+      background: rgba(0, 0, 0, 0.55); border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px; padding: 0.45rem 0.6rem; text-align: center;
+    }
+    .hero-mini-telemetry div span { display: block; font-size: 0.54rem; color: var(--text-muted); text-transform: uppercase; }
+    .hero-mini-telemetry div strong { font-size: 0.78rem; color: var(--accent); font-weight: 800; }
+
+    /* Prawa karta: Interaktywny Hub AI & Live Czat */
+    .home-ai-chat-hub {
+      background: linear-gradient(155deg, rgba(12, 28, 34, 0.97), rgba(6, 14, 18, 0.99));
+      border: 1.5px solid rgba(56, 189, 248, 0.5); border-radius: 14px; padding: 0.85rem 1rem;
       display: flex; flex-direction: column; justify-content: space-between;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55), inset 0 0 20px rgba(56, 189, 248, 0.08);
     }
-    .telemetry-kpi-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin: 0.5rem 0;
+    .hub-mode-tabs {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem;
+      background: rgba(0, 0, 0, 0.45); padding: 0.25rem; border-radius: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 0.6rem;
     }
-    .telemetry-kpi-box {
-      background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 8px; padding: 0.4rem 0.3rem; text-align: center;
+    .hub-tab-btn {
+      background: transparent; border: none; color: var(--text-muted);
+      padding: 0.38rem 0.5rem; border-radius: 6px; font-size: 0.72rem; font-weight: 800;
+      cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px;
     }
-    .telemetry-kpi-box span { display: block; font-size: 0.56rem; color: var(--text-muted); text-transform: uppercase; }
-    .telemetry-kpi-box strong { font-size: 0.86rem; color: var(--accent); font-weight: 800; }
+    .hub-tab-btn.active.ai-mode { background: var(--blue); color: #041e2b; }
+    .hub-tab-btn.active.chat-mode { background: var(--accent); color: #052e16; }
+
+    .hub-messages-stream {
+      height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.4rem;
+      padding-right: 4px; margin-bottom: 0.5rem; scrollbar-width: thin;
+    }
+    .hub-msg-bubble {
+      font-size: 0.72rem; line-height: 1.38; padding: 0.45rem 0.7rem; border-radius: 9px; max-width: 94%;
+    }
+    .hub-msg-bubble.bot {
+      background: rgba(56, 189, 248, 0.12); border-left: 3px solid var(--blue); color: #f1f5f9; align-self: flex-start;
+    }
+    .hub-msg-bubble.incoming {
+      background: rgba(255, 255, 255, 0.07); border-left: 3px solid var(--gold); color: #f1f5f9; align-self: flex-start;
+    }
+    .hub-msg-bubble.user {
+      background: rgba(74, 222, 128, 0.18); border-right: 3px solid var(--accent); color: var(--accent); align-self: flex-end;
+    }
+    .hub-quick-chips {
+      display: flex; gap: 0.35rem; overflow-x: auto; padding-bottom: 0.35rem; margin-bottom: 0.45rem;
+      white-space: nowrap; scrollbar-width: none;
+    }
+    .hub-quick-chips::-webkit-scrollbar { display: none; }
+    .hub-input-bar {
+      display: flex; gap: 0.4rem;
+    }
+    .hub-input-bar input {
+      flex: 1; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 7px; padding: 0.42rem 0.65rem; color: #fff; font-size: 0.73rem; outline: none;
+    }
+    .hub-input-bar input:focus { border-color: var(--blue); }
+    .hub-input-bar button {
+      background: var(--blue); color: #041e2b; border: none; border-radius: 7px;
+      padding: 0 0.85rem; font-size: 0.72rem; font-weight: 800; cursor: pointer; white-space: nowrap;
+    }
 
     /* 3 Zgrabne Bramy Portalu (Sklep / Forum / Kokpit) */
     .home-portals-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.85rem; margin-bottom: 1.1rem;
     }
     .portal-gate-card {
-      border-radius: 14px; padding: 1rem 1.1rem; display: flex; flex-direction: column;
+      border-radius: 14px; padding: 0.95rem 1.05rem; display: flex; flex-direction: column;
       justify-content: space-between; cursor: pointer; transition: 0.22s ease;
-      position: relative; overflow: hidden; min-height: 148px;
+      position: relative; overflow: hidden; min-height: 138px;
     }
     .portal-gate-card:hover { transform: translateY(-3px); }
     .portal-gate-card.gate-shop {
@@ -91,7 +140,7 @@
     }
     .spotlight-prod-card:hover { border-color: var(--accent); background: rgba(74, 222, 128, 0.05); }
     .spotlight-img-wrap {
-      width: 100%; height: 96px; background: #fff; border-radius: 8px; margin-bottom: 0.5rem;
+      width: 100%; height: 92px; background: #fff; border-radius: 8px; margin-bottom: 0.45rem;
       display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
     }
     .spotlight-img-wrap img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
@@ -102,7 +151,7 @@
     }
     .home-forum-row {
       background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
-      border-left: 3px solid var(--blue); border-radius: 10px; padding: 0.6rem 0.8rem;
+      border-left: 3px solid var(--blue); border-radius: 10px; padding: 0.55rem 0.75rem;
       margin-bottom: 0.45rem; cursor: pointer; transition: 0.2s;
     }
     .home-forum-row:hover { background: rgba(56, 189, 248, 0.08); border-color: var(--blue); }
@@ -112,12 +161,13 @@
       .home-spotlight-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 768px) {
-      .home-compact-wrap { padding: 0.8rem !important; }
-      .hero-main-showcase { padding: 0.95rem; }
-      .portal-gate-card { min-height: 115px; padding: 0.85rem 0.95rem; }
+      .home-compact-wrap { padding: 0.75rem !important; }
+      .hero-main-showcase { padding: 0.9rem; }
+      .hero-mini-telemetry { grid-template-columns: repeat(2, 1fr); }
+      .portal-gate-card { min-height: 110px; padding: 0.8rem 0.9rem; }
       .portal-gate-desc { display: none; }
-      .home-spotlight-grid { grid-template-columns: repeat(2, 1fr); gap: 0.55rem; }
-      .spotlight-img-wrap { height: 82px; }
+      .home-spotlight-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+      .spotlight-img-wrap { height: 80px; }
     }
   `;
   document.head.appendChild(style);
@@ -146,6 +196,27 @@ window.ensureAllPortalDataReady = function() {
 
   if (typeof StoreComponent !== 'undefined' && StoreComponent.ensureStoreDataInitialized) {
     StoreComponent.ensureStoreDataInitialized();
+  }
+
+  // Stan dla widgetu AI & Live Czat na Stronie Głównej
+  if (!window.AppData.homeHubState) {
+    window.AppData.homeHubState = {
+      activeMode: 'AI', // 'AI' | 'CHAT'
+      aiMessages: [
+        {
+          sender: "TGN AI Concierge",
+          type: "bot",
+          text: "Cześć! Jestem Twoim doradcą AI na stronie głównej. Mogę dobrać sprzęt pod Twój HCP 12.4, znaleźć okazje w komisie CPO lub sprawdzić pola w Polsce!"
+        }
+      ]
+    };
+  }
+
+  if (!window.AppData.chatMessages || window.AppData.chatMessages.length === 0) {
+    window.AppData.chatMessages = [
+      { sender: "Tomek_PGA (Support Sklepu)", text: "Witamy na czacie TGN! Dzisiaj wysyłamy zamówienia kurierem DPD do godz. 16:00.", type: "incoming" },
+      { sender: "Janusz_G (HCP 9.4)", text: "Ktoś gra jutro rano w Rajszewie lub na Modrym Lesie?", type: "incoming" }
+    ];
   }
 
   if (!window.AppData.forumPosts || window.AppData.forumPosts.length === 0) {
@@ -197,7 +268,7 @@ window.saveForumToDB = function() {
 };
 
 // =========================================================================
-// KOMPAKTOWA I PRZEJRZYSTA STRONA GŁÓWNA (TGN.PL HUB v26.0)
+// STRONA GŁÓWNA Z WBUDOWANYM ASYSTENTEM AI ORAZ CZATEM NA ŻYWO (v27.0)
 // =========================================================================
 window.HomeComponent = {
   render: function() {
@@ -206,7 +277,6 @@ window.HomeComponent = {
     const userObj = (window.AppData && window.AppData.user) ? window.AppData.user : window.DefaultUser;
     const userName = userObj.name || "Marek Kowalski";
     const userHcp = userObj.hcp || 12.4;
-    const userCity = userObj.city || "Warszawa";
     const userSwing = userObj.swingSpeed || "96 mph";
     const lastRound = userObj.lastRound || "82 (Modry Las)";
 
@@ -225,6 +295,22 @@ window.HomeComponent = {
       spotsLeft: 14,
       xpReward: "+750 XP"
     };
+
+    const hubState = window.AppData.homeHubState;
+    const isAiMode = hubState.activeMode === 'AI';
+
+    // Wiadomości do wyświetlenia w prawym boksie (Asystent AI albo Czat Graczy)
+    const hubStreamHTML = isAiMode
+      ? hubState.aiMessages.map(m => `
+          <div class="hub-msg-bubble ${m.type === 'user' ? 'user' : 'bot'}">
+            <strong>${m.sender}:</strong> ${m.text}
+          </div>
+        `).join('')
+      : (window.AppData.chatMessages || []).map(m => `
+          <div class="hub-msg-bubble ${m.type === 'outgoing' ? 'user' : 'incoming'}">
+            <strong>${m.sender}:</strong> ${m.text}
+          </div>
+        `).join('');
 
     const spotlightProducts = products.slice(0, 4);
     const spotlightHTML = spotlightProducts.map(prod => {
@@ -271,7 +357,7 @@ window.HomeComponent = {
     return `
       <section class="panel-3d home-compact-wrap" style="grid-column: span 2;">
         
-        <!-- 1. Zwięzły pasek statusu (1 linia, przewijana na telefonie) -->
+        <!-- 1. Pasek statusu LIVE -->
         <div class="home-live-ticker">
           <div>
             <span class="ticker-dot"></span><strong style="color:var(--accent);">LIVE:</strong>
@@ -286,93 +372,112 @@ window.HomeComponent = {
           </span>
         </div>
 
-        <!-- 2. Kompaktowy Hero + Karta Gracza -->
+        <!-- 2. HERO BENTO: LEWY SHOWCASE + PRAWY HUB (ASYSTENT AI & CZAT LIVE) -->
         <div class="home-hero-bento">
           
+          <!-- Lewa kolumna: Powitanie + Wyszukiwarka + Mini-Telemetria WHS -->
           <div class="hero-main-showcase">
             <div>
               <span style="font-size:0.62rem; font-weight:800; color:var(--accent); text-transform:uppercase; letter-spacing:1px;">
                 🌐 TGN.PL • CENTRALNY PORTAL GOLFOWY
               </span>
-              <h1 style="font-size:1.35rem; color:#fff; font-weight:900; margin:0.25rem 0 0.35rem;">
+              <h1 style="font-size:1.35rem; color:#fff; font-weight:900; margin:0.2rem 0 0.3rem;">
                 Witaj na TGN.pl, <span style="color:var(--accent);">${userName.split(' ')[0]}!</span> ⛳
               </h1>
-              <p style="font-size:0.76rem; color:#cbd5e1; line-height:1.4; max-width:520px;">
-                Wybierz sekcję portalu poniżej lub wyszukaj sprzęt bezpośrednio w autoryzowanym katalogu <strong>sklep.tgn.pl</strong> (${productsCount} produktów).
+              <p style="font-size:0.75rem; color:#cbd5e1; line-height:1.4; max-width:520px;">
+                Przejdź do sklepu <strong>sklep.tgn.pl</strong> (${productsCount} produktów), <strong>forum.tgn.pl</strong> lub porozmawiaj z naszym <strong>Asystentem AI i społecznością na czacie obok →</strong>
               </p>
             </div>
 
             <div>
-              <div style="display:flex; gap:0.4rem; background:rgba(5, 14, 18, 0.9); border:1px solid rgba(114,214,150,0.45); padding:0.35rem; border-radius:10px; margin-bottom:0.55rem;">
-                <input type="text" id="homeQuickSearch" placeholder="🔍 Szukaj w sklepie (np. Qi10, Vokey 52, Pro V1)..." style="flex:1; background:transparent; border:none; color:#fff; font-size:0.75rem; padding:0.25rem 0.5rem; outline:none;" onkeypress="if(event.key==='Enter'){ window.app.quickSearchFromHome(); }">
-                <button type="button" class="btn-primary" style="width:auto; margin:0; padding:0.38rem 0.9rem; font-size:0.72rem;" onclick="window.app.quickSearchFromHome()">
+              <div style="display:flex; gap:0.4rem; background:rgba(5, 14, 18, 0.9); border:1px solid rgba(114,214,150,0.45); padding:0.32rem; border-radius:10px; margin-bottom:0.55rem;">
+                <input type="text" id="homeQuickSearch" placeholder="🔍 Szukaj kija w sklepie (np. Qi10, Vokey 52, Pro V1)..." style="flex:1; background:transparent; border:none; color:#fff; font-size:0.74rem; padding:0.22rem 0.5rem; outline:none;" onkeypress="if(event.key==='Enter'){ window.app.quickSearchFromHome(); }">
+                <button type="button" class="btn-primary" style="width:auto; margin:0; padding:0.35rem 0.85rem; font-size:0.72rem;" onclick="window.app.quickSearchFromHome()">
                   Szukaj →
                 </button>
               </div>
 
-              <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
-                <button type="button" class="btn-mini-tool" onclick="window.app.switchTab('sklep'); window.StoreComponent.setCategory('KIJE_NOWE');">🏌️ Nowe Kije</button>
-                <button type="button" class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="window.app.switchTab('sklep'); window.StoreComponent.setCategory('UZYWANE_KIJE');">♻️ Komis CPO (${cpoCount})</button>
-                <button type="button" class="btn-mini-tool" onclick="window.app.switchTab('sklep'); window.StoreComponent.setCategory('PERSONALIZACJA');">🖨️ Piłki z logo</button>
-                <button type="button" class="btn-mini-tool" onclick="window.app.switchTab('pola');">⛳ Pola (25)</button>
+              <!-- Kompaktowy pasek telemetrii gracza -->
+              <div class="hero-mini-telemetry">
+                <div style="cursor:pointer;" onclick="window.app.switchTab('profile')">
+                  <span>HCP WHS</span>
+                  <strong style="color:var(--gold);">${userHcp}</strong>
+                </div>
+                <div style="cursor:pointer;" onclick="window.app.switchTab('profile')">
+                  <span>Swing Speed</span>
+                  <strong>${userSwing}</strong>
+                </div>
+                <div style="cursor:pointer;" onclick="window.app.switchTab('profile')">
+                  <span>Torba 3D</span>
+                  <strong style="color:#38bdf8;">${bagCount}/14 kijów</strong>
+                </div>
+                <div style="cursor:pointer;" onclick="window.app.openAiModal()">
+                  <span>Gapping AI</span>
+                  <strong style="color:var(--gold);">Luka 52° ⚠️</strong>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="hero-telemetry-card">
+          <!-- Prawa kolumna: NOWY INTERAKTYWNY WIDGET ASYSTENTA AI & CZATU LIVE -->
+          <div class="home-ai-chat-hub">
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
-                <span style="font-size:0.62rem; font-weight:800; color:var(--gold); text-transform:uppercase;">📡 PROFIL WHS & TRACKMAN</span>
-                <span style="font-size:0.62rem; color:var(--text-muted);">📍 ${userCity}</span>
+              <div class="hub-mode-tabs">
+                <button type="button" class="hub-tab-btn ai-mode ${isAiMode ? 'active' : ''}" onclick="window.app.switchHomeHubMode('AI')">
+                  🤖 Asystent AI (Fitter)
+                </button>
+                <button type="button" class="hub-tab-btn chat-mode ${!isAiMode ? 'active' : ''}" onclick="window.app.switchHomeHubMode('CHAT')">
+                  💬 Czat Graczy & Support
+                </button>
               </div>
 
-              <div class="telemetry-kpi-grid">
-                <div class="telemetry-kpi-box">
-                  <span>HCP WHS</span>
-                  <strong style="color:var(--gold);">${userHcp}</strong>
-                </div>
-                <div class="telemetry-kpi-box">
-                  <span>Swing</span>
-                  <strong>${userSwing}</strong>
-                </div>
-                <div class="telemetry-kpi-box">
-                  <span>Torba 3D</span>
-                  <strong style="color:#38bdf8;">${bagCount}/14</strong>
-                </div>
-              </div>
-
-              <div style="background:rgba(250,204,21,0.08); border:1px dashed rgba(250,204,21,0.4); border-radius:8px; padding:0.45rem 0.6rem; font-size:0.68rem; color:var(--text-main); margin-bottom:0.5rem;">
-                🎯 <strong style="color:var(--gold);">Gapping AI:</strong> Luka 15m (PW–SW). Zalecany kij: <strong>Wedge 52°</strong>.
+              <div class="hub-messages-stream" id="homeHubMsgsBox">
+                ${hubStreamHTML}
               </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.4rem;">
-              <button type="button" class="btn-action" style="margin:0; padding:0.42rem; font-size:0.68rem;" onclick="window.app.switchTab('profile')">
-                🎒 Moja Torba 3D
-              </button>
-              <button type="button" class="btn-action" style="margin:0; padding:0.42rem; font-size:0.68rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="window.app.openAiModal()">
-                🌟 Dobierz 52°
-              </button>
+            <div>
+              ${isAiMode ? `
+                <div class="hub-quick-chips">
+                  <button type="button" class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="window.app.sendHomeAiQuick('WEDGE_52')">🎯 Dobierz Wedge 52°</button>
+                  <button type="button" class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="window.app.sendHomeAiQuick('DRIVER_96')">⚡ Driver pod 96 mph</button>
+                  <button type="button" class="btn-mini-tool" onclick="window.app.sendHomeAiQuick('CPO_DEALS')">♻️ Okazje CPO</button>
+                  <button type="button" class="btn-mini-tool" onclick="window.app.sendHomeAiQuick('RABAT')">🏷️ Kod -3%</button>
+                </div>
+              ` : `
+                <div class="hub-quick-chips">
+                  <button type="button" class="btn-mini-tool" onclick="window.app.sendHomeChatQuick('Cześć! Ktoś gra w ten weekend?')">⛳ Ktoś gra w weekend?</button>
+                  <button type="button" class="btn-mini-tool" onclick="window.app.sendHomeChatQuick('Mam pytanie o wysyłkę kija CPO.')">📦 Pytanie o wysyłkę CPO</button>
+                  <button type="button" class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="window.app.switchTab('chat')">↗ Pełny ekran czatu</button>
+                </div>
+              `}
+
+              <div class="hub-input-bar">
+                <input type="text" id="homeHubInput" placeholder="${isAiMode ? 'Zapytaj AI o sprzęt, fitting lub pola...' : 'Napisz wiadomość na czacie TGN...'}" onkeypress="if(event.key==='Enter'){ window.app.submitHomeHubMessage(); }">
+                <button type="button" style="background:${isAiMode ? 'var(--blue)' : 'var(--accent)'};" onclick="window.app.submitHomeHubMessage()">
+                  Wyślij →
+                </button>
+              </div>
             </div>
           </div>
 
         </div>
 
-        <!-- 3. Trzy Główne Bramy Modułowe (Kompaktowe i czytelne) -->
+        <!-- 3. Trzy Główne Bramy Modułowe (sklep.tgn.pl / forum.tgn.pl / kokpit.tgn.pl) -->
         <div class="home-portals-grid">
           
           <div class="portal-gate-card gate-shop" onclick="window.app.switchTab('sklep')">
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
                 <span style="background:var(--accent); color:#052e16; font-size:0.6rem; font-weight:900; padding:2px 8px; border-radius:5px;">SKLEP.TGN.PL</span>
                 <span style="font-size:0.66rem; color:var(--accent); font-weight:700;">● ${productsCount} towarów</span>
               </div>
-              <h3 style="font-size:1.02rem; color:#fff; margin-bottom:0.25rem; font-weight:800;">🛍️ Sklep & Komis CPO</h3>
-              <p class="portal-gate-desc" style="font-size:0.72rem; color:#cbd5e1; line-height:1.35;">
+              <h3 style="font-size:1rem; color:#fff; margin-bottom:0.2rem; font-weight:800;">🛍️ Sklep & Komis CPO</h3>
+              <p class="portal-gate-desc" style="font-size:0.71rem; color:#cbd5e1; line-height:1.35;">
                 Nowy sprzęt PGA 2026, używane kije CPO z gwarancją i wymiana Trade-In.
               </p>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.6rem; padding-top:0.45rem; border-top:1px solid rgba(255,255,255,0.1);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.55rem; padding-top:0.4rem; border-top:1px solid rgba(255,255,255,0.1);">
               <span style="font-size:0.65rem; color:var(--gold);">🏷️ Kod: RABAT3</span>
               <span style="font-size:0.72rem; color:var(--accent); font-weight:800;">Otwórz Sklep →</span>
             </div>
@@ -380,16 +485,16 @@ window.HomeComponent = {
 
           <div class="portal-gate-card gate-forum" onclick="window.app.switchTab('forum')">
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
                 <span style="background:var(--blue); color:#041e2b; font-size:0.6rem; font-weight:900; padding:2px 8px; border-radius:5px;">FORUM.TGN.PL</span>
                 <span style="font-size:0.66rem; color:var(--blue); font-weight:700;">● ${forumTotal} tematów</span>
               </div>
-              <h3 style="font-size:1.02rem; color:#fff; margin-bottom:0.25rem; font-weight:800;">💬 Forum Golfowe</h3>
-              <p class="portal-gate-desc" style="font-size:0.72rem; color:#cbd5e1; line-height:1.35;">
+              <h3 style="font-size:1rem; color:#fff; margin-bottom:0.2rem; font-weight:800;">💬 Forum Golfowe</h3>
+              <p class="portal-gate-desc" style="font-size:0.71rem; color:#cbd5e1; line-height:1.35;">
                 Opinie o kijach, porady trenerów PGA Pro, raporty z pól i wspólne rundy.
               </p>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.6rem; padding-top:0.45rem; border-top:1px solid rgba(255,255,255,0.1);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.55rem; padding-top:0.4rem; border-top:1px solid rgba(255,255,255,0.1);">
               <span style="font-size:0.65rem; color:#cbd5e1;">👥 Społeczność PL</span>
               <span style="font-size:0.72rem; color:var(--blue); font-weight:800;">Otwórz Forum →</span>
             </div>
@@ -397,16 +502,16 @@ window.HomeComponent = {
 
           <div class="portal-gate-card gate-cockpit" onclick="window.app.switchTab('profile')">
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
                 <span style="background:var(--gold); color:#052e16; font-size:0.6rem; font-weight:900; padding:2px 8px; border-radius:5px;">KOKPIT.TGN.PL</span>
                 <span style="font-size:0.66rem; color:var(--gold); font-weight:700;">● Runda: ${lastRound}</span>
               </div>
-              <h3 style="font-size:1.02rem; color:#fff; margin-bottom:0.25rem; font-weight:800;">👤 Kokpit & Torba 3D</h3>
-              <p class="portal-gate-desc" style="font-size:0.72rem; color:#cbd5e1; line-height:1.35;">
+              <h3 style="font-size:1rem; color:#fff; margin-bottom:0.2rem; font-weight:800;">👤 Kokpit & Torba 3D</h3>
+              <p class="portal-gate-desc" style="font-size:0.71rem; color:#cbd5e1; line-height:1.35;">
                 Zarządzaj swoimi kijami w torbie, sprawdzaj wyceny CPO i statystyki gry.
               </p>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.6rem; padding-top:0.45rem; border-top:1px solid rgba(255,255,255,0.1);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.55rem; padding-top:0.4rem; border-top:1px solid rgba(255,255,255,0.1);">
               <span style="font-size:0.65rem; color:var(--gold);">🎒 ${bagCount}/14 kijów</span>
               <span style="font-size:0.72rem; color:var(--gold); font-weight:800;">Otwórz Kokpit →</span>
             </div>
@@ -414,11 +519,11 @@ window.HomeComponent = {
 
         </div>
 
-        <!-- 4. Kompaktowa Karuzela Produktów Dnia (2x2 na telefonie, 4 w rzędzie na PC) -->
+        <!-- 4. Kompaktowa Karuzela Produktów Dnia -->
         <div style="margin-bottom:1.1rem;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.55rem;">
             <strong style="font-size:0.82rem; text-transform:uppercase; color:var(--accent); letter-spacing:0.5px;">
-              🔥 Wybrane Oferty ze Sklepu & CPO
+              🔥 Wybrane Oferty ze Sklepu & CPO (${cpoCount} używanych)
             </strong>
             <button type="button" class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="window.app.switchTab('sklep')">
               Pełny sklep (${productsCount}) →
@@ -701,6 +806,96 @@ window.auth = {
 // 5. Główny router i akcje aplikacji (window.app)
 window.app = {
   previewTimer: null,
+
+  // Obsługa przełączania i wysyłania wiadomości w widgecie AI / Czat na Stronie Głównej
+  switchHomeHubMode: function(mode) {
+    window.ensureAllPortalDataReady();
+    window.AppData.homeHubState.activeMode = mode;
+    window.app.switchTab('home');
+    setTimeout(window.app.scrollHomeHubToBottom, 30);
+  },
+
+  scrollHomeHubToBottom: function() {
+    const box = document.getElementById('homeHubMsgsBox');
+    if (box) box.scrollTop = box.scrollHeight;
+  },
+
+  sendHomeAiQuick: function(type) {
+    window.ensureAllPortalDataReady();
+    const msgs = window.AppData.homeHubState.aiMessages;
+    if (type === 'WEDGE_52') {
+      msgs.push(
+        { sender: "Ty", type: "user", text: "Jaki kij zamknie moją lukę 15m między PW a SW?" },
+        { sender: "TGN AI Concierge", type: "bot", text: "Przy Twoim swingu 96 mph idealnie sprawdzi się Gap Wedge 52° (Titleist Vokey SM10 lub używany Cleveland RTX 6 CPO). Kliknij 'Sklep' lub otwórz dział Wedge!" }
+      );
+    } else if (type === 'DRIVER_96') {
+      msgs.push(
+        { sender: "Ty", type: "user", text: "Poleć driver pod prędkość 96 mph." },
+        { sender: "TGN AI Concierge", type: "bot", text: "Dla 96 mph optymalny jest shaft Stiff (S) i główka 10K MOI: TaylorMade Qi10 Max lub Ping G430 Max 10K. Oba mamy dostępne od ręki!" }
+      );
+    } else if (type === 'CPO_DEALS') {
+      msgs.push(
+        { sender: "Ty", type: "user", text: "Jakie okazje macie w komisie CPO?" },
+        { sender: "TGN AI Concierge", type: "bot", text: "Mamy 10 zweryfikowanych pozycji CPO z 12-miesięczną gwarancją (m.in. Garmin R10, drivery i wedge). Możesz też oddać swój stary kij w Trade-In!" }
+      );
+    } else if (type === 'RABAT') {
+      if (window.StoreComponent && window.StoreComponent.applyRabat3Code) {
+        window.StoreComponent.applyRabat3Code();
+      }
+      msgs.push(
+        { sender: "TGN AI Concierge", type: "bot", text: "🎉 Aktywowałem na Twoim koncie kod RABAT3 (-3% jak 'Par 3') na cały asortyment w koszyku!" }
+      );
+    }
+    window.app.switchTab('home');
+    setTimeout(window.app.scrollHomeHubToBottom, 40);
+  },
+
+  sendHomeChatQuick: function(text) {
+    window.ensureAllPortalDataReady();
+    const userName = (window.AppData.user && window.AppData.user.name) ? window.AppData.user.name.split(' ')[0] : 'Marek';
+    window.AppData.chatMessages.push({ sender: userName, text: text, type: "outgoing" });
+    window.app.switchTab('home');
+    setTimeout(window.app.scrollHomeHubToBottom, 40);
+
+    setTimeout(() => {
+      window.AppData.chatMessages.push({
+        sender: "Tomek_PGA (Support)",
+        text: "Dzięki za wiadomość! Jesteśmy online – chętnie pomożemy z doborem sprzętu lub rezerwacją.",
+        type: "incoming"
+      });
+      const activeBtn = document.querySelector('#mainNav button.active');
+      if (activeBtn && activeBtn.dataset.tab === 'home') {
+        window.app.switchTab('home');
+        setTimeout(window.app.scrollHomeHubToBottom, 40);
+      }
+    }, 900);
+  },
+
+  submitHomeHubMessage: function() {
+    window.ensureAllPortalDataReady();
+    const inp = document.getElementById('homeHubInput');
+    if (!inp || !inp.value.trim()) return;
+    const text = inp.value.trim();
+    const hubState = window.AppData.homeHubState;
+
+    if (hubState.activeMode === 'AI') {
+      hubState.aiMessages.push({ sender: "Ty", type: "user", text: text });
+      const lower = text.toLowerCase();
+      let reply = "Sprawdziłem katalog TGN! Możesz przejść bezpośrednio do sklepu lub przefiltrować ten sprzęt jednym kliknięciem.";
+      if (lower.includes('driver') || lower.includes('qi10') || lower.includes('ping')) {
+        reply = "W kategorii Driverów polecam modele 10K MOI (TaylorMade Qi10 Max oraz Ping G430) ze sztywnością Stiff pod Twoje 96 mph.";
+      } else if (lower.includes('piłk') || lower.includes('pilk') || lower.includes('logo')) {
+        reply = "Mamy zarówno pakiety Lake Balls AAAA Pearl, jak i nowe Titleist Pro V1 z personalizacją UV Twojego logo!";
+      } else if (lower.includes('pole') || lower.includes('pola') || lower.includes('modry')) {
+        reply = "W naszym Atlasie Pól znajdziesz 25 polskich obiektów z aktualnymi parametrami Par, CR/Slope i szybkim linkiem do Tee Time.";
+      }
+      hubState.aiMessages.push({ sender: "TGN AI Concierge", type: "bot", text: reply });
+      window.app.switchTab('home');
+      setTimeout(window.app.scrollHomeHubToBottom, 40);
+    } else {
+      window.app.sendHomeChatQuick(text);
+    }
+  },
 
   quickSearchFromHome: function() {
     const q = document.getElementById('homeQuickSearch')?.value.trim() || '';
