@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#070f14">
   <title>TGN Global Golf – Oficjalny Sklep Golfowy, Komis CPO & Forum</title>
-  <link rel="stylesheet" href="./style.css?v=22.0">
+  <link rel="stylesheet" href="./style.css?v=24.0">
 </head>
 <body>
 
@@ -44,8 +44,8 @@
       </div>
 
       <div class="auth-tabs">
-        <button id="tabLoginBtn" class="auth-tab-btn active" onclick="auth.switchAuthMode('login')">Logowanie</button>
-        <button id="tabRegisterBtn" class="auth-tab-btn" onclick="auth.switchAuthMode('register')">Załóż konto</button>
+        <button type="button" id="tabLoginBtn" class="auth-tab-btn active" onclick="window.auth && window.auth.switchAuthMode('login')">Logowanie</button>
+        <button type="button" id="tabRegisterBtn" class="auth-tab-btn" onclick="window.auth && window.auth.switchAuthMode('register')">Załóż konto</button>
       </div>
 
       <div id="loginForm">
@@ -57,10 +57,10 @@
           <label>Hasło</label>
           <input type="password" id="loginPass" placeholder="••••••••" value="********">
         </div>
-        <button class="btn-primary" onclick="auth.handleLogin()">Zaloguj się</button>
+        <button type="button" id="btnLoginSubmit" class="btn-primary" onclick="window.auth && window.auth.handleLogin()">Zaloguj się</button>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-top:0.75rem;">
-          <button class="btn-demo" style="margin:0; font-size:0.72rem;" onclick="auth.loginAsClient()">👤 Wejdź jako Klient</button>
-          <button class="btn-demo" style="margin:0; font-size:0.72rem; border-color:var(--accent); color:var(--accent); background:rgba(74,222,128,0.1);" onclick="auth.loginAsAdmin()">🔑 Wejdź jako Właściciel (Admin)</button>
+          <button type="button" id="btnLoginClient" class="btn-demo" style="margin:0; font-size:0.72rem;" onclick="window.auth && window.auth.loginAsClient()">👤 Wejdź jako Klient</button>
+          <button type="button" id="btnLoginAdmin" class="btn-demo" style="margin:0; font-size:0.72rem; border-color:var(--accent); color:var(--accent); background:rgba(74,222,128,0.1);" onclick="window.auth && window.auth.loginAsAdmin()">🔑 Wejdź jako Właściciel (Admin)</button>
         </div>
       </div>
 
@@ -87,7 +87,7 @@
           <label>Hasło</label>
           <input type="password" id="regPass" placeholder="Minimum 6 znaków">
         </div>
-        <button class="btn-primary" onclick="auth.handleRegister()">Utwórz Konto Gracza</button>
+        <button type="button" id="btnRegSubmit" class="btn-primary" onclick="window.auth && window.auth.handleRegister()">Utwórz Konto Gracza</button>
       </div>
     </div>
   </div>
@@ -103,10 +103,10 @@
         <span>Bezpieczne płatności: BLIK • Przelewy24 • Visa / Mastercard • Dostawa: Kurier DPD Dłużyca / InPost Paczkomaty</span>
       </div>
       <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-        <a href="javascript:void(0)" style="color:var(--accent); text-decoration:none;" onclick="app.openLegalModal('REGULAMIN')">📜 Regulamin Sklepu i Forum</a>
-        <a href="javascript:void(0)" style="color:var(--accent); text-decoration:none;" onclick="app.openLegalModal('ZWROTY')">🔄 Zwroty i Reklamacje (14 dni)</a>
-        <a href="javascript:void(0)" style="color:var(--accent); text-decoration:none;" onclick="app.openLegalModal('RODO')">🔒 Polityka Prywatności (RODO)</a>
-        <a href="javascript:void(0)" style="color:var(--gold); text-decoration:none;" onclick="app.openLegalModal('KONTAKT')">📞 Kontakt & Serwis Fittingu</a>
+        <a href="javascript:void(0)" style="color:var(--accent); text-decoration:none;" onclick="window.app && window.app.openLegalModal('REGULAMIN')">📜 Regulamin Sklepu i Forum</a>
+        <a href="javascript:void(0)" style="color:var(--accent); text-decoration:none;" onclick="window.app && window.app.openLegalModal('ZWROTY')">🔄 Zwroty i Reklamacje (14 dni)</a>
+        <a href="javascript:void(0)" style="color:var(--accent); text-decoration:none;" onclick="window.app && window.app.openLegalModal('RODO')">🔒 Polityka Prywatności (RODO)</a>
+        <a href="javascript:void(0)" style="color:var(--gold); text-decoration:none;" onclick="window.app && window.app.openLegalModal('KONTAKT')">📞 Kontakt & Serwis Fittingu</a>
       </div>
     </div>
   </footer>
@@ -116,42 +116,42 @@
     <div class="ai-popup-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.8rem;">
         <h3 style="color: var(--gold); font-size: 0.95rem; text-transform:uppercase;">🌟 Rekomendacja Fittingu AI – Sezon 2026/2027</h3>
-        <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="app.closeAiModal()">✕</span>
+        <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="window.app && window.app.closeAiModal()">✕</span>
       </div>
       <p style="font-size: 0.82rem; color: var(--text-main); line-height: 1.55; margin-bottom: 1rem;">
         Analiza Twojej torby (HCP 12.4, Swing 96 mph) wykazała lukę dystansową 15m pomiędzy Pitching Wedge a Sand Wedge.<br><br>
         Rekomendowany zakup: <strong>Gap Wedge 52° (Titleist Vokey SM10 lub Cleveland RTX 6 ZipCore)</strong>. Możesz obniżyć cenę zakupu oddając swój nieużywany sprzęt w rozliczeniu Trade-In.
       </p>
-      <button class="btn-action" style="background: rgba(250,204,21,0.16); border-color: var(--gold); color: var(--gold);" onclick="app.closeAiModal(); app.switchTab('sklep'); StoreComponent.setCategory('WEDGE');">
+      <button type="button" class="btn-action" style="background: rgba(250,204,21,0.16); border-color: var(--gold); color: var(--gold);" onclick="window.app && window.app.closeAiModal(); window.app && window.app.switchTab('sklep'); window.StoreComponent && window.StoreComponent.setCategory('WEDGE');">
         [ PRZEJDŹ DO DZIAŁU WEDGE 52° W SKLEPIE ]
       </button>
     </div>
   </div>
 
   <!-- Modal powiększenia zdjęcia kija HD -->
-  <div id="photoZoomModal" class="modal-overlay" onclick="app.closePhotoZoom()">
+  <div id="photoZoomModal" class="modal-overlay" onclick="window.app && window.app.closePhotoZoom()">
     <div class="ai-popup-card" style="max-width:460px; border-color:var(--accent); text-align:center;" onclick="event.stopPropagation()">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
         <h3 id="zoomClubTitle" style="color:var(--accent); font-size:0.9rem;">Karta Produktu HD</h3>
-        <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="app.closePhotoZoom()">✕</span>
+        <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="window.app && window.app.closePhotoZoom()">✕</span>
       </div>
       <div style="width:100%; height:270px; border-radius:14px; overflow:hidden; border:2px solid var(--glass-border); background:#ffffff; margin-bottom:0.8rem; position:relative; display:flex; align-items:center; justify-content:center;">
         <img id="zoomClubImg" src="" alt="Club HD" style="width:100%; height:100%; object-fit:contain; padding:10px;">
       </div>
       <p id="zoomClubMeta" style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.75rem;"></p>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
-        <button class="btn-action" style="margin:0;" onclick="app.regenerateModalAiPhoto()">📷 Następne zdjęcie produktu</button>
-        <button class="btn-action" style="margin:0; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="app.openGoogleImagesForModal()">🔎 Zobacz w Google Grafika ↗</button>
+        <button type="button" class="btn-action" style="margin:0;" onclick="window.app && window.app.regenerateModalAiPhoto()">📷 Następne zdjęcie produktu</button>
+        <button type="button" class="btn-action" style="margin:0; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="window.app && window.app.openGoogleImagesForModal()">🔎 Zobacz w Google Grafika ↗</button>
       </div>
     </div>
   </div>
 
   <!-- Modal Dokumentów Prawnych -->
-  <div id="legalModalOverlay" class="modal-overlay" onclick="app.closeLegalModal()">
+  <div id="legalModalOverlay" class="modal-overlay" onclick="window.app && window.app.closeLegalModal()">
     <div class="ai-popup-card" style="max-width:620px; border-color:var(--accent);" onclick="event.stopPropagation()">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
         <h3 id="legalModalTitle" style="color:var(--accent); font-size:0.95rem;">Dokumenty Sklepu TGN</h3>
-        <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="app.closeLegalModal()">✕</span>
+        <span style="cursor:pointer; color:var(--text-muted); font-size:1.2rem;" onclick="window.app && window.app.closeLegalModal()">✕</span>
       </div>
       <div id="legalModalBody" style="font-size:0.78rem; color:var(--text-main); line-height:1.55; max-height:65vh; overflow-y:auto; padding-right:6px;"></div>
     </div>
@@ -159,15 +159,14 @@
 
   <div id="toast">Powiadomienie</div>
 
-  <!-- Ładowanie modułów produkcyjnych (v22.0 z dołączonym home.js) -->
-  <script src="./js/data.js?v=22.0"></script>
-  <script src="./js/home.js?v=22.0"></script>
-  <script src="./js/profile.js?v=22.0"></script>
-  <script src="./js/courses.js?v=22.0"></script>
-  <script src="./js/events.js?v=22.0"></script>
-  <script src="./js/store.js?v=22.0"></script>
-  <script src="./js/forum.js?v=22.0"></script>
-  <script src="./js/market.js?v=22.0"></script>
-  <script src="./js/app.js?v=22.0"></script>
+  <!-- Ładowanie modułów produkcyjnych (v24.0 - bez duplikatu home.js) -->
+  <script src="./js/data.js?v=24.0"></script>
+  <script src="./js/profile.js?v=24.0"></script>
+  <script src="./js/courses.js?v=24.0"></script>
+  <script src="./js/events.js?v=24.0"></script>
+  <script src="./js/store.js?v=24.0"></script>
+  <script src="./js/forum.js?v=24.0"></script>
+  <script src="./js/market.js?v=24.0"></script>
+  <script src="./js/app.js?v=24.0"></script>
 </body>
 </html>
