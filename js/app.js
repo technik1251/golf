@@ -1,126 +1,128 @@
 /* =========================================================================
-   GŁÓWNY KONTROLER PRODUKCYJNY TGN v25.0 (js/app.js)
-   - Nowy Design Strony Głównej: Executive Golf Portal (Bento Grid 3D + Foto HD)
-   - Naprawione ładowanie produktów i wątków forum (nigdy nie pokazuje "0")
-   - Wbudowany Spotlight Produktowy, Telemetria TrackMan Live i Ticker Pól
+   GŁÓWNY KONTROLER PRODUKCYJNY TGN v26.0 (js/app.js)
+   - Odchudzony, kompaktowy i przejrzysty Bento Grid na PC i Mobile
+   - Siatka 2-kolumnowa produktów na telefonie, mniejsze kafle na komputerze
    ========================================================================= */
 
-// Wstrzyknięcie dedykowanych stylów Premium Bento Grid dla Strony Głównej
-(function injectHomeV25Styles() {
-  if (document.getElementById('tgnHomeV25Styles')) return;
+(function injectHomeV26Styles() {
+  const old = document.getElementById('tgnHomeV25Styles');
+  if (old) old.remove();
+  if (document.getElementById('tgnHomeV26Styles')) return;
+
   const style = document.createElement('style');
-  style.id = 'tgnHomeV25Styles';
+  style.id = 'tgnHomeV26Styles';
   style.textContent = `
+    .home-compact-wrap {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 1.15rem 1.35rem !important;
+    }
     .home-live-ticker {
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem;
-      background: rgba(4, 12, 15, 0.92); border: 1px solid rgba(74, 222, 128, 0.35);
-      border-radius: 12px; padding: 0.55rem 1rem; margin-bottom: 1.25rem; font-size: 0.74rem;
-      box-shadow: inset 0 0 15px rgba(74, 222, 128, 0.08);
+      display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+      background: rgba(4, 12, 15, 0.9); border: 1px solid rgba(74, 222, 128, 0.28);
+      border-radius: 10px; padding: 0.4rem 0.85rem; margin-bottom: 0.9rem; font-size: 0.7rem;
+      overflow-x: auto; white-space: nowrap; scrollbar-width: none;
     }
+    .home-live-ticker::-webkit-scrollbar { display: none; }
     .ticker-dot {
-      width: 8px; height: 8px; border-radius: 50%; background: #4ade80;
-      box-shadow: 0 0 10px #4ade80; display: inline-block; margin-right: 6px;
+      width: 7px; height: 7px; border-radius: 50%; background: #4ade80;
+      box-shadow: 0 0 8px #4ade80; display: inline-block; margin-right: 5px;
     }
+
+    /* Kompaktowy Hero + Telemetria */
     .home-hero-bento {
-      display: grid; grid-template-columns: 1.65fr 1fr; gap: 1.25rem; margin-bottom: 1.4rem;
+      display: grid; grid-template-columns: 1.55fr 1fr; gap: 0.9rem; margin-bottom: 0.95rem;
     }
     .hero-main-showcase {
-      background: linear-gradient(125deg, rgba(6, 18, 22, 0.92) 35%, rgba(10, 38, 28, 0.75) 100%),
-                  url('https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
-      border: 1px solid rgba(114, 214, 150, 0.45); border-radius: 20px; padding: 1.8rem;
-      display: flex; flex-direction: column; justify-content: space-between;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6); position: relative; overflow: hidden;
+      background: linear-gradient(125deg, rgba(6, 18, 22, 0.93) 40%, rgba(10, 38, 28, 0.78) 100%),
+                  url('https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=1000&q=80') center/cover no-repeat;
+      border: 1px solid rgba(114, 214, 150, 0.38); border-radius: 14px; padding: 1.15rem 1.3rem;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 0.75rem;
     }
     .hero-telemetry-card {
-      background: linear-gradient(155deg, rgba(14, 30, 36, 0.95), rgba(6, 14, 18, 0.98));
-      border: 1px solid rgba(250, 204, 21, 0.45); border-radius: 20px; padding: 1.35rem;
+      background: linear-gradient(155deg, rgba(14, 28, 34, 0.95), rgba(6, 14, 18, 0.98));
+      border: 1px solid rgba(250, 204, 21, 0.38); border-radius: 14px; padding: 1rem 1.15rem;
       display: flex; flex-direction: column; justify-content: space-between;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), inset 0 0 25px rgba(250, 204, 21, 0.08);
     }
     .telemetry-kpi-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin: 0.75rem 0;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin: 0.5rem 0;
     }
     .telemetry-kpi-box {
-      background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px; padding: 0.55rem 0.4rem; text-align: center;
+      background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 8px; padding: 0.4rem 0.3rem; text-align: center;
     }
-    .telemetry-kpi-box span { display: block; font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; }
-    .telemetry-kpi-box strong { font-size: 0.95rem; color: var(--accent); font-weight: 800; }
+    .telemetry-kpi-box span { display: block; font-size: 0.56rem; color: var(--text-muted); text-transform: uppercase; }
+    .telemetry-kpi-box strong { font-size: 0.86rem; color: var(--accent); font-weight: 800; }
 
-    /* 3 Wizualne Bramy Subdomenowe (Sklep / Forum / Kokpit) */
+    /* 3 Zgrabne Bramy Portalu (Sklep / Forum / Kokpit) */
     .home-portals-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1.6rem;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.85rem; margin-bottom: 1.1rem;
     }
     .portal-gate-card {
-      border-radius: 18px; padding: 1.5rem 1.3rem; display: flex; flex-direction: column;
-      justify-content: space-between; cursor: pointer; transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
-      position: relative; overflow: hidden; min-height: 235px; box-shadow: 0 15px 35px rgba(0,0,0,0.55);
+      border-radius: 14px; padding: 1rem 1.1rem; display: flex; flex-direction: column;
+      justify-content: space-between; cursor: pointer; transition: 0.22s ease;
+      position: relative; overflow: hidden; min-height: 148px;
     }
-    .portal-gate-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 22px 45px rgba(0,0,0,0.8);
-    }
+    .portal-gate-card:hover { transform: translateY(-3px); }
     .portal-gate-card.gate-shop {
-      background: linear-gradient(160deg, rgba(8, 24, 20, 0.88) 25%, rgba(6, 16, 20, 0.96) 90%),
-                  url('https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
-      border: 2px solid var(--accent);
+      background: linear-gradient(160deg, rgba(8, 24, 20, 0.9) 30%, rgba(6, 16, 20, 0.96) 95%),
+                  url('https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?auto=format&fit=crop&w=600&q=80') center/cover no-repeat;
+      border: 1.5px solid var(--accent);
     }
     .portal-gate-card.gate-forum {
-      background: linear-gradient(160deg, rgba(8, 22, 34, 0.88) 25%, rgba(6, 14, 22, 0.96) 90%),
-                  url('https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
-      border: 2px solid var(--blue);
+      background: linear-gradient(160deg, rgba(8, 22, 34, 0.9) 30%, rgba(6, 14, 22, 0.96) 95%),
+                  url('https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=600&q=80') center/cover no-repeat;
+      border: 1.5px solid var(--blue);
     }
     .portal-gate-card.gate-cockpit {
-      background: linear-gradient(160deg, rgba(28, 24, 10, 0.88) 25%, rgba(8, 14, 18, 0.96) 90%),
-                  url('https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
-      border: 2px solid var(--gold);
+      background: linear-gradient(160deg, rgba(28, 24, 10, 0.9) 30%, rgba(8, 14, 18, 0.96) 95%),
+                  url('https://images.unsplash.com/photo-1622398925373-3f91b1e275f5?auto=format&fit=crop&w=600&q=80') center/cover no-repeat;
+      border: 1.5px solid var(--gold);
     }
 
-    /* Karuzela Produktów Spotlight na Stronie Głównej */
+    /* Kompaktowa Karuzela Produktów Spotlight */
     .home-spotlight-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.6rem;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1.1rem;
     }
     .spotlight-prod-card {
-      background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 15px; padding: 0.9rem; display: flex; flex-direction: column; justify-content: space-between;
-      transition: 0.25s; cursor: pointer;
+      background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 12px; padding: 0.7rem; display: flex; flex-direction: column; justify-content: space-between;
+      transition: 0.2s; cursor: pointer;
     }
-    .spotlight-prod-card:hover {
-      border-color: var(--accent); background: rgba(74, 222, 128, 0.06); transform: translateY(-3px);
-    }
+    .spotlight-prod-card:hover { border-color: var(--accent); background: rgba(74, 222, 128, 0.05); }
     .spotlight-img-wrap {
-      width: 100%; height: 130px; background: #fff; border-radius: 10px; margin-bottom: 0.65rem;
+      width: 100%; height: 96px; background: #fff; border-radius: 8px; margin-bottom: 0.5rem;
       display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
-      border: 1px solid rgba(114, 214, 150, 0.35);
     }
-    .spotlight-img-wrap img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
+    .spotlight-img-wrap img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
 
-    /* Dolny układ 2-kolumnowy: Forum + Ekosystem Pól i Turniejów */
+    /* Dolna sekcja: Forum + Skróty */
     .home-bottom-bento {
-      display: grid; grid-template-columns: 1.15fr 1fr; gap: 1.35rem;
+      display: grid; grid-template-columns: 1.15fr 1fr; gap: 0.95rem;
     }
     .home-forum-row {
-      background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.09);
-      border-left: 3px solid var(--blue); border-radius: 12px; padding: 0.85rem 1rem;
-      margin-bottom: 0.65rem; cursor: pointer; transition: 0.2s;
+      background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+      border-left: 3px solid var(--blue); border-radius: 10px; padding: 0.6rem 0.8rem;
+      margin-bottom: 0.45rem; cursor: pointer; transition: 0.2s;
     }
-    .home-forum-row:hover {
-      background: rgba(56, 189, 248, 0.08); border-color: var(--blue);
-    }
+    .home-forum-row:hover { background: rgba(56, 189, 248, 0.08); border-color: var(--blue); }
 
-    @media (max-width: 1100px) {
+    @media (max-width: 1024px) {
       .home-hero-bento, .home-portals-grid, .home-bottom-bento { grid-template-columns: 1fr; }
       .home-spotlight-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 768px) {
-      .home-spotlight-grid { grid-template-columns: 1fr; }
-      .hero-main-showcase { padding: 1.25rem; }
+      .home-compact-wrap { padding: 0.8rem !important; }
+      .hero-main-showcase { padding: 0.95rem; }
+      .portal-gate-card { min-height: 115px; padding: 0.85rem 0.95rem; }
+      .portal-gate-desc { display: none; }
+      .home-spotlight-grid { grid-template-columns: repeat(2, 1fr); gap: 0.55rem; }
+      .spotlight-img-wrap { height: 82px; }
     }
   `;
   document.head.appendChild(style);
 })();
 
-// Zabezpieczenie danych bazowych i naprawa licznika "0 produktów / 0 tematów"
 window.DefaultUser = window.DefaultUser || {
   name: "Marek Kowalski",
   email: "marek.kowalski@tgngolf.pl",
@@ -133,7 +135,6 @@ window.DefaultUser = window.DefaultUser || {
 };
 
 window.ensureAllPortalDataReady = function() {
-  // Jeśli w globalnym zasięgu jest obiekt AppData z pliku data.js, zsynchronizuj go z window.AppData
   if (typeof AppData !== 'undefined') {
     window.AppData = AppData;
   } else if (typeof window.AppData === 'undefined') {
@@ -143,36 +144,34 @@ window.ensureAllPortalDataReady = function() {
     };
   }
 
-  // Upewnij się, że sklep zainicjalizował swoje produkty
   if (typeof StoreComponent !== 'undefined' && StoreComponent.ensureStoreDataInitialized) {
     StoreComponent.ensureStoreDataInitialized();
   }
 
-  // Jeśli lista wątków forum nadal jest pusta, załaduj domyślne wątki społeczności TGN
   if (!window.AppData.forumPosts || window.AppData.forumPosts.length === 0) {
     window.AppData.forumPosts = [
       {
         id: 501, pinned: true, catKey: "EQUIPMENT", category: "🏌️ Sprzęt & Fitting",
-        title: "TaylorMade Qi10 Max vs Ping G430 Max 10K – realne testy na TrackManie przy 95-100 mph",
+        title: "TaylorMade Qi10 Max vs Ping G430 Max 10K – testy przy 95-100 mph",
         author: "Tomek_PGA_Fitter", badge: "PRO FITTER", badgeClass: "badge-pro",
-        date: "Dzisiaj, 09:40", views: "1 420", likes: 38,
-        content: "Przetestowaliśmy oba drivery 10K MOI na 25 graczach z HCP 8-18. Zobaczcie różnice w spawie i dyspersji bocznej...",
+        date: "Dzisiaj", views: "1 420", likes: 38,
+        content: "Przetestowaliśmy oba drivery 10K MOI na 25 graczach z HCP 8-18.",
         comments: [{ author: "Marek_WWA", badge: "HCP 12.4", badgeClass: "badge-vet", date: "Dzisiaj", text: "U mnie Qi10 dał +6m carry!" }]
       },
       {
         id: 502, pinned: false, catKey: "COURSES", category: "⛳ Pola w Polsce",
-        title: "Stan greenów na Modrym Lesie i Binowo Park – raport z weekendu (Stimpmeter 10.5 ft!)",
+        title: "Stan greenów na Modrym Lesie i Binowo Park – raport (10.5 ft)",
         author: "Krzysztof_Szczecin", badge: "HCP 8.2", badgeClass: "badge-og",
         date: "Wczoraj", views: "890", likes: 24,
-        content: "Kto wybiera się w ten weekend na Pomorze Zachodnie – greeny są w absolutnie turniejowej kondycji.",
-        comments: [{ author: "Anna_Golf", badge: "HCP 16.0", badgeClass: "badge-vet", date: "Wczoraj", text: "Potwierdzam, bunkry też świeżo przygotowane!" }]
+        content: "Greeny są w turniejowej kondycji.",
+        comments: [{ author: "Anna_Golf", badge: "HCP 16.0", badgeClass: "badge-vet", date: "Wczoraj", text: "Potwierdzam!" }]
       },
       {
         id: 503, pinned: false, catKey: "TECHNIQUE", category: "🎯 Technika & WHS",
-        title: "Jak zamknąć lukę dystansową między PW (43°) a SW (56°)? Dobór Gap Wedge 50° vs 52°",
+        title: "Jak zamknąć lukę między PW (43°) a SW (56°)? Dobór Gap Wedge 52°",
         author: "Michal_Coach", badge: "PGA COACH", badgeClass: "badge-pro",
         date: "2 dni temu", views: "640", likes: 19,
-        content: "W nowoczesnych zestawach ironów Pitching Wedge ma często 43 stopnie. Brak kija 50-52° kosztuje średnio 3 uderzenia na rundę.",
+        content: "Brak kija 50-52° kosztuje średnio 3 uderzenia na rundę.",
         comments: []
       }
     ];
@@ -198,7 +197,7 @@ window.saveForumToDB = function() {
 };
 
 // =========================================================================
-// 2. NOWA STRONA GŁÓWNA PORTALU (TGN.PL EXECUTIVE COMMAND CENTER v25.0)
+// KOMPAKTOWA I PRZEJRZYSTA STRONA GŁÓWNA (TGN.PL HUB v26.0)
 // =========================================================================
 window.HomeComponent = {
   render: function() {
@@ -209,7 +208,7 @@ window.HomeComponent = {
     const userHcp = userObj.hcp || 12.4;
     const userCity = userObj.city || "Warszawa";
     const userSwing = userObj.swingSpeed || "96 mph";
-    const lastRound = userObj.lastRound || "82 ud. (Modry Las)";
+    const lastRound = userObj.lastRound || "82 (Modry Las)";
 
     const products = window.AppData.storeProducts || [];
     const productsCount = products.length;
@@ -222,12 +221,11 @@ window.HomeComponent = {
     const nextEvent = events[0] || {
       title: "TGN Polish Masters Open 2027 – Modry Las",
       date: "15–17 Maja 2027",
-      location: "Modry Las Golf Resort (Choszczno)",
+      location: "Modry Las Golf Resort",
       spotsLeft: 14,
       xpReward: "+750 XP"
     };
 
-    // 4 wyróżnione produkty do sekcji Spotlight na Stronie Głównej
     const spotlightProducts = products.slice(0, 4);
     const spotlightHTML = spotlightProducts.map(prod => {
       const visualSrc = (typeof ClubImageEngine !== 'undefined')
@@ -243,20 +241,17 @@ window.HomeComponent = {
           <div>
             <div class="spotlight-img-wrap">
               <img src="${visualSrc}" alt="${prod.name}" onerror="this.onerror=null; this.src='${fallbackSrc}';">
-              <span style="position:absolute; top:6px; left:6px; background:${isUsed ? 'rgba(250,204,21,0.92)' : 'rgba(5,22,16,0.92)'}; color:${isUsed ? '#052e16' : 'var(--accent)'}; font-size:0.55rem; font-weight:800; padding:2px 6px; border-radius:4px;">
-                ${isUsed ? '♻️ KOMIS CPO' : '🏆 HIT 2026'}
+              <span style="position:absolute; top:4px; left:4px; background:${isUsed ? 'rgba(250,204,21,0.92)' : 'rgba(5,22,16,0.92)'}; color:${isUsed ? '#052e16' : 'var(--accent)'}; font-size:0.52rem; font-weight:800; padding:2px 5px; border-radius:4px;">
+                ${isUsed ? 'CPO' : 'NOWY'}
               </span>
             </div>
-            <div style="font-size:0.65rem; color:var(--accent); font-weight:700; text-transform:uppercase;">${prod.brand} • ${prod.loft}</div>
-            <strong style="font-size:0.8rem; color:#fff; display:block; margin:3px 0 6px; line-height:1.25;">${prod.name}</strong>
+            <div style="font-size:0.6rem; color:var(--accent); font-weight:700;">${prod.brand} • ${prod.loft}</div>
+            <strong style="font-size:0.74rem; color:#fff; display:block; margin:2px 0 5px; line-height:1.2; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${prod.name}</strong>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; padding-top:0.45rem; border-top:1px solid rgba(255,255,255,0.08);">
-            <div>
-              ${prod.oldPrice ? `<span style="font-size:0.65rem; color:var(--text-muted); text-decoration:line-through; display:block;">${prod.oldPrice} PLN</span>` : ''}
-              <strong style="font-size:0.92rem; color:var(--gold);">${prod.price} PLN</strong>
-            </div>
-            <button type="button" class="btn-mini-tool" style="background:var(--accent); color:#052e16; border:none; padding:5px 9px; font-weight:800;" onclick="event.stopPropagation(); window.StoreComponent && window.StoreComponent.addItem(${prod.id}, false)">
-              🛒 + Koszyk
+          <div style="display:flex; justify-content:space-between; align-items:center; padding-top:0.4rem; border-top:1px solid rgba(255,255,255,0.08);">
+            <strong style="font-size:0.82rem; color:var(--gold);">${prod.price} zł</strong>
+            <button type="button" class="btn-mini-tool" style="background:var(--accent); color:#052e16; border:none; padding:4px 8px; font-weight:800;" onclick="event.stopPropagation(); window.StoreComponent && window.StoreComponent.addItem(${prod.id}, false)">
+              + Koszyk
             </button>
           </div>
         </div>
@@ -265,251 +260,213 @@ window.HomeComponent = {
 
     const recentPostsHTML = forumPosts.slice(0, 3).map(post => `
       <div class="home-forum-row" onclick="window.app.switchTab('forum')">
-        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.66rem; margin-bottom:0.25rem;">
-          <span style="color:var(--blue); font-weight:700;">${post.category || '💬 Forum TGN'}</span>
-          <span style="color:var(--text-muted);">${post.date || 'Dzisiaj'} • 👍 ${post.likes || 12}</span>
+        <div style="display:flex; justify-content:space-between; font-size:0.62rem; margin-bottom:2px;">
+          <span style="color:var(--blue); font-weight:700;">${post.category || '💬 Forum'}</span>
+          <span style="color:var(--text-muted);">${post.date || 'Dzisiaj'} • 💬 ${(post.comments || []).length}</span>
         </div>
-        <strong style="font-size:0.84rem; color:#fff; display:block; margin-bottom:0.25rem; line-height:1.3;">${post.title}</strong>
-        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.7rem; color:var(--text-muted);">
-          <span>Autor: <strong style="color:var(--text-main);">${post.author}</strong> <span class="user-badge ${post.badgeClass || 'badge-vet'}">${post.badge || 'GRACZ'}</span></span>
-          <span style="color:var(--accent); font-weight:700;">💬 ${(post.comments || []).length} odp. →</span>
-        </div>
+        <strong style="font-size:0.78rem; color:#fff; display:block; line-height:1.25;">${post.title}</strong>
       </div>
     `).join('');
 
     return `
-      <section class="panel-3d" style="grid-column: span 2; padding: 1.5rem;">
+      <section class="panel-3d home-compact-wrap" style="grid-column: span 2;">
         
-        <!-- 1. PASEK LIVE TICKER (STATUS PÓL & OFERT W CZASIE RZECZYWISTYM) -->
+        <!-- 1. Zwięzły pasek statusu (1 linia, przewijana na telefonie) -->
         <div class="home-live-ticker">
-          <div style="display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
-            <span><span class="ticker-dot"></span><strong style="color:var(--accent);">LIVE POLSKA:</strong></span>
-            <span style="color:var(--text-main);">⛳ <strong>Modry Las:</strong> 19°C (Greeny 10.5 ft)</span>
-            <span style="color:var(--text-muted);">|</span>
-            <span style="color:var(--text-main);">⛳ <strong>Binowo Park:</strong> 18°C (Otwarte 18 dołków)</span>
-            <span style="color:var(--text-muted);">|</span>
-            <span style="color:var(--text-main);">⛳ <strong>First Warsaw:</strong> 20°C (Brak opóźnień)</span>
-          </div>
           <div>
-            <span style="background:rgba(250,204,21,0.16); border:1px solid var(--gold); color:var(--gold); padding:3px 9px; border-radius:6px; font-weight:800; font-size:0.7rem; cursor:pointer;" onclick="window.StoreComponent && window.StoreComponent.applyRabat3Code()">
-              🏷️ Kod "RABAT3" (-3% w sklepie) – Kliknij by aktywować
-            </span>
+            <span class="ticker-dot"></span><strong style="color:var(--accent);">LIVE:</strong>
+            <span style="margin-left:6px;">⛳ Modry Las: 19°C (10.5 ft)</span>
+            <span style="margin:0 6px; color:var(--text-muted);">•</span>
+            <span>⛳ Binowo Park: 18°C</span>
+            <span style="margin:0 6px; color:var(--text-muted);">•</span>
+            <span>⛳ First Warsaw: 20°C</span>
           </div>
+          <span style="background:rgba(250,204,21,0.15); border:1px solid var(--gold); color:var(--gold); padding:2px 8px; border-radius:5px; font-weight:800; cursor:pointer;" onclick="window.StoreComponent && window.StoreComponent.applyRabat3Code()">
+            🏷️ Kod RABAT3 (-3%)
+          </span>
         </div>
 
-        <!-- 2. HERO BENTO GRID: POWITANIE + TELEMETRIA TRACKMAN LIVE -->
+        <!-- 2. Kompaktowy Hero + Karta Gracza -->
         <div class="home-hero-bento">
           
-          <!-- Lewa karta: Główny Showcase Portalu TGN.PL z wyszukiwarką -->
           <div class="hero-main-showcase">
             <div>
-              <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(0,0,0,0.65); border:1px solid var(--accent); padding:4px 12px; border-radius:20px; font-size:0.68rem; font-weight:800; color:var(--accent); margin-bottom:0.85rem;">
-                <span>🌐 TGN.PL EXECUTIVE GOLF ECOSYSTEM</span>
-                <span>•</span>
-                <span style="color:var(--gold);">SEZON 2026 / 2027</span>
-              </div>
-              <h1 style="font-size:1.85rem; color:#ffffff; font-weight:900; line-height:1.2; margin-bottom:0.6rem; text-shadow: 0 4px 20px rgba(0,0,0,0.8);">
-                Twój Centralny Hub Golfowy,<br><span style="color:var(--accent);">${userName}!</span> 🏌️‍♂️
+              <span style="font-size:0.62rem; font-weight:800; color:var(--accent); text-transform:uppercase; letter-spacing:1px;">
+                🌐 TGN.PL • CENTRALNY PORTAL GOLFOWY
+              </span>
+              <h1 style="font-size:1.35rem; color:#fff; font-weight:900; margin:0.25rem 0 0.35rem;">
+                Witaj na TGN.pl, <span style="color:var(--accent);">${userName.split(' ')[0]}!</span> ⛳
               </h1>
-              <p style="font-size:0.84rem; color:#e2e8f0; max-width:560px; line-height:1.55; margin-bottom:1.1rem;">
-                Z jednego miejsca przechodzisz bezpośrednio do autoryzowanego sklepu <strong>sklep.tgn.pl</strong> (${productsCount} produktów i komis CPO), ogólnopolskiego <strong>forum.tgn.pl</strong> oraz swojego wirtualnego <strong>Kokpitu 3D</strong>.
+              <p style="font-size:0.76rem; color:#cbd5e1; line-height:1.4; max-width:520px;">
+                Wybierz sekcję portalu poniżej lub wyszukaj sprzęt bezpośrednio w autoryzowanym katalogu <strong>sklep.tgn.pl</strong> (${productsCount} produktów).
               </p>
             </div>
 
-            <!-- Szybka wyszukiwarka globalna na stronie głównej -->
             <div>
-              <div style="display:flex; gap:0.5rem; background:rgba(5, 14, 18, 0.88); border:1px solid rgba(114,214,150,0.5); padding:0.45rem; border-radius:12px; margin-bottom:0.8rem;">
-                <input type="text" id="homeQuickSearch" placeholder="🔍 Szukaj kija w sklepie (np. TaylorMade Qi10, Vokey 52, Pro V1, Garmin)..." style="flex:1; background:transparent; border:none; color:#fff; font-size:0.8rem; padding:0.35rem 0.6rem; outline:none;" onkeypress="if(event.key==='Enter'){ window.app.quickSearchFromHome(); }">
-                <button type="button" class="btn-primary" style="width:auto; margin:0; padding:0.45rem 1.1rem; font-size:0.76rem;" onclick="window.app.quickSearchFromHome()">
-                  Szukaj w Sklepie →
+              <div style="display:flex; gap:0.4rem; background:rgba(5, 14, 18, 0.9); border:1px solid rgba(114,214,150,0.45); padding:0.35rem; border-radius:10px; margin-bottom:0.55rem;">
+                <input type="text" id="homeQuickSearch" placeholder="🔍 Szukaj w sklepie (np. Qi10, Vokey 52, Pro V1)..." style="flex:1; background:transparent; border:none; color:#fff; font-size:0.75rem; padding:0.25rem 0.5rem; outline:none;" onkeypress="if(event.key==='Enter'){ window.app.quickSearchFromHome(); }">
+                <button type="button" class="btn-primary" style="width:auto; margin:0; padding:0.38rem 0.9rem; font-size:0.72rem;" onclick="window.app.quickSearchFromHome()">
+                  Szukaj →
                 </button>
               </div>
 
-              <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                <span style="font-size:0.7rem; color:var(--text-muted); align-self:center;">Szybkie filtry:</span>
-                <button type="button" class="btn-mini-tool" onclick="window.app.switchTab('sklep'); window.StoreComponent.setCategory('KIJE_NOWE');">🏌️ Nowe Kije 2026</button>
+              <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                <button type="button" class="btn-mini-tool" onclick="window.app.switchTab('sklep'); window.StoreComponent.setCategory('KIJE_NOWE');">🏌️ Nowe Kije</button>
                 <button type="button" class="btn-mini-tool" style="border-color:var(--gold); color:var(--gold);" onclick="window.app.switchTab('sklep'); window.StoreComponent.setCategory('UZYWANE_KIJE');">♻️ Komis CPO (${cpoCount})</button>
-                <button type="button" class="btn-mini-tool" onclick="window.app.switchTab('sklep'); window.StoreComponent.setCategory('PERSONALIZACJA');">🖨️ Piłki z własnym logo</button>
-                <button type="button" class="btn-mini-tool" onclick="window.app.switchTab('pola');">⛳ Rezerwuj Tee Time</button>
+                <button type="button" class="btn-mini-tool" onclick="window.app.switchTab('sklep'); window.StoreComponent.setCategory('PERSONALIZACJA');">🖨️ Piłki z logo</button>
+                <button type="button" class="btn-mini-tool" onclick="window.app.switchTab('pola');">⛳ Pola (25)</button>
               </div>
             </div>
           </div>
 
-          <!-- Prawa karta: Karta Telemetrii WHS & TrackMan Gracza -->
           <div class="hero-telemetry-card">
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-                <span style="font-size:0.68rem; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:0.8px;">📡 TWOJA TELEMETRIA WHS & TRACKMAN</span>
-                <span style="font-size:0.65rem; background:rgba(74,222,128,0.16); color:var(--accent); padding:2px 7px; border-radius:4px; font-weight:700;">ZWERYFIKOWANY</span>
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline;">
-                <strong style="font-size:1.1rem; color:#fff;">${userName}</strong>
-                <span style="font-size:0.75rem; color:var(--text-muted);">📍 ${userCity}</span>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+                <span style="font-size:0.62rem; font-weight:800; color:var(--gold); text-transform:uppercase;">📡 PROFIL WHS & TRACKMAN</span>
+                <span style="font-size:0.62rem; color:var(--text-muted);">📍 ${userCity}</span>
               </div>
 
               <div class="telemetry-kpi-grid">
                 <div class="telemetry-kpi-box">
-                  <span>Handicap WHS</span>
+                  <span>HCP WHS</span>
                   <strong style="color:var(--gold);">${userHcp}</strong>
                 </div>
                 <div class="telemetry-kpi-box">
-                  <span>Swing Speed</span>
+                  <span>Swing</span>
                   <strong>${userSwing}</strong>
                 </div>
                 <div class="telemetry-kpi-box">
-                  <span>Smash Factor</span>
-                  <strong style="color:#38bdf8;">1.48</strong>
+                  <span>Torba 3D</span>
+                  <strong style="color:#38bdf8;">${bagCount}/14</strong>
                 </div>
               </div>
 
-              <div style="background:rgba(250,204,21,0.09); border:1px dashed rgba(250,204,21,0.45); border-radius:10px; padding:0.6rem 0.75rem; font-size:0.73rem; line-height:1.4; color:var(--text-main); margin-bottom:0.6rem;">
-                ⚠️ <strong style="color:var(--gold);">Alert Gapping AI:</strong> Wykryto lukę <strong>15 metrów</strong> pomiędzy PW (43°) a SW (56°). Rekomendowany kij: <strong>Gap Wedge 52°</strong>.
+              <div style="background:rgba(250,204,21,0.08); border:1px dashed rgba(250,204,21,0.4); border-radius:8px; padding:0.45rem 0.6rem; font-size:0.68rem; color:var(--text-main); margin-bottom:0.5rem;">
+                🎯 <strong style="color:var(--gold);">Gapping AI:</strong> Luka 15m (PW–SW). Zalecany kij: <strong>Wedge 52°</strong>.
               </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
-              <button type="button" class="btn-action" style="margin:0; padding:0.5rem; font-size:0.72rem;" onclick="window.app.switchTab('profile')">
-                🎒 Otwórz Torbę 3D (${bagCount}/14)
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.4rem;">
+              <button type="button" class="btn-action" style="margin:0; padding:0.42rem; font-size:0.68rem;" onclick="window.app.switchTab('profile')">
+                🎒 Moja Torba 3D
               </button>
-              <button type="button" class="btn-action" style="margin:0; padding:0.5rem; font-size:0.72rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.12);" onclick="window.app.openAiModal()">
-                🌟 Dobierz Wedge 52°
+              <button type="button" class="btn-action" style="margin:0; padding:0.42rem; font-size:0.68rem; border-color:var(--gold); color:var(--gold); background:rgba(250,204,21,0.1);" onclick="window.app.openAiModal()">
+                🌟 Dobierz 52°
               </button>
             </div>
           </div>
 
         </div>
 
-        <!-- 3. TRZY WIZUALNE BRAMY SUBDOMENOWE (SKLEP.TGN.PL / FORUM.TGN.PL / KOKPIT 3D) -->
+        <!-- 3. Trzy Główne Bramy Modułowe (Kompaktowe i czytelne) -->
         <div class="home-portals-grid">
           
-          <!-- Brama 1: SKLEP.TGN.PL -->
           <div class="portal-gate-card gate-shop" onclick="window.app.switchTab('sklep')">
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-                <span style="background:var(--accent); color:#052e16; font-size:0.65rem; font-weight:900; padding:3px 9px; border-radius:6px; letter-spacing:0.5px;">
-                  🌐 SKLEP.TGN.PL
-                </span>
-                <span style="font-size:0.7rem; color:var(--accent); font-weight:700;">● ${productsCount} towarów od ręki</span>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                <span style="background:var(--accent); color:#052e16; font-size:0.6rem; font-weight:900; padding:2px 8px; border-radius:5px;">SKLEP.TGN.PL</span>
+                <span style="font-size:0.66rem; color:var(--accent); font-weight:700;">● ${productsCount} towarów</span>
               </div>
-              <h3 style="font-size:1.2rem; color:#fff; margin-bottom:0.4rem; font-weight:800;">Pro Shop & Komis CPO</h3>
-              <p style="font-size:0.77rem; color:#cbd5e1; line-height:1.45;">
-                Autoryzowany sklep: nowe drivery i irony 2026, sprawdzony komis używanych kijów CPO z 12-miesięczną gwarancją oraz rozliczenie Trade-In.
+              <h3 style="font-size:1.02rem; color:#fff; margin-bottom:0.25rem; font-weight:800;">🛍️ Sklep & Komis CPO</h3>
+              <p class="portal-gate-desc" style="font-size:0.72rem; color:#cbd5e1; line-height:1.35;">
+                Nowy sprzęt PGA 2026, używane kije CPO z gwarancją i wymiana Trade-In.
               </p>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; padding-top:0.7rem; border-top:1px solid rgba(255,255,255,0.12);">
-              <span style="font-size:0.7rem; color:var(--gold); font-weight:700;">🏷️ Kod: RABAT3 (-3%)</span>
-              <span style="font-size:0.78rem; color:var(--accent); font-weight:800;">Wejdź do Sklepu →</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.6rem; padding-top:0.45rem; border-top:1px solid rgba(255,255,255,0.1);">
+              <span style="font-size:0.65rem; color:var(--gold);">🏷️ Kod: RABAT3</span>
+              <span style="font-size:0.72rem; color:var(--accent); font-weight:800;">Otwórz Sklep →</span>
             </div>
           </div>
 
-          <!-- Brama 2: FORUM.TGN.PL -->
           <div class="portal-gate-card gate-forum" onclick="window.app.switchTab('forum')">
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-                <span style="background:var(--blue); color:#041e2b; font-size:0.65rem; font-weight:900; padding:3px 9px; border-radius:6px; letter-spacing:0.5px;">
-                  🌐 FORUM.TGN.PL
-                </span>
-                <span style="font-size:0.7rem; color:var(--blue); font-weight:700;">● ${forumTotal} aktywnych dyskusji</span>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                <span style="background:var(--blue); color:#041e2b; font-size:0.6rem; font-weight:900; padding:2px 8px; border-radius:5px;">FORUM.TGN.PL</span>
+                <span style="font-size:0.66rem; color:var(--blue); font-weight:700;">● ${forumTotal} tematów</span>
               </div>
-              <h3 style="font-size:1.2rem; color:#fff; margin-bottom:0.4rem; font-weight:800;">Forum Społeczności</h3>
-              <p style="font-size:0.77rem; color:#cbd5e1; line-height:1.45;">
-                Największe polskie forum golfowe: recenzje sprzętu, porady trenerów PGA, raporty o stanie pól w Polsce i umawianie wspólnych rund.
+              <h3 style="font-size:1.02rem; color:#fff; margin-bottom:0.25rem; font-weight:800;">💬 Forum Golfowe</h3>
+              <p class="portal-gate-desc" style="font-size:0.72rem; color:#cbd5e1; line-height:1.35;">
+                Opinie o kijach, porady trenerów PGA Pro, raporty z pól i wspólne rundy.
               </p>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; padding-top:0.7rem; border-top:1px solid rgba(255,255,255,0.12);">
-              <span style="font-size:0.7rem; color:#cbd5e1;">👥 1 840 graczy online</span>
-              <span style="font-size:0.78rem; color:var(--blue); font-weight:800;">Otwórz Forum →</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.6rem; padding-top:0.45rem; border-top:1px solid rgba(255,255,255,0.1);">
+              <span style="font-size:0.65rem; color:#cbd5e1;">👥 Społeczność PL</span>
+              <span style="font-size:0.72rem; color:var(--blue); font-weight:800;">Otwórz Forum →</span>
             </div>
           </div>
 
-          <!-- Brama 3: KOKPIT 3D & GIEŁDA C2C -->
           <div class="portal-gate-card gate-cockpit" onclick="window.app.switchTab('profile')">
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-                <span style="background:var(--gold); color:#052e16; font-size:0.65rem; font-weight:900; padding:3px 9px; border-radius:6px; letter-spacing:0.5px;">
-                  🌐 KOKPIT.TGN.PL
-                </span>
-                <span style="font-size:0.7rem; color:var(--gold); font-weight:700;">● Ostatnia runda: ${lastRound}</span>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                <span style="background:var(--gold); color:#052e16; font-size:0.6rem; font-weight:900; padding:2px 8px; border-radius:5px;">KOKPIT.TGN.PL</span>
+                <span style="font-size:0.66rem; color:var(--gold); font-weight:700;">● Runda: ${lastRound}</span>
               </div>
-              <h3 style="font-size:1.2rem; color:#fff; margin-bottom:0.4rem; font-weight:800;">Moje Konto & Torba 3D</h3>
-              <p style="font-size:0.77rem; color:#cbd5e1; line-height:1.45;">
-                Zarządzaj swoimi 14 kijami w torbie ze zdjęciami na żywo, sprawdzaj wycenę odsprzedaży CPO i analizuj wykres swojego Handicapu.
+              <h3 style="font-size:1.02rem; color:#fff; margin-bottom:0.25rem; font-weight:800;">👤 Kokpit & Torba 3D</h3>
+              <p class="portal-gate-desc" style="font-size:0.72rem; color:#cbd5e1; line-height:1.35;">
+                Zarządzaj swoimi kijami w torbie, sprawdzaj wyceny CPO i statystyki gry.
               </p>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; padding-top:0.7rem; border-top:1px solid rgba(255,255,255,0.12);">
-              <span style="font-size:0.7rem; color:var(--gold); font-weight:700;">🎒 Wartość torby: ~9 850 PLN</span>
-              <span style="font-size:0.78rem; color:var(--gold); font-weight:800;">Otwórz Kokpit 3D →</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.6rem; padding-top:0.45rem; border-top:1px solid rgba(255,255,255,0.1);">
+              <span style="font-size:0.65rem; color:var(--gold);">🎒 ${bagCount}/14 kijów</span>
+              <span style="font-size:0.72rem; color:var(--gold); font-weight:800;">Otwórz Kokpit →</span>
             </div>
           </div>
 
         </div>
 
-        <!-- 4. SEKCJA SPOTLIGHT: GORĄCE OFERTY PRO SHOP & CPO (BEZPOŚREDNIO NA STRONIE GŁÓWNEJ) -->
-        <div style="margin-bottom:1.6rem;">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.85rem;">
-            <div>
-              <h3 style="font-size:0.95rem; text-transform:uppercase; color:var(--accent); margin:0; letter-spacing:0.8px;">
-                🔥 Wybrane Oferty Dnia z Pro Shopu & Komisu CPO
-              </h3>
-              <span style="font-size:0.72rem; color:var(--text-muted);">Dodaj sprzęt bezpośrednio do koszyka lub przejdź do pełnego katalogu ${productsCount} produktów</span>
-            </div>
-            <button type="button" class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent); padding:5px 12px;" onclick="window.app.switchTab('sklep')">
-              Zobacz wszystkie produkty (${productsCount}) →
+        <!-- 4. Kompaktowa Karuzela Produktów Dnia (2x2 na telefonie, 4 w rzędzie na PC) -->
+        <div style="margin-bottom:1.1rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.55rem;">
+            <strong style="font-size:0.82rem; text-transform:uppercase; color:var(--accent); letter-spacing:0.5px;">
+              🔥 Wybrane Oferty ze Sklepu & CPO
+            </strong>
+            <button type="button" class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="window.app.switchTab('sklep')">
+              Pełny sklep (${productsCount}) →
             </button>
           </div>
-
           <div class="home-spotlight-grid">
             ${spotlightHTML}
           </div>
         </div>
 
-        <!-- 5. DOLNY UKŁAD BENTO: NAJNOWSZE DYSKUSJE Z FORUM + KALENDARZ TURNIEJÓW I ATLAS PÓL -->
+        <!-- 5. Dolna sekcja: Forum + Szybkie Skróty -->
         <div class="home-bottom-bento">
-          
-          <!-- Lewa kolumna: Żywy podgląd Forum -->
           <div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-              <h3 style="font-size:0.9rem; text-transform:uppercase; color:var(--blue); margin:0;">💬 Ostatnie dyskusje na Forum.tgn.pl</h3>
-              <button type="button" class="btn-mini-tool" onclick="window.app.switchTab('forum')">Dołącz do dyskusji →</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <strong style="font-size:0.8rem; text-transform:uppercase; color:var(--blue);">💬 Aktywne tematy na Forum</strong>
+              <button type="button" class="btn-mini-tool" onclick="window.app.switchTab('forum')">Wszystkie →</button>
             </div>
             ${recentPostsHTML}
           </div>
 
-          <!-- Prawa kolumna: Najbliższy Turniej 2027 + Szybkie kafelki modułów -->
-          <div style="display:flex; flex-direction:column; justify-content:space-between; gap:0.85rem;">
-            <div style="background:linear-gradient(135deg, rgba(56,189,248,0.12), rgba(74,222,128,0.1)); border:1px solid rgba(56,189,248,0.4); border-radius:16px; padding:1.15rem;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-                <span style="font-size:0.65rem; font-weight:800; color:var(--blue); text-transform:uppercase;">🏆 NADCHODZĄCY TURNIEJ TGN TOUR</span>
-                <span style="font-size:0.65rem; background:rgba(250,204,21,0.18); color:var(--gold); padding:2px 7px; border-radius:5px; font-weight:800;">${nextEvent.xpReward || '+750 XP'}</span>
+          <div style="display:flex; flex-direction:column; justify-content:space-between; gap:0.6rem;">
+            <div style="background:rgba(56,189,248,0.09); border:1px solid rgba(56,189,248,0.35); border-radius:12px; padding:0.85rem;">
+              <div style="display:flex; justify-content:space-between; font-size:0.62rem; margin-bottom:3px;">
+                <span style="color:var(--blue); font-weight:800;">📅 NAJBLIŻSZY TURNIEJ 2027</span>
+                <span style="color:var(--gold); font-weight:800;">${nextEvent.xpReward || '+750 XP'}</span>
               </div>
-              <strong style="font-size:0.95rem; color:#fff; display:block; margin-bottom:0.25rem;">${nextEvent.title}</strong>
-              <p style="font-size:0.74rem; color:var(--text-muted); margin-bottom:0.75rem;">
-                📅 ${nextEvent.date} • 📍 ${nextEvent.location} • Wolne miejsca: <strong style="color:var(--accent);">${nextEvent.spotsLeft}</strong>
-              </p>
-              <button type="button" class="btn-action" style="margin:0; padding:0.5rem;" onclick="window.app.switchTab('wydarzenia')">
-                📅 Zobacz Kalendarz 2027 i Zapisz się →
-              </button>
+              <strong style="font-size:0.84rem; color:#fff; display:block; margin-bottom:4px;">${nextEvent.title}</strong>
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.7rem; color:var(--text-muted);">
+                <span>📍 ${nextEvent.date}</span>
+                <button type="button" class="btn-mini-tool" style="border-color:var(--accent); color:var(--accent);" onclick="window.app.switchTab('wydarzenia')">Zapisz się →</button>
+              </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:0.6rem;">
-              <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.8rem; text-align:center; cursor:pointer;" onclick="window.app.switchTab('pola')">
-                <div style="font-size:1.3rem; margin-bottom:3px;">⛳</div>
-                <strong style="font-size:0.75rem; color:#fff; display:block;">Pola w Polsce</strong>
-                <span style="font-size:0.63rem; color:var(--text-muted);">25 obiektów</span>
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:0.5rem;">
+              <div style="background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.09); border-radius:10px; padding:0.6rem; text-align:center; cursor:pointer;" onclick="window.app.switchTab('pola')">
+                <strong style="font-size:0.72rem; color:#fff; display:block;">⛳ Pola PL</strong>
+                <span style="font-size:0.6rem; color:var(--text-muted);">25 pól</span>
               </div>
-              <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.8rem; text-align:center; cursor:pointer;" onclick="window.app.switchTab('cpo')">
-                <div style="font-size:1.3rem; margin-bottom:3px;">⚡</div>
-                <strong style="font-size:0.75rem; color:#fff; display:block;">Skup Kijów</strong>
-                <span style="font-size:0.63rem; color:var(--text-muted);">Wycena w 2 min</span>
+              <div style="background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.09); border-radius:10px; padding:0.6rem; text-align:center; cursor:pointer;" onclick="window.app.switchTab('cpo')">
+                <strong style="font-size:0.72rem; color:#fff; display:block;">⚡ Skup CPO</strong>
+                <span style="font-size:0.6rem; color:var(--text-muted);">Wycena</span>
               </div>
-              <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.8rem; text-align:center; cursor:pointer;" onclick="window.app.switchTab('marketplace')">
-                <div style="font-size:1.3rem; margin-bottom:3px;">🤝</div>
-                <strong style="font-size:0.75rem; color:#fff; display:block;">Giełda C2C</strong>
-                <span style="font-size:0.63rem; color:var(--text-muted);">Oferty graczy</span>
+              <div style="background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.09); border-radius:10px; padding:0.6rem; text-align:center; cursor:pointer;" onclick="window.app.switchTab('marketplace')">
+                <strong style="font-size:0.72rem; color:#fff; display:block;">🤝 Giełda</strong>
+                <span style="font-size:0.6rem; color:var(--text-muted);">Gracze C2C</span>
               </div>
             </div>
           </div>
-
         </div>
 
       </section>
@@ -552,7 +509,7 @@ window.AdminDashboardComponent = {
     `).join('');
 
     return `
-      <section class="panel-3d" style="grid-column: span 2; border-color:var(--gold);">
+      <section class="panel-3d home-compact-wrap" style="grid-column: span 2; border-color:var(--gold);">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1.2rem;">
           <h2 style="margin:0; color:var(--gold);">⚙️ PANEL ADMINISTRATORA SKLEPU & FORUM (TGN CMS)</h2>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
