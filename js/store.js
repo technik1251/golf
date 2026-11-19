@@ -2094,5 +2094,51 @@ StoreComponent.addFromPdp = function(prodId, useTradeIn, customPrice, tradeInClu
 };
 
 window.StoreComponent = StoreComponent;
+/* =========================================================================
+   KOREKTA LOGISTYKI TRADE-IN (VIP = NAJPIERW NOWY KIJ) v37.1
+   ========================================================================= */
+
+TradeInWizard.state.logistics = 'SEND_FIRST';
+
+const _origTiOpenV37 = TradeInWizard.open;
+TradeInWizard.open = function(prodId, opts) {
+  TradeInWizard.state.logistics = 'SEND_FIRST';
+  return _origTiOpenV37(prodId, opts);
+};
+
+const _origTiRenderV37 = TradeInWizard.renderModal;
+TradeInWizard.renderModal = function() {
+  _origTiRenderV37();
+  const grid = document.querySelector('#tgnTradeInModalOverlay .ti-logistics-grid');
+  if (!grid) return;
+
+  const s = TradeInWizard.state;
+  grid.innerHTML = `
+    <div class="ti-log-option ${s.logistics === 'SEND_FIRST' ? 'active' : ''}" onclick="TradeInWizard.updateField('logistics', 'SEND_FIRST')">
+      <div>
+        <strong style="font-size:0.75rem; color:#fff; display:block;">🚚 Wyślij stary sprzęt najpierw (Standard)</strong>
+        <span style="font-size:0.65rem; color:var(--text-muted);">Darmowa etykieta DPD/InPost • Wysyłka nowego kija po weryfikacji CPO</span>
+      </div>
+      <strong style="font-size:0.68rem; color:var(--accent); white-space:nowrap;">0 PLN</strong>
+    </div>
+
+    <div class="ti-log-option ${s.logistics === 'IN_STORE' ? 'active' : ''}" onclick="TradeInWizard.updateField('logistics', 'IN_STORE')">
+      <div>
+        <strong style="font-size:0.75rem; color:#fff; display:block;">🎯 Wymiana na miejscu (Warszawa / Szczecin)</strong>
+        <span style="font-size:0.65rem; color:var(--text-muted);">Wycena od ręki w 5 min + szybki test nowego kija na TrackManie</span>
+      </div>
+      <strong style="font-size:0.68rem; color:var(--accent); white-space:nowrap;">OD RĘKI</strong>
+    </div>
+
+    <div class="ti-log-option ${s.logistics === 'NEW_FIRST' ? 'active' : ''}" style="${s.logistics === 'NEW_FIRST' ? 'border-color:var(--gold); background:rgba(250,204,21,0.12);' : 'border-color:rgba(250,204,21,0.3);'}" onclick="TradeInWizard.updateField('logistics', 'NEW_FIRST')">
+      <div>
+        <strong style="font-size:0.75rem; color:var(--gold); display:block;">👑 Najpierw nowy kij (14 dni na odesłanie starego)</strong>
+        <span style="font-size:0.65rem; color:var(--text-muted);">Przywilej stałych klientów TGN VIP (lub kaucja zwrotna) • Zwrot w tym samym kartonie</span>
+      </div>
+      <strong style="font-size:0.64rem; background:var(--gold); color:#052e16; padding:2px 6px; border-radius:4px; white-space:nowrap;">TGN VIP</strong>
+    </div>
+  `;
+};
+
 
 
