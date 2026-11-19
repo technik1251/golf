@@ -1327,4 +1327,59 @@ StoreComponent.render = () => {
 };
 
 window.StoreComponent = StoreComponent;
+/* =========================================================================
+   PEWNE OTWIERANIE SZCZEGÓŁÓW PRODUKTU (PDP) PO KLIKNIĘCIU v36.0
+   ========================================================================= */
+
+StoreComponent.openProductPage = function(prodId) {
+  StoreComponent.ensureStoreDataInitialized();
+  const numId = Number(prodId);
+  const prod = (AppData.storeProducts || []).find(p => Number(p.id) === numId);
+  if (!prod) return;
+
+  const st = AppData.storeState;
+  st.selectedProductId = prod.id;
+  st.pdpHand = prod.hand === 'LH' ? 'LH' : 'RH';
+  st.pdpFlex = (prod.flex && prod.flex !== 'N/A') ? prod.flex : 'Standard';
+  st.pdpLoft = prod.loft || 'Standard';
+  st.pdpImgIdx = 0;
+  st.pdpTradeInClubId = "DEFAULT";
+
+  if (window.app && typeof window.app.switchTab === 'function') {
+    window.app.switchTab('sklep');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// Nadpisanie renderowania, aby zawsze najpierw sprawdzało wybrany produkt (PDP)
+// i dopinało przycisk "☰ Kategorie" do paska kategorii
+const _renderBeforePdpFix = StoreComponent.render;
+StoreComponent.render = function() {
+  StoreComponent.ensureStoreDataInitialized();
+  const st = AppData.storeState;
+
+  if (st.selectedProductId !== null && typeof st.selectedProductId !== 'undefined') {
+    const prod = (AppData.storeProducts || []).find(p => Number(p.id) === Number(st.selectedProductId));
+    if (prod && typeof StoreComponent.renderProductDetailPage === 'function') {
+      setTimeout(() => {
+        if (typeof StoreComponent.syncGlobalCartDrawer === 'function') {
+          StoreComponent.syncGlobalCartDrawer();
+        }
+      }, 10);
+      return StoreComponent.renderProductDetailPage(prod);
+    }
+    st.selectedProductId = null;
+  }
+
+  const html = _renderBeforePdpFix();
+  if (html.indexOf('class="btn-open-cat-drawer"') === -1) {
+    return html.replace(
+      '<div class="store-category-slider">',
+      '<div class="store-category-slider"><button type="button" class="btn-open-cat-drawer" onclick="StoreComponent.openCategoryDrawer()">☰ Kategorie</button>'
+    );
+  }
+  return html;
+};
+
+window.StoreComponent = StoreComponent;
 
