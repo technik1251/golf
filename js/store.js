@@ -1382,4 +1382,717 @@ StoreComponent.render = function() {
 };
 
 window.StoreComponent = StoreComponent;
+/* =========================================================================
+   INTERAKTYWNY KREATOR WYMIANY TRADE-IN (WIZARD + KALKULATOR CPO) v37.0
+   ========================================================================= */
+
+(function injectTradeInWizardStyles() {
+  const old = document.getElementById('tgnTradeInWizardStyles');
+  if (old) old.remove();
+
+  const style = document.createElement('style');
+  style.id = 'tgnTradeInWizardStyles';
+  style.textContent = `
+    #tgnTradeInModalOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.84);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9998;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem;
+    }
+    .ti-modal-card {
+      width: 100%;
+      max-width: 560px;
+      max-height: 92dvh;
+      background: linear-gradient(165deg, #0e2228, #061014);
+      border: 1.5px solid var(--gold);
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 65px rgba(0, 0, 0, 0.92), inset 0 0 25px rgba(250, 204, 21, 0.08);
+      animation: tiFadeUp 0.22s ease-out;
+    }
+    @keyframes tiFadeUp {
+      from { opacity: 0; transform: translateY(16px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .ti-header {
+      padding: 0.95rem 1.15rem;
+      background: rgba(0, 0, 0, 0.45);
+      border-bottom: 1px solid rgba(250, 204, 21, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .ti-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+    .ti-footer {
+      padding: 0.9rem 1.15rem;
+      background: rgba(4, 12, 16, 0.97);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .ti-target-banner {
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      gap: 0.75rem;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(114, 214, 150, 0.28);
+      border-radius: 12px;
+      padding: 0.6rem 0.75rem;
+    }
+    .ti-target-thumb {
+      width: 56px;
+      height: 56px;
+      background: #fff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .ti-target-thumb img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
+
+    .ti-mode-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.35rem;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 0.28rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .ti-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.48rem 0.5rem;
+      border-radius: 7px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .ti-tab-btn.active {
+      background: var(--gold);
+      color: #052e16;
+    }
+
+    .ti-bag-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .ti-bag-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.65rem;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 0.65rem 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .ti-bag-item:hover { border-color: rgba(250, 204, 21, 0.55); }
+    .ti-bag-item.selected {
+      background: rgba(250, 204, 21, 0.12);
+      border-color: var(--gold);
+      box-shadow: inset 0 0 12px rgba(250, 204, 21, 0.12);
+    }
+    .ti-check-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      flex-shrink: 0;
+    }
+    .ti-bag-item.selected .ti-check-circle {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #052e16;
+      font-weight: 900;
+    }
+
+    .ti-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.55rem;
+    }
+    .ti-form-grid label {
+      display: block;
+      font-size: 0.63rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 3px;
+      font-weight: 700;
+    }
+    .ti-form-grid input,
+    .ti-form-grid select {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 7px;
+      padding: 0.48rem 0.6rem;
+      color: #fff;
+      font-size: 0.76rem;
+      outline: none;
+    }
+    .ti-form-grid select option { background: #09161b; color: #fff; }
+    .ti-form-grid input:focus, .ti-form-grid select:focus { border-color: var(--gold); }
+
+    .ti-cond-pills {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.35rem;
+      margin-top: 0.25rem;
+    }
+    .ti-cond-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 0.42rem 0.3rem;
+      color: #cbd5e1;
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .ti-cond-pill.active {
+      background: rgba(74, 222, 128, 0.16);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .ti-extras-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      background: rgba(0, 0, 0, 0.32);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.72rem;
+      color: #e2e8f0;
+    }
+    .ti-extras-row label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .ti-logistics-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .ti-log-option {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 0.55rem 0.75rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      transition: 0.2s;
+    }
+    .ti-log-option.active {
+      border-color: var(--accent);
+      background: rgba(74, 222, 128, 0.1);
+    }
+
+    .ti-summary-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    @media (max-width: 600px) {
+      .ti-form-grid { grid-template-columns: 1fr; }
+      .ti-cond-pills { grid-template-columns: repeat(2, 1fr); }
+      .ti-modal-card { max-height: 94dvh; border-radius: 14px; }
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+window.TradeInWizard = {
+  state: {
+    open: false,
+    productId: null,
+    variantLabel: '',
+    sourceTab: 'BAG', // 'BAG' | 'CUSTOM'
+    selectedBagIds: [],
+    customCat: 'DRIVER',
+    customBrand: 'TaylorMade',
+    customModel: '',
+    customCond: 'BDB', // 'MINT' | 'BDB' | 'DOBRY' | 'SLADY'
+    hasHeadcover: true,
+    noSkyMarks: true,
+    photoDataUrl: null,
+    logistics: 'NEW_FIRST' // 'NEW_FIRST' | 'SEND_FIRST' | 'IN_STORE'
+  },
+
+  open: function(prodId, opts = {}) {
+    StoreComponent.ensureStoreDataInitialized();
+    if (typeof ProfileAndBagComponent !== 'undefined' && ProfileAndBagComponent.initSavedBag) {
+      ProfileAndBagComponent.initSavedBag();
+    }
+
+    const prod = (AppData.storeProducts || []).find(p => Number(p.id) === Number(prodId));
+    if (!prod) return;
+
+    const bag = AppData.bag || [];
+    const s = TradeInWizard.state;
+    s.open = true;
+    s.productId = prod.id;
+    s.variantLabel = opts.variant || prod.loft || 'Standard';
+    s.sourceTab = bag.length > 0 ? 'BAG' : 'CUSTOM';
+    s.selectedBagIds = bag.length > 0 ? [bag[0].id] : [];
+    s.photoDataUrl = null;
+
+    TradeInWizard.renderModal();
+  },
+
+  close: function() {
+    TradeInWizard.state.open = false;
+    const overlay = document.getElementById('tgnTradeInModalOverlay');
+    if (overlay) overlay.style.display = 'none';
+  },
+
+  getBagClubBaseOffer: function(club) {
+    const cpoRaw = parseInt(String(club.cpoOffer || '0').replace(/\D/g, ''), 10);
+    if (cpoRaw > 0) return cpoRaw;
+    const valRaw = parseInt(String(club.val || '900').replace(/\D/g, ''), 10) || 900;
+    return Math.round(valRaw * 0.68);
+  },
+
+  calculateValuation: function() {
+    const s = TradeInWizard.state;
+    const prod = (AppData.storeProducts || []).find(p => Number(p.id) === Number(s.productId));
+    const prodPrice = prod ? prod.price : 0;
+
+    let baseValue = 0;
+    let itemsDesc = [];
+
+    if (s.sourceTab === 'BAG') {
+      const bag = AppData.bag || [];
+      const chosen = bag.filter(c => s.selectedBagIds.includes(c.id));
+      chosen.forEach(c => {
+        baseValue += TradeInWizard.getBagClubBaseOffer(c);
+        itemsDesc.push(c.name);
+      });
+    } else {
+      const catBase = {
+        DRIVER: 980,
+        IRONY: 1480,
+        WOOD: 560,
+        WEDGE: 340,
+        PUTTER: 620,
+        GPS: 680
+      }[s.customCat] || 600;
+
+      const brandMult = {
+        TaylorMade: 1.24,
+        Titleist: 1.28,
+        Ping: 1.25,
+        Mizuno: 1.2,
+        Callaway: 1.18,
+        Cobra: 1.05,
+        Garmin: 1.22,
+        Inna: 0.85
+      }[s.customBrand] || 1.0;
+
+      const condMult = {
+        MINT: 1.18,
+        BDB: 1.0,
+        DOBRY: 0.78,
+        SLADY: 0.56
+      }[s.customCond] || 1.0;
+
+      baseValue = Math.round((catBase * brandMult * condMult) / 10) * 10;
+      const modelTxt = s.customModel.trim() || `${s.customBrand} (${s.customCat})`;
+      itemsDesc.push(`${modelTxt} [${s.customCond}]`);
+    }
+
+    // Dodatki za stan i akcesoria (jeśli wybrano jakikolwiek sprzęt)
+    let extrasBonus = 0;
+    if (baseValue > 0) {
+      if (s.hasHeadcover) extrasBonus += 50;
+      if (s.noSkyMarks) extrasBonus += 70;
+    }
+
+    const subtotalCpo = baseValue + extrasBonus;
+    // +10% bonusu TGN za wymianę Trade-In zamiast wypłaty gotówki
+    const tradeInBonus = Math.round(subtotalCpo * 0.10);
+    const totalTradeValue = subtotalCpo + tradeInBonus;
+
+    const finalToPay = Math.max(0, prodPrice - totalTradeValue);
+    const voucherSurplus = Math.max(0, totalTradeValue - prodPrice);
+
+    return {
+      prodPrice,
+      subtotalCpo,
+      tradeInBonus,
+      totalTradeValue,
+      finalToPay,
+      voucherSurplus,
+      summaryLabel: itemsDesc.join(' + ')
+    };
+  },
+
+  setTab: function(tab) {
+    TradeInWizard.state.sourceTab = tab;
+    TradeInWizard.renderModal();
+  },
+
+  toggleBagClub: function(clubId) {
+    const ids = TradeInWizard.state.selectedBagIds;
+    const idx = ids.indexOf(clubId);
+    if (idx >= 0) ids.splice(idx, 1);
+    else ids.push(clubId);
+    TradeInWizard.renderModal();
+  },
+
+  updateField: function(key, val, rerenderFull = true) {
+    TradeInWizard.state[key] = val;
+    if (rerenderFull) {
+      TradeInWizard.renderModal();
+    } else {
+      TradeInWizard.refreshSummaryOnly();
+    }
+  },
+
+  handlePhotoUpload: function(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      TradeInWizard.state.photoDataUrl = e.target.result;
+      TradeInWizard.renderModal();
+      app.showToast('📷 Dodano zdjęcie do weryfikacji Trade-In!');
+    };
+    reader.readAsDataURL(file);
+  },
+
+  refreshSummaryOnly: function() {
+    const calc = TradeInWizard.calculateValuation();
+    const summaryEl = document.getElementById('tiFooterSummary');
+    const confirmBtn = document.getElementById('tiConfirmBtn');
+    if (summaryEl) summaryEl.innerHTML = TradeInWizard.buildSummaryHTML(calc);
+    if (confirmBtn) {
+      confirmBtn.disabled = calc.totalTradeValue <= 0;
+      confirmBtn.textContent = calc.totalTradeValue <= 0
+        ? 'Wybierz sprzęt do wymiany powyżej'
+        : `✓ Zatwierdź Trade-In i dodaj do koszyka (Dopłata: ${calc.finalToPay} PLN)`;
+    }
+  },
+
+  buildSummaryHTML: function(calc) {
+    return `
+      <div class="ti-summary-line">
+        <span>Cena katalogowa wybranego sprzętu:</span>
+        <strong style="color:#fff;">${calc.prodPrice} PLN</strong>
+      </div>
+      <div class="ti-summary-line">
+        <span>Wycena CPO Twojego sprzętu:</span>
+        <span style="color:var(--accent);">-${calc.subtotalCpo} PLN</span>
+      </div>
+      <div class="ti-summary-line">
+        <span>Bonus TGN Trade-In (+10% przy wymianie):</span>
+        <strong style="color:var(--gold);">-${calc.tradeInBonus} PLN</strong>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.45rem; padding-top:0.45rem; border-top:1px solid rgba(255,255,255,0.12);">
+        <strong style="font-size:0.86rem; color:#fff;">Twoja dopłata końcowa:</strong>
+        <strong style="font-size:1.22rem; color:var(--gold);">${calc.finalToPay} PLN</strong>
+      </div>
+      ${calc.voucherSurplus > 0 ? `
+        <div style="margin-top:0.35rem; font-size:0.7rem; color:var(--accent); background:rgba(74,222,128,0.12); padding:4px 8px; border-radius:6px; text-align:center;">
+          🎁 Nadwyżka <strong>+${calc.voucherSurplus} PLN</strong> zostanie dopisana jako Voucher TGN na kolejne zakupy!
+        </div>
+      ` : ''}
+    `;
+  },
+
+  confirmTradeIn: function() {
+    const s = TradeInWizard.state;
+    const prod = (AppData.storeProducts || []).find(p => Number(p.id) === Number(s.productId));
+    if (!prod) return;
+
+    const calc = TradeInWizard.calculateValuation();
+    if (calc.totalTradeValue <= 0) {
+      app.showToast('⚠️ Zaznacz co najmniej jeden kij lub uzupełnij wycenę!');
+      return;
+    }
+
+    const logLabels = {
+      NEW_FIRST: 'Najpierw nowy kij (14 dni na odesłanie starego)',
+      SEND_FIRST: 'Darmowa etykieta DPD/InPost',
+      IN_STORE: 'Wymiana osobista w punkcie TGN'
+    };
+
+    const photoTag = s.photoDataUrl ? ' • 📷 Foto zweryfikowane' : '';
+    const modeLabel = `[🔄 TRADE-IN: oddajesz ${calc.summaryLabel} (-${calc.totalTradeValue} PLN) • ${logLabels[s.logistics]}${photoTag}]`;
+
+    AppData.cart.push({
+      id: prod.id,
+      name: prod.name,
+      price: calc.finalToPay,
+      qty: 1,
+      useTradeIn: true,
+      modeLabel: modeLabel,
+      variant: s.variantLabel,
+      customPrint: calc.voucherSurplus > 0 ? `Voucher zwrotny TGN: +${calc.voucherSurplus} PLN` : '',
+      imgUrl: prod.imgUrl,
+      tradeInMeta: {
+        tradedItems: calc.summaryLabel,
+        tradeValue: calc.totalTradeValue,
+        logistics: s.logistics,
+        hasPhoto: !!s.photoDataUrl
+      }
+    });
+
+    StoreComponent.saveCartToStorage();
+    TradeInWizard.close();
+    AppData.storeState.cartOpen = true;
+    auth.updateHeaderBar();
+    StoreComponent.syncGlobalCartDrawer();
+    app.showToast(`🔄 Dodano wymianę Trade-In! Twoja dopłata: ${calc.finalToPay} PLN`);
+  },
+
+  renderModal: function() {
+    const s = TradeInWizard.state;
+    let overlay = document.getElementById('tgnTradeInModalOverlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'tgnTradeInModalOverlay';
+      overlay.onclick = () => TradeInWizard.close();
+      document.body.appendChild(overlay);
+    }
+
+    if (!s.open) {
+      overlay.style.display = 'none';
+      return;
+    }
+
+    const prod = (AppData.storeProducts || []).find(p => Number(p.id) === Number(s.productId));
+    if (!prod) return;
+
+    const bag = AppData.bag || [];
+    const calc = TradeInWizard.calculateValuation();
+    const thumbUrl = ClubImageEngine.getClubVisualUrl(prod.name, prod.imgUrl);
+    const fallbackUrl = ClubImageEngine.getFallbackPhoto(prod.name);
+
+    const bagTabHTML = bag.length === 0 ? `
+      <div style="text-align:center; padding:1.2rem; background:rgba(0,0,0,0.3); border-radius:10px; font-size:0.75rem; color:var(--text-muted);">
+        Brak kijów w Twojej Cyfrowej Torbie 3D. Przełącz na zakładkę <strong>➕ Inny sprzęt</strong>, aby wycenić dowolny kij.
+      </div>
+    ` : `
+      <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:0.35rem;">
+        Zaznacz jeden lub kilka kijów, które chcesz oddać w rozliczeniu:
+      </div>
+      <div class="ti-bag-list">
+        ${bag.map(club => {
+          const isSel = s.selectedBagIds.includes(club.id);
+          const offer = TradeInWizard.getBagClubBaseOffer(club);
+          return `
+            <div class="ti-bag-item ${isSel ? 'selected' : ''}" onclick="TradeInWizard.toggleBagClub(${club.id})">
+              <div style="display:flex; align-items:center; gap:0.6rem; min-width:0;">
+                <span class="ti-check-circle">${isSel ? '✓' : ''}</span>
+                <div style="min-width:0;">
+                  <strong style="font-size:0.78rem; color:#fff; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${club.name}</strong>
+                  <span style="font-size:0.66rem; color:var(--text-muted);">${club.loft} • Stan: ${club.cond}</span>
+                </div>
+              </div>
+              <div style="text-align:right; flex-shrink:0;">
+                <strong style="font-size:0.82rem; color:var(--gold); display:block;">-${offer} PLN</strong>
+                <span style="font-size:0.6rem; color:var(--accent);">+10% bonus</span>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+
+    const customTabHTML = `
+      <div class="ti-form-grid">
+        <div>
+          <label>Kategoria sprzętu</label>
+          <select onchange="TradeInWizard.updateField('customCat', this.value)">
+            <option value="DRIVER" ${s.customCat === 'DRIVER' ? 'selected' : ''}>Driver</option>
+            <option value="IRONY" ${s.customCat === 'IRONY' ? 'selected' : ''}>Zestaw Ironów (5-PW)</option>
+            <option value="WOOD" ${s.customCat === 'WOOD' ? 'selected' : ''}>Fairway Wood / Hybryda</option>
+            <option value="WEDGE" ${s.customCat === 'WEDGE' ? 'selected' : ''}>Wedge</option>
+            <option value="PUTTER" ${s.customCat === 'PUTTER' ? 'selected' : ''}>Putter</option>
+            <option value="GPS" ${s.customCat === 'GPS' ? 'selected' : ''}>Dalmierz / Radar GPS</option>
+          </select>
+        </div>
+        <div>
+          <label>Marka</label>
+          <select onchange="TradeInWizard.updateField('customBrand', this.value)">
+            ${['TaylorMade', 'Titleist', 'Ping', 'Mizuno', 'Callaway', 'Cobra', 'Garmin', 'Inna'].map(b =>
+              `<option value="${b}" ${s.customBrand === b ? 'selected' : ''}>${b}</option>`
+            ).join('')}
+          </select>
+        </div>
+        <div style="grid-column:span 2;">
+          <label>Dokładny model i shaft</label>
+          <input type="text" value="${s.customModel}" placeholder="np. Titleist TSR2 10° Ventus Blue 6S" oninput="TradeInWizard.updateField('customModel', this.value, false)">
+        </div>
+      </div>
+
+      <div>
+        <span style="display:block; font-size:0.63rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; margin-bottom:4px;">Stan wizualny i techniczny</span>
+        <div class="ti-cond-pills">
+          <button type="button" class="ti-cond-pill ${s.customCond === 'MINT' ? 'active' : ''}" onclick="TradeInWizard.updateField('customCond', 'MINT')">10/10<br>Jak nowy</button>
+          <button type="button" class="ti-cond-pill ${s.customCond === 'BDB' ? 'active' : ''}" onclick="TradeInWizard.updateField('customCond', 'BDB')">9/10<br>Bardzo dobry</button>
+          <button type="button" class="ti-cond-pill ${s.customCond === 'DOBRY' ? 'active' : ''}" onclick="TradeInWizard.updateField('customCond', 'DOBRY')">7.5/10<br>Dobry</button>
+          <button type="button" class="ti-cond-pill ${s.customCond === 'SLADY' ? 'active' : ''}" onclick="TradeInWizard.updateField('customCond', 'SLADY')">6/10<br>Ślady gry</button>
+        </div>
+      </div>
+    `;
+
+    overlay.innerHTML = `
+      <div class="ti-modal-card" onclick="event.stopPropagation()">
+        <div class="ti-header">
+          <div>
+            <strong style="color:var(--gold); font-size:0.92rem; letter-spacing:0.4px;">🔄 KREATOR WYMIANY TRADE-IN (+10% BONUS)</strong>
+            <span style="display:block; font-size:0.66rem; color:var(--text-muted);">Obniż cenę nowego zakupu oddając obecny sprzęt</span>
+          </div>
+          <button type="button" style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:30px; height:30px; border-radius:50%; cursor:pointer;" onclick="TradeInWizard.close()">✕</button>
+        </div>
+
+        <div class="ti-body">
+          <!-- Wybrany produkt docelowy -->
+          <div class="ti-target-banner">
+            <div class="ti-target-thumb">
+              <img src="${thumbUrl}" alt="${prod.name}" onerror="this.onerror=null; this.src='${fallbackUrl}';">
+            </div>
+            <div style="min-width:0;">
+              <span style="font-size:0.6rem; color:var(--accent); font-weight:800; text-transform:uppercase;">KUPUJESZ:</span>
+              <strong style="font-size:0.8rem; color:#fff; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${prod.name}</strong>
+              <span style="font-size:0.66rem; color:var(--text-muted);">Wariant: ${s.variantLabel}</span>
+            </div>
+            <strong style="font-size:0.92rem; color:#fff; white-space:nowrap;">${prod.price} PLN</strong>
+          </div>
+
+          <!-- Wybór źródła oddawanego sprzętu -->
+          <div class="ti-mode-tabs">
+            <button type="button" class="ti-tab-btn ${s.sourceTab === 'BAG' ? 'active' : ''}" onclick="TradeInWizard.setTab('BAG')">
+              🎒 Z mojej Torby 3D (${bag.length})
+            </button>
+            <button type="button" class="ti-tab-btn ${s.sourceTab === 'CUSTOM' ? 'active' : ''}" onclick="TradeInWizard.setTab('CUSTOM')">
+              ➕ Inny sprzęt (Wycena)
+            </button>
+          </div>
+
+          ${s.sourceTab === 'BAG' ? bagTabHTML : customTabHTML}
+
+          <!-- Dodatki zwiększające wycenę + zdjęcie do weryfikacji -->
+          <div class="ti-extras-row">
+            <label>
+              <input type="checkbox" ${s.hasHeadcover ? 'checked' : ''} onchange="TradeInWizard.updateField('hasHeadcover', this.checked)">
+              Oryginalny headcover / klucz (<strong style="color:var(--accent);">+50 PLN</strong>)
+            </label>
+            <label>
+              <input type="checkbox" ${s.noSkyMarks ? 'checked' : ''} onchange="TradeInWizard.updateField('noSkyMarks', this.checked)">
+              Brak wgnieceń i sky-marków (<strong style="color:var(--accent);">+70 PLN</strong>)
+            </label>
+            <label style="color:var(--blue); font-weight:700; width:100%; margin-top:2px;">
+              📷 ${s.photoDataUrl ? 'Zdjęcie dodane ✓ (kliknij, aby zmienić)' : 'Dodaj zdjęcie główki/lica (szybsza akceptacja CPO)'}
+              <input type="file" accept="image/*" style="display:none;" onchange="TradeInWizard.handlePhotoUpload(event)">
+            </label>
+            ${s.photoDataUrl ? `<img src="${s.photoDataUrl}" alt="Podgląd" style="height:54px; border-radius:6px; border:1px solid var(--accent);">` : ''}
+          </div>
+
+          <!-- Wybór logistyki wymiany -->
+          <div>
+            <span style="display:block; font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; margin-bottom:5px;">Sposób przekazania starego sprzętu</span>
+            <div class="ti-logistics-grid">
+              <div class="ti-log-option ${s.logistics === 'NEW_FIRST' ? 'active' : ''}" onclick="TradeInWizard.updateField('logistics', 'NEW_FIRST')">
+                <div>
+                  <strong style="font-size:0.75rem; color:#fff; display:block;">📦 Najpierw nowy sprzęt (14 dni na zwrot starego)</strong>
+                  <span style="font-size:0.65rem; color:var(--text-muted);">Odsyłasz stary kij w tym samym kartonie darmową etykietą DPD</span>
+                </div>
+                <strong style="font-size:0.68rem; color:var(--accent);">0 PLN</strong>
+              </div>
+              <div class="ti-log-option ${s.logistics === 'SEND_FIRST' ? 'active' : ''}" onclick="TradeInWizard.updateField('logistics', 'SEND_FIRST')">
+                <div>
+                  <strong style="font-size:0.75rem; color:#fff; display:block;">🚚 Wyślij stary sprzęt teraz</strong>
+                  <span style="font-size:0.65rem; color:var(--text-muted);">Wysyłka po weryfikacji serwisowej (bez blokady kaucji)</span>
+                </div>
+                <strong style="font-size:0.68rem; color:var(--accent);">0 PLN</strong>
+              </div>
+              <div class="ti-log-option ${s.logistics === 'IN_STORE' ? 'active' : ''}" onclick="TradeInWizard.updateField('logistics', 'IN_STORE')">
+                <div>
+                  <strong style="font-size:0.75rem; color:#fff; display:block;">🎯 Wymiana na miejscu (Warszawa / Szczecin)</strong>
+                  <span style="font-size:0.65rem; color:var(--text-muted);">Wycena od ręki + darmowe 15 min testu na TrackManie</span>
+                </div>
+                <strong style="font-size:0.68rem; color:var(--gold);">VIP</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ti-footer">
+          <div id="tiFooterSummary">${TradeInWizard.buildSummaryHTML(calc)}</div>
+          <button type="button" id="tiConfirmBtn" class="btn-primary" style="margin-top:0.65rem; padding:0.72rem; font-size:0.82rem;" ${calc.totalTradeValue <= 0 ? 'disabled' : ''} onclick="TradeInWizard.confirmTradeIn()">
+            ${calc.totalTradeValue <= 0 ? 'Wybierz sprzęt do wymiany powyżej' : `✓ Zatwierdź Trade-In i dodaj do koszyka (Dopłata: ${calc.finalToPay} PLN)`}
+          </button>
+        </div>
+      </div>
+    `;
+
+    overlay.style.display = 'flex';
+  }
+};
+
+// Przechwycenie wszystkich przycisków Trade-In (z listy sklepu oraz karty PDP)
+const _origAddItemBeforeWizard = StoreComponent.addItem;
+StoreComponent.addItem = function(prodId, useTradeIn) {
+  if (useTradeIn) {
+    TradeInWizard.open(prodId);
+    return;
+  }
+  return _origAddItemBeforeWizard(prodId, false);
+};
+
+const _origAddFromPdpBeforeWizard = StoreComponent.addFromPdp;
+StoreComponent.addFromPdp = function(prodId, useTradeIn, customPrice, tradeInClubName) {
+  if (useTradeIn) {
+    const st = AppData.storeState || {};
+    const variantLabel = `${st.pdpLoft || 'Standard'} • ${st.pdpFlex || 'Standard'} • ${st.pdpHand || 'RH'}`;
+    TradeInWizard.open(prodId, { variant: variantLabel });
+    return;
+  }
+  return _origAddFromPdpBeforeWizard(prodId, false, customPrice, tradeInClubName);
+};
+
+window.StoreComponent = StoreComponent;
+
 
