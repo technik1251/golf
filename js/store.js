@@ -2139,6 +2139,137 @@ TradeInWizard.renderModal = function() {
     </div>
   `;
 };
+/* =========================================================================
+   TRADE-IN v37.2: SZACUNKOWE WIDEŁKI (+/-) + POTWIERDZENIE PO OGLĘDZINACH
+   ========================================================================= */
+
+const _origTiCalcV372 = TradeInWizard.calculateValuation;
+TradeInWizard.calculateValuation = function() {
+  const base = _origTiCalcV372();
+  const s = TradeInWizard.state;
+  const round10 = (n) => Math.round(n / 10) * 10;
+
+  // Bez zdjęcia widełki ±15%, po dodaniu zdjęcia zawężają się do ±8%
+  const spreadPct = s.photoDataUrl ? 0.08 : 0.15;
+  const spreadLabel = s.photoDataUrl ? '±8%' : '±15%';
+
+  const minTradeValue = base.totalTradeValue > 0 ? round10(base.totalTradeValue * (1 - spreadPct)) : 0;
+  const maxTradeValue = base.totalTradeValue > 0 ? round10(base.totalTradeValue * (1 + spreadPct)) : 0;
+
+  const minToPay = Math.max(0, base.prodPrice - maxTradeValue);
+  const maxToPay = Math.max(0, base.prodPrice - minTradeValue);
+
+  const fmtRange = (a, b) => (a === b ? `${a} PLN` : `${a} – ${b} PLN`);
+
+  return {
+    ...base,
+    spreadLabel,
+    minTradeValue,
+    maxTradeValue,
+    minToPay,
+    maxToPay,
+    tradeRangeText: fmtRange(minTradeValue, maxTradeValue),
+    payRangeText: fmtRange(minToPay, maxToPay)
+  };
+};
+
+TradeInWizard.buildSummaryHTML = function(calc) {
+  const s = TradeInWizard.state;
+  return `
+    <div class="ti-summary-line">
+      <span>Cena katalogowa wybranego sprzętu:</span>
+      <strong style="color:#fff;">${calc.prodPrice} PLN</strong>
+    </div>
+    <div class="ti-summary-line">
+      <span>Wstępna wycena CPO + 10% bonusu (${calc.spreadLabel}):</span>
+      <strong style="color:var(--accent);">od -${calc.minTradeValue} do -${calc.maxTradeValue} PLN</strong>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-top:0.45rem; padding-top:0.45rem; border-top:1px solid rgba(255,255,255,0.12); gap:0.5rem;">
+      <div>
+        <strong style="font-size:0.84rem; color:#fff; display:block;">Szacowana dopłata (+/-):</strong>
+        <span style="font-size:0.63rem; color:var(--text-muted);">Średnio ok. ${calc.finalToPay} PLN (do korekty po weryfikacji)</span>
+      </div>
+      <strong style="font-size:1.12rem; color:var(--gold); white-space:nowrap;">${calc.payRangeText}</strong>
+    </div>
+    ${calc.voucherSurplus > 0 ? `
+      <div style="margin-top:0.35rem; font-size:0.68rem; color:var(--accent); background:rgba(74,222,128,0.12); padding:4px 8px; border-radius:6px; text-align:center;">
+        🎁 Szacowana nadwyżka (~${calc.voucherSurplus} PLN) trafi na Twój Voucher TGN po weryfikacji sprzętu.
+      </div>
+    ` : ''}
+    <div style="margin-top:0.5rem; font-size:0.66rem; line-height:1.4; color:#cbd5e1; background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.3); border-radius:8px; padding:0.45rem 0.65rem;">
+      ℹ️ <strong>Wycena orientacyjna:</strong> Dokładna kwota odkupu i ostateczna dopłata zostaną potwierdzone po fizycznych oględzinach sprzętu przez serwis TGN CPO.
+      ${!s.photoDataUrl ? ' <span style="color:var(--gold);">Dodaj zdjęcie wyżej, aby zawęzić widełki do ±8%.</span>' : ' <span style="color:var(--accent);">📷 Zdjęcie załączone — widełki zawężone do ±8%.</span>'}
+    </div>
+  `;
+};
+
+TradeInWizard.refreshSummaryOnly = function() {
+  const calc = TradeInWizard.calculateValuation();
+  const summaryEl = document.getElementById('tiFooterSummary');
+  const confirmBtn = document.getElementById('tiConfirmBtn');
+  if (summaryEl) summaryEl.innerHTML = TradeInWizard.buildSummaryHTML(calc);
+  if (confirmBtn) {
+    confirmBtn.disabled = calc.totalTradeValue <= 0;
+    confirmBtn.textContent = calc.totalTradeValue <= 0
+      ? 'Wybierz sprzęt do wymiany powyżej'
+      : `✓ Zgłoś wstępny Trade-In (szac. ${calc.payRangeText})`;
+  }
+};
+
+TradeInWizard.confirmTradeIn = function() {
+  const s = TradeInWizard.state;
+  const prod = (AppData.storeProducts || []).find(p => Number(p.id) === Number(s.productId));
+  if (!prod) return;
+
+  const calc = TradeInWizard.calculateValuation();
+  if (calc.totalTradeValue <= 0) {
+    app.showToast('⚠️ Zaznacz co najmniej jeden kij lub uzupełnij wycenę!');
+    return;
+  }
+
+  const logLabels = {
+    SEND_FIRST: 'Wysyłka starego sprzętu najpierw (Standard)',
+    IN_STORE: 'Wymiana i oględziny na miejscu (WWA / Szczecin)',
+    NEW_FIRST: 'Najpierw nowy kij (TGN VIP • 14 dni na zwrot)'
+  };
+
+  const photoTag = s.photoDataUrl ? ' • 📷 Zdj. do weryfikacji' : '';
+  const modeLabel = `[🔄 WSTĘPNY TRADE-IN: ${calc.summaryLabel} | szac. wycena ${calc.tradeRangeText} • ostateczna kwota po oględzinach • ${logLabels[s.logistics] || logLabels.SEND_FIRST}${photoTag}]`;
+
+  AppData.cart.push({
+    id: prod.id,
+    name: prod.name,
+    price: calc.finalToPay,
+    qty: 1,
+    useTradeIn: true,
+    modeLabel: modeLabel,
+    variant: s.variantLabel,
+    customPrint: `Szacowana dopłata: ${calc.payRangeText} (do potwierdzenia po oględzinach)`,
+    imgUrl: prod.imgUrl,
+    tradeInMeta: {
+      tradedItems: calc.summaryLabel,
+      estimatedTradeRange: calc.tradeRangeText,
+      estimatedPayRange: calc.payRangeText,
+      finalAfterInspection: true,
+      logistics: s.logistics,
+      hasPhoto: !!s.photoDataUrl
+    }
+  });
+
+  StoreComponent.saveCartToStorage();
+  TradeInWizard.close();
+  AppData.storeState.cartOpen = true;
+  auth.updateHeaderBar();
+  StoreComponent.syncGlobalCartDrawer();
+  app.showToast(`🔄 Dodano wstępny Trade-In (szac. dopłata: ${calc.payRangeText})`);
+};
+
+const _origTiRenderV372 = TradeInWizard.renderModal;
+TradeInWizard.renderModal = function() {
+  _origTiRenderV372();
+  TradeInWizard.refreshSummaryOnly();
+};
+
 
 
 
