@@ -1281,3 +1281,806 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {}
   }
 });
+/* =========================================================================
+   STRONA GŁÓWNA v38.0 (CLEAN UX) + PŁYWAJĄCY DYMEK AI & CZAT
+   ========================================================================= */
+
+(function injectCleanHomeV38Styles() {
+  const old = document.getElementById('tgnCleanHomeV38Styles');
+  if (old) old.remove();
+
+  const style = document.createElement('style');
+  style.id = 'tgnCleanHomeV38Styles';
+  style.textContent = `
+    .tgn-home-clean {
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.6rem !important;
+      background: rgba(10, 20, 24, 0.92);
+      border: 1px solid rgba(114, 214, 150, 0.24);
+      border-radius: 20px;
+    }
+
+    /* 1. Czysty nagłówek + wyszukiwarka */
+    .tgn-hero-clean {
+      display: flex;
+      flex-direction: column;
+      gap: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .tgn-hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .tgn-hero-title {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #f8fafc;
+      letter-spacing: -0.2px;
+      margin: 0;
+    }
+    .tgn-hero-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .tgn-status-pills {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .tgn-soft-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e2e8f0;
+      padding: 0.38rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .tgn-soft-pill:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .tgn-soft-pill.promo {
+      background: rgba(250, 204, 21, 0.1);
+      border-color: rgba(250, 204, 21, 0.35);
+      color: var(--gold);
+    }
+
+    .tgn-search-clean {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(5, 13, 17, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 12px;
+      padding: 0.42rem 0.45rem 0.42rem 0.9rem;
+      transition: border-color 0.2s;
+    }
+    .tgn-search-clean:focus-within {
+      border-color: var(--accent);
+    }
+    .tgn-search-clean input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 0.84rem;
+      outline: none;
+      min-width: 0;
+    }
+    .tgn-search-clean input::placeholder {
+      color: #64748b;
+    }
+    .tgn-search-clean button {
+      background: var(--accent);
+      color: #052e16;
+      border: none;
+      border-radius: 8px;
+      padding: 0.52rem 1.05rem;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* 2. 4 Główne, intuicyjne kafelki nawigacyjne */
+    .tgn-main-tiles {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.9rem;
+      margin-bottom: 1.1rem;
+    }
+    .tgn-tile {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 1.15rem 1.05rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .tgn-tile:hover {
+      transform: translateY(-3px);
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--accent);
+    }
+    .tgn-tile-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      background: rgba(74, 222, 128, 0.12);
+      border: 1px solid rgba(74, 222, 128, 0.28);
+      margin-bottom: 0.2rem;
+    }
+    .tgn-tile.blue .tgn-tile-icon {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+    .tgn-tile.blue:hover { border-color: var(--blue); }
+    .tgn-tile.gold .tgn-tile-icon {
+      background: rgba(250, 204, 21, 0.12);
+      border-color: rgba(250, 204, 21, 0.3);
+    }
+    .tgn-tile.gold:hover { border-color: var(--gold); }
+
+    .tgn-tile-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+    .tgn-tile-desc {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    /* 3. Pasek pobocznych skrótów */
+    .tgn-secondary-strip {
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.6rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .tgn-sec-link {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      padding: 0.42rem 0.85rem;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .tgn-sec-link:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.28);
+      color: #fff;
+    }
+
+    /* 4. Polecane produkty (lekki, czysty grid) */
+    .tgn-section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+    .tgn-section-head h3 {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #f8fafc;
+      margin: 0;
+    }
+    .tgn-link-more {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .tgn-link-more:hover { text-decoration: underline; }
+
+    .tgn-clean-products {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.85rem;
+      margin-bottom: 1.6rem;
+    }
+    .tgn-clean-prod {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .tgn-clean-prod:hover {
+      border-color: rgba(74, 222, 128, 0.45);
+      background: rgba(255, 255, 255, 0.055);
+    }
+    .tgn-clean-prod-img {
+      width: 100%;
+      height: 112px;
+      background: #ffffff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 0.6rem;
+    }
+    .tgn-clean-prod-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 6px;
+    }
+    .tgn-clean-prod-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1.3;
+      margin: 0.2rem 0 0.5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* 5. Ostatnie z forum (czysta lista) */
+    .tgn-clean-forum-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .tgn-clean-forum-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 0.75rem 0.95rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .tgn-clean-forum-item:hover {
+      background: rgba(56, 189, 248, 0.07);
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+
+    /* =====================================================================
+       PŁYWAJĄCY DYMEK AI & CZAT (LEWY DOLNY RÓG)
+       ===================================================================== */
+    #tgnFloatingAiBtn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      color: #ffffff;
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      border-radius: 999px;
+      padding: 0.65rem 1.05rem;
+      font-size: 0.8rem;
+      font-weight: 800;
+      display: none;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      z-index: 8600;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #tgnFloatingAiBtn:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 14px 34px rgba(14, 165, 233, 0.45);
+    }
+    .tgn-ai-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 8px #4ade80;
+    }
+
+    #tgnFloatingAiPopup {
+      position: fixed;
+      bottom: 76px;
+      left: 20px;
+      width: 370px;
+      max-width: calc(100vw - 24px);
+      background: linear-gradient(165deg, #0d1f26, #061014);
+      border: 1.5px solid rgba(56, 189, 248, 0.65);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
+      z-index: 9500;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      animation: tgnPopUp 0.2s ease-out;
+    }
+    @keyframes tgnPopUp {
+      from { opacity: 0; transform: translateY(12px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .tgn-ai-pop-head {
+      padding: 0.8rem 1rem;
+      background: rgba(0, 0, 0, 0.45);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tgn-ai-pop-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.3rem;
+      padding: 0.55rem 0.8rem 0;
+    }
+    .tgn-ai-pop-tab {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      border-radius: 8px;
+      padding: 0.42rem;
+      font-size: 0.74rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .tgn-ai-pop-tab.active.ai { background: var(--blue); color: #041e2b; border-color: var(--blue); }
+    .tgn-ai-pop-tab.active.chat { background: var(--accent); color: #052e16; border-color: var(--accent); }
+
+    .tgn-ai-pop-msgs {
+      height: 235px;
+      overflow-y: auto;
+      padding: 0.75rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .tgn-ai-pop-chips {
+      display: flex;
+      gap: 0.35rem;
+      overflow-x: auto;
+      padding: 0 0.85rem 0.55rem;
+      white-space: nowrap;
+      scrollbar-width: none;
+    }
+    .tgn-ai-pop-chips::-webkit-scrollbar { display: none; }
+    .tgn-ai-pop-input {
+      display: flex;
+      gap: 0.4rem;
+      padding: 0.65rem 0.85rem;
+      background: rgba(0, 0, 0, 0.4);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .tgn-ai-pop-input input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      padding: 0.48rem 0.65rem;
+      color: #fff;
+      font-size: 0.76rem;
+      outline: none;
+      min-width: 0;
+    }
+    .tgn-ai-pop-input button {
+      background: var(--blue);
+      color: #041e2b;
+      border: none;
+      border-radius: 8px;
+      padding: 0 0.9rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    @media (max-width: 900px) {
+      .tgn-main-tiles,
+      .tgn-clean-products {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 768px) {
+      .tgn-home-clean {
+        padding: 1rem !important;
+        border-radius: 16px !important;
+      }
+      .tgn-hero-title { font-size: 1.25rem; }
+      .tgn-main-tiles { gap: 0.65rem; }
+      .tgn-tile { padding: 0.9rem 0.85rem; border-radius: 13px; }
+      .tgn-tile-icon { width: 34px; height: 34px; font-size: 1.05rem; }
+      .tgn-tile-title { font-size: 0.85rem; }
+      .tgn-tile-desc { font-size: 0.69rem; }
+      .tgn-clean-products { gap: 0.6rem; }
+      .tgn-clean-prod-img { height: 92px; }
+      #tgnFloatingAiBtn {
+        bottom: 14px;
+        left: 14px;
+        padding: 0.55rem 0.85rem;
+        font-size: 0.74rem;
+      }
+      #tgnFloatingAiPopup {
+        left: 12px;
+        right: 12px;
+        bottom: 66px;
+        width: auto;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+// =========================================================================
+// 1. NOWA, CZYSTA I INTUICYJNA STRONA GŁÓWNA
+// =========================================================================
+window.HomeComponent = {
+  render: function() {
+    window.ensureAllPortalDataReady();
+
+    const u = (window.AppData && window.AppData.user) ? window.AppData.user : window.DefaultUser;
+    const firstName = (u.name || 'Golfista').split(' ')[0];
+    const hcp = u.hcp || 12.4;
+    const products = window.AppData.storeProducts || [];
+    const forumPosts = window.AppData.forumPosts || [];
+    const bagCount = (window.AppData.bag || []).length;
+
+    const spotlightHTML = products.slice(0, 4).map(prod => {
+      const imgUrl = (typeof ClubImageEngine !== 'undefined')
+        ? ClubImageEngine.getClubVisualUrl(prod.name, prod.imgUrl)
+        : '';
+      const fallbackUrl = (typeof ClubImageEngine !== 'undefined')
+        ? ClubImageEngine.getFallbackPhoto(prod.name)
+        : '';
+      const openFn = (typeof StoreComponent !== 'undefined' && StoreComponent.openProductPage)
+        ? `StoreComponent.openProductPage(${prod.id})`
+        : `window.app.switchTab('sklep')`;
+
+      return `
+        <div class="tgn-clean-prod" onclick="${openFn}">
+          <div>
+            <div class="tgn-clean-prod-img">
+              <img src="${imgUrl}" alt="${prod.name}" onerror="this.onerror=null; this.src='${fallbackUrl}';">
+            </div>
+            <span style="font-size:0.64rem; color:var(--accent); font-weight:700;">${prod.brand}</span>
+            <div class="tgn-clean-prod-name">${prod.name}</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong style="font-size:0.88rem; color:#fff;">${prod.price} zł</strong>
+            <span style="font-size:0.68rem; color:var(--text-muted);">Zobacz →</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const forumHTML = forumPosts.slice(0, 3).map(post => `
+      <div class="tgn-clean-forum-item" onclick="window.app.switchTab('forum')">
+        <div style="min-width:0;">
+          <div style="font-size:0.66rem; color:var(--blue); font-weight:700; margin-bottom:2px;">${post.category || 'Forum'}</div>
+          <strong style="font-size:0.82rem; color:#f1f5f9; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${post.title}</strong>
+        </div>
+        <span style="font-size:0.7rem; color:var(--text-muted); white-space:nowrap;">💬 ${(post.comments || []).length}</span>
+      </div>
+    `).join('');
+
+    setTimeout(() => window.FloatingAiWidget && window.FloatingAiWidget.sync(), 20);
+
+    return `
+      <section class="panel-3d tgn-home-clean" style="grid-column: span 2;">
+        
+        <!-- Nagłówek i jedna wyszukiwarka -->
+        <div class="tgn-hero-clean">
+          <div class="tgn-hero-top">
+            <div>
+              <h1 class="tgn-hero-title">Cześć, ${firstName} 👋</h1>
+              <p class="tgn-hero-sub">Wybierz dział poniżej lub znajdź od razu sprzęt w sklepie.</p>
+            </div>
+            <div class="tgn-status-pills">
+              <button type="button" class="tgn-soft-pill" onclick="window.app.switchTab('profile')">⛳ HCP ${hcp} • Torba ${bagCount}/14</button>
+              <button type="button" class="tgn-soft-pill promo" onclick="window.StoreComponent && window.StoreComponent.applyRabat3Code()">🏷️ Kod RABAT3 (-3%)</button>
+            </div>
+          </div>
+
+          <div class="tgn-search-clean">
+            <span style="font-size:0.9rem; opacity:0.7;">🔍</span>
+            <input type="text" id="homeQuickSearch" placeholder="Szukaj w sklepie (np. Qi10, Vokey 52, Pro V1, Garmin)..." onkeypress="if(event.key==='Enter'){ window.app.quickSearchFromHome(); }">
+            <button type="button" onclick="window.app.quickSearchFromHome()">Szukaj</button>
+          </div>
+        </div>
+
+        <!-- 4 główne, czytelne kafelki nawigacyjne -->
+        <div class="tgn-main-tiles">
+          <div class="tgn-tile" onclick="window.app.switchTab('sklep')">
+            <div class="tgn-tile-icon">🛍️</div>
+            <div class="tgn-tile-title">Sklep & Komis CPO</div>
+            <div class="tgn-tile-desc">Nowy sprzęt 2026, używane CPO i wymiana Trade-In</div>
+          </div>
+
+          <div class="tgn-tile blue" onclick="window.app.switchTab('forum')">
+            <div class="tgn-tile-icon">💬</div>
+            <div class="tgn-tile-title">Forum Golfowe</div>
+            <div class="tgn-tile-desc">Recenzje kijów, porady PGA i dyskusje graczy</div>
+          </div>
+
+          <div class="tgn-tile gold" onclick="window.app.switchTab('profile')">
+            <div class="tgn-tile-icon">🎒</div>
+            <div class="tgn-tile-title">Moja Torba 3D</div>
+            <div class="tgn-tile-desc">Twój profil WHS, lista kijów i wycena sprzętu</div>
+          </div>
+
+          <div class="tgn-tile" onclick="window.app.switchTab('pola')">
+            <div class="tgn-tile-icon">⛳</div>
+            <div class="tgn-tile-title">Pola w Polsce</div>
+            <div class="tgn-tile-desc">Atlas 25 pól golfowych i szybkie Tee Time</div>
+          </div>
+        </div>
+
+        <!-- Pasek pozostałych modułów -->
+        <div class="tgn-secondary-strip">
+          <button type="button" class="tgn-sec-link" onclick="window.app.switchTab('cpo')">⚡ Wyceń swój kij (Skup CPO)</button>
+          <button type="button" class="tgn-sec-link" onclick="window.app.switchTab('marketplace')">🤝 Giełda Graczy C2C</button>
+          <button type="button" class="tgn-sec-link" onclick="window.app.switchTab('wydarzenia')">📅 Kalendarz Turniejów 2027</button>
+          <button type="button" class="tgn-sec-link" onclick="window.FloatingAiWidget.open('AI')">🤖 Zapytaj Asystenta AI</button>
+        </div>
+
+        <!-- Polecane produkty ze sklepu -->
+        <div class="tgn-section-head">
+          <h3>Polecane w sklepie</h3>
+          <button type="button" class="tgn-link-more" onclick="window.app.switchTab('sklep')">Wszystkie produkty (${products.length}) →</button>
+        </div>
+        <div class="tgn-clean-products">
+          ${spotlightHTML}
+        </div>
+
+        <!-- Najnowsze z forum -->
+        <div class="tgn-section-head">
+          <h3>Ostatnie dyskusje na forum</h3>
+          <button type="button" class="tgn-link-more" onclick="window.app.switchTab('forum')">Otwórz forum →</button>
+        </div>
+        <div class="tgn-clean-forum-list">
+          ${forumHTML}
+        </div>
+
+      </section>
+    `;
+  }
+};
+var HomeComponent = window.HomeComponent;
+
+// =========================================================================
+// 2. PŁYWAJĄCY DYMEK ASYSTENTA AI & CZATU (DZIAŁA W CAŁEJ APLIKACJI)
+// =========================================================================
+window.FloatingAiWidget = {
+  isOpen: false,
+
+  sync: function() {
+    window.ensureAllPortalDataReady();
+
+    let btn = document.getElementById('tgnFloatingAiBtn');
+    if (!btn) {
+      btn = document.createElement('button');
+      btn.id = 'tgnFloatingAiBtn';
+      btn.type = 'button';
+      btn.innerHTML = `<span class="tgn-ai-dot"></span><span>🤖 AI & Czat</span>`;
+      btn.onclick = () => window.FloatingAiWidget.toggle();
+      document.body.appendChild(btn);
+    }
+
+    let popup = document.getElementById('tgnFloatingAiPopup');
+    if (!popup) {
+      popup = document.createElement('div');
+      popup.id = 'tgnFloatingAiPopup';
+      document.body.appendChild(popup);
+    }
+
+    const isLoggedIn = document.getElementById('mainNav')?.style.display !== 'none';
+    btn.style.display = isLoggedIn ? 'flex' : 'none';
+
+    if (!isLoggedIn) {
+      window.FloatingAiWidget.isOpen = false;
+      popup.style.display = 'none';
+      return;
+    }
+
+    if (window.FloatingAiWidget.isOpen) {
+      window.FloatingAiWidget.renderPopup();
+      popup.style.display = 'flex';
+    } else {
+      popup.style.display = 'none';
+    }
+  },
+
+  toggle: function() {
+    window.FloatingAiWidget.isOpen = !window.FloatingAiWidget.isOpen;
+    window.FloatingAiWidget.sync();
+  },
+
+  open: function(mode) {
+    window.ensureAllPortalDataReady();
+    if (mode) window.AppData.homeHubState.activeMode = mode;
+    window.FloatingAiWidget.isOpen = true;
+    window.FloatingAiWidget.sync();
+  },
+
+  close: function() {
+    window.FloatingAiWidget.isOpen = false;
+    window.FloatingAiWidget.sync();
+  },
+
+  setMode: function(mode) {
+    window.ensureAllPortalDataReady();
+    window.AppData.homeHubState.activeMode = mode;
+    window.FloatingAiWidget.renderPopup();
+  },
+
+  sendQuick: function(keyOrText) {
+    window.ensureAllPortalDataReady();
+    const mode = window.AppData.homeHubState.activeMode;
+
+    if (mode === 'AI') {
+      const msgs = window.AppData.homeHubState.aiMessages;
+      if (keyOrText === 'WEDGE_52') {
+        msgs.push(
+          { sender: "Ty", type: "user", text: "Dobierz kij pod lukę 15m (Wedge 52°)." },
+          { sender: "TGN AI", type: "bot", text: "Pod Twój swing 96 mph polecam Titleist Vokey SM10 52°/12F. Możesz go wziąć z dopłatą Trade-In w sklepie!" }
+        );
+      } else if (keyOrText === 'DRIVER_96') {
+        msgs.push(
+          { sender: "Ty", type: "user", text: "Jaki driver pod 96 mph?" },
+          { sender: "TGN AI", type: "bot", text: "Najlepszy wybór to TaylorMade Qi10 Max 10.5° lub Ping G430 Max 10K ze sztywnością shaftu Stiff (S)." }
+        );
+      } else if (keyOrText === 'CPO') {
+        msgs.push(
+          { sender: "Ty", type: "user", text: "Pokaż okazje z komisu CPO." },
+          { sender: "TGN AI", type: "bot", text: "W komisie CPO mamy zweryfikowane kije z 12-mies. gwarancją. Przejdź do Sklepu i wybierz filtr 'Tylko Komis CPO'." }
+        );
+      } else if (keyOrText === 'RABAT') {
+        if (window.StoreComponent && window.StoreComponent.applyRabat3Code) {
+          window.StoreComponent.applyRabat3Code();
+        }
+        msgs.push({ sender: "TGN AI", type: "bot", text: "🎉 Aktywowałem kod RABAT3 (-3%) w Twoim koszyku!" });
+      }
+      window.FloatingAiWidget.renderPopup();
+    } else {
+      window.FloatingAiWidget.pushChatMessage(keyOrText);
+    }
+  },
+
+  pushChatMessage: function(text) {
+    const userName = (window.AppData.user && window.AppData.user.name) ? window.AppData.user.name.split(' ')[0] : 'Marek';
+    window.AppData.chatMessages.push({ sender: userName, text: text, type: "outgoing" });
+    window.FloatingAiWidget.renderPopup();
+
+    setTimeout(() => {
+      window.AppData.chatMessages.push({
+        sender: "Tomek_PGA (Support)",
+        text: "Dzięki za wiadomość! Jesteśmy online — w czym możemy pomóc?",
+        type: "incoming"
+      });
+      if (window.FloatingAiWidget.isOpen) window.FloatingAiWidget.renderPopup();
+    }, 850);
+  },
+
+  submitInput: function() {
+    const inp = document.getElementById('tgnAiPopInput');
+    if (!inp || !inp.value.trim()) return;
+    const text = inp.value.trim();
+    const mode = window.AppData.homeHubState.activeMode;
+
+    if (mode === 'AI') {
+      const msgs = window.AppData.homeHubState.aiMessages;
+      msgs.push({ sender: "Ty", type: "user", text });
+      const lower = text.toLowerCase();
+      let reply = "Sprawdziłem katalog TGN — wpisz nazwę w wyszukiwarkę u góry lub otwórz Sklep, żeby zobaczyć szczegóły i opcję Trade-In.";
+      if (lower.includes('driver') || lower.includes('qi10') || lower.includes('ping')) {
+        reply = "Dla 96 mph sugeruję główkę 10K MOI (Qi10 Max lub Ping G430) na shafcie Stiff. Oba modele są w sklepie.";
+      } else if (lower.includes('piłk') || lower.includes('pilk') || lower.includes('logo')) {
+        reply = "Mamy pakiety Lake Balls oraz nowe Titleist Pro V1 z nadrukiem UV Twojego logo (realizacja 48h).";
+      } else if (lower.includes('trade') || lower.includes('wymian')) {
+        reply = "Wejdź w dowolny kij w sklepie i kliknij 'Kup w Trade-In' — wycenisz tam swój obecny sprzęt z widełkami +/- i +10% bonusem.";
+      }
+      msgs.push({ sender: "TGN AI", type: "bot", text: reply });
+      window.FloatingAiWidget.renderPopup();
+    } else {
+      window.FloatingAiWidget.pushChatMessage(text);
+    }
+  },
+
+  renderPopup: function() {
+    const popup = document.getElementById('tgnFloatingAiPopup');
+    if (!popup) return;
+    const isAi = window.AppData.homeHubState.activeMode === 'AI';
+
+    const msgsHTML = isAi
+      ? (window.AppData.homeHubState.aiMessages || []).map(m => `
+          <div class="hub-msg-bubble ${m.type === 'user' ? 'user' : 'bot'}">
+            <strong>${m.sender}:</strong> ${m.text}
+          </div>
+        `).join('')
+      : (window.AppData.chatMessages || []).map(m => `
+          <div class="hub-msg-bubble ${m.type === 'outgoing' ? 'user' : 'incoming'}">
+            <strong>${m.sender}:</strong> ${m.text}
+          </div>
+        `).join('');
+
+    popup.innerHTML = `
+      <div class="tgn-ai-pop-head">
+        <div style="display:flex; align-items:center; gap:7px;">
+          <span class="tgn-ai-dot"></span>
+          <strong style="font-size:0.84rem; color:#fff;">${isAi ? 'Asystent AI TGN' : 'Czat Graczy & Support'}</strong>
+        </div>
+        <button type="button" style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:26px; height:26px; border-radius:50%; cursor:pointer;" onclick="window.FloatingAiWidget.close()">✕</button>
+      </div>
+
+      <div class="tgn-ai-pop-tabs">
+        <button type="button" class="tgn-ai-pop-tab ai ${isAi ? 'active' : ''}" onclick="window.FloatingAiWidget.setMode('AI')">🤖 Asystent AI</button>
+        <button type="button" class="tgn-ai-pop-tab chat ${!isAi ? 'active' : ''}" onclick="window.FloatingAiWidget.setMode('CHAT')">💬 Czat Live</button>
+      </div>
+
+      <div class="tgn-ai-pop-msgs" id="tgnAiPopMsgs">
+        ${msgsHTML}
+      </div>
+
+      <div class="tgn-ai-pop-chips">
+        ${isAi ? `
+          <button type="button" class="btn-mini-tool" onclick="window.FloatingAiWidget.sendQuick('WEDGE_52')">🎯 Wedge 52°</button>
+          <button type="button" class="btn-mini-tool" onclick="window.FloatingAiWidget.sendQuick('DRIVER_96')">⚡ Driver 96 mph</button>
+          <button type="button" class="btn-mini-tool" onclick="window.FloatingAiWidget.sendQuick('CPO')">♻️ Okazje CPO</button>
+          <button type="button" class="btn-mini-tool" onclick="window.FloatingAiWidget.sendQuick('RABAT')">🏷️ Kod -3%</button>
+        ` : `
+          <button type="button" class="btn-mini-tool" onclick="window.FloatingAiWidget.sendQuick('Ktoś gra w ten weekend?')">⛳ Gra w weekend?</button>
+          <button type="button" class="btn-mini-tool" onclick="window.FloatingAiWidget.sendQuick('Pytanie o wycenę Trade-In.')">🔄 Pytanie o Trade-In</button>
+        `}
+      </div>
+
+      <div class="tgn-ai-pop-input">
+        <input type="text" id="tgnAiPopInput" placeholder="${isAi ? 'Zapytaj AI o sprzęt lub fitting...' : 'Napisz wiadomość...'}" onkeypress="if(event.key==='Enter'){ window.FloatingAiWidget.submitInput(); }">
+        <button type="button" style="background:${isAi ? 'var(--blue)' : 'var(--accent)'};" onclick="window.FloatingAiWidget.submitInput()">Wyślij</button>
+      </div>
+    `;
+
+    const box = document.getElementById('tgnAiPopMsgs');
+    if (box) box.scrollTop = box.scrollHeight;
+  }
+};
+
+// Synchronizacja dymka przy logowaniu, wylogowaniu i zmianie zakładek
+const _origEnterV38 = window.auth.enterApp;
+window.auth.enterApp = function(msg) {
+  _origEnterV38(msg);
+  window.FloatingAiWidget.sync();
+};
+
+const _origLogoutV38 = window.auth.logout;
+window.auth.logout = function() {
+  _origLogoutV38();
+  window.FloatingAiWidget.sync();
+};
+
+const _origSwitchTabV38 = window.app.switchTab;
+window.app.switchTab = function(tabName) {
+  _origSwitchTabV38(tabName);
+  window.FloatingAiWidget.sync();
+};
