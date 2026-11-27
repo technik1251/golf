@@ -2834,3 +2834,875 @@ window.HomeComponent = {
   }
 };
 HomeComponent = window.HomeComponent;
+/* =========================================================================
+   STRONA GŁÓWNA v40.0 — JEDNOLITE PANELE + NAPRAWIONY DYMEK AI & CZAT
+   ========================================================================= */
+
+(function injectHomeV40Styles() {
+  ['tgnCleanHomeV38Styles', 'tgnHomeV39Styles', 'tgnHomeV40Styles'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  });
+
+  const style = document.createElement('style');
+  style.id = 'tgnHomeV40Styles';
+  style.textContent = `
+    /* Globalne ujednolicenie wszystkich głównych paneli w portalu */
+    .panel-3d {
+      background: linear-gradient(180deg, rgba(10, 20, 24, 0.94), rgba(6, 13, 17, 0.96)) !important;
+      border: 1px solid rgba(148, 163, 184, 0.16) !important;
+      border-radius: 20px !important;
+      box-shadow: 0 24px 55px rgba(0, 0, 0, 0.62) !important;
+    }
+
+    .tgn-v40-shell {
+      max-width: 1120px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.35rem !important;
+    }
+
+    /* 1. Hero z wyszukiwarką */
+    .tgn-v40-hero {
+      position: relative;
+      border-radius: 16px;
+      padding: 1.4rem 1.5rem;
+      margin-bottom: 1.15rem;
+      overflow: hidden;
+      border: 1px solid rgba(74, 222, 128, 0.24);
+      background:
+        linear-gradient(125deg, rgba(6, 17, 21, 0.94) 40%, rgba(10, 34, 26, 0.8) 100%),
+        url('https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+    }
+    .tgn-v40-hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .tgn-v40-eyebrow {
+      display: inline-block;
+      font-size: 0.63rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+    .tgn-v40-title {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #f8fafc;
+      letter-spacing: -0.3px;
+      line-height: 1.18;
+      margin: 0;
+    }
+    .tgn-v40-sub {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-top: 0.25rem;
+      max-width: 480px;
+      line-height: 1.4;
+    }
+    .tgn-v40-player-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      background: rgba(5, 14, 18, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 12px;
+      padding: 0.45rem 0.78rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .tgn-v40-player-chip:hover { border-color: var(--accent); }
+    .tgn-v40-chip-metric { display: flex; flex-direction: column; line-height: 1.15; }
+    .tgn-v40-chip-metric span { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.6px; color: #94a3b8; }
+    .tgn-v40-chip-metric strong { font-size: 0.82rem; color: #f8fafc; font-weight: 800; }
+    .tgn-v40-chip-sep { width: 1px; height: 22px; background: rgba(255, 255, 255, 0.14); }
+
+    .tgn-v40-search {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: rgba(5, 13, 17, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 12px;
+      padding: 0.36rem 0.4rem 0.36rem 0.85rem;
+      transition: border-color 0.2s;
+    }
+    .tgn-v40-search:focus-within { border-color: var(--accent); }
+    .tgn-v40-search svg { color: #94a3b8; flex-shrink: 0; }
+    .tgn-v40-search input {
+      flex: 1; background: transparent; border: none; color: #f8fafc;
+      font-size: 0.82rem; outline: none; min-width: 0;
+    }
+    .tgn-v40-search input::placeholder { color: #64748b; }
+    .tgn-v40-search button {
+      background: var(--accent); color: #052e16; border: none; border-radius: 9px;
+      padding: 0.5rem 1.1rem; font-size: 0.78rem; font-weight: 800; cursor: pointer; white-space: nowrap;
+    }
+
+    /* 2. JEDNOLITA SIATKA 6 PANELI PORTALU (identyczny styl dla każdego działu) */
+    .tgn-v40-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+    .tgn-v40-card {
+      position: relative;
+      border-radius: 15px;
+      padding: 1.1rem 1.15rem;
+      min-height: 138px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      background: linear-gradient(155deg, rgba(16, 30, 36, 0.92), rgba(8, 16, 20, 0.96));
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+    .tgn-v40-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.55);
+    }
+    .tgn-v40-card.tone-green:hover { border-color: rgba(74, 222, 128, 0.65); }
+    .tgn-v40-card.tone-blue:hover { border-color: rgba(56, 189, 248, 0.65); }
+    .tgn-v40-card.tone-gold:hover { border-color: rgba(250, 204, 21, 0.65); }
+
+    .tgn-v40-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.65rem;
+    }
+    .tgn-v40-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .tgn-v40-card.tone-green .tgn-v40-icon {
+      background: rgba(74, 222, 128, 0.12);
+      border: 1px solid rgba(74, 222, 128, 0.32);
+      color: var(--accent);
+    }
+    .tgn-v40-card.tone-blue .tgn-v40-icon {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.32);
+      color: var(--blue);
+    }
+    .tgn-v40-card.tone-gold .tgn-v40-icon {
+      background: rgba(250, 204, 21, 0.12);
+      border: 1px solid rgba(250, 204, 21, 0.32);
+      color: var(--gold);
+    }
+
+    .tgn-v40-badge {
+      font-size: 0.62rem;
+      font-weight: 700;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .tgn-v40-card h2 {
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: #f8fafc;
+      text-transform: none;
+      letter-spacing: -0.1px;
+      margin: 0 0 0.22rem 0;
+    }
+    .tgn-v40-card p {
+      font-size: 0.74rem;
+      color: #94a3b8;
+      line-height: 1.38;
+      margin: 0;
+    }
+    .tgn-v40-cta {
+      margin-top: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .tgn-v40-card.tone-green .tgn-v40-cta { color: var(--accent); }
+    .tgn-v40-card.tone-blue .tgn-v40-cta { color: var(--blue); }
+    .tgn-v40-card.tone-gold .tgn-v40-cta { color: var(--gold); }
+
+    /* 3. Nagłówki sekcji, produkty i dół */
+    .tgn-v40-sec-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+    .tgn-v40-sec-head h3 {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.85px;
+      color: #cbd5e1;
+      margin: 0;
+    }
+    .tgn-v40-sec-link {
+      background: none; border: none; color: var(--accent); font-size: 0.74rem;
+      font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+    }
+    .tgn-v40-sec-link:hover { text-decoration: underline; }
+
+    .tgn-v40-prods {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+    .tgn-v40-prod {
+      background: linear-gradient(155deg, rgba(16, 30, 36, 0.85), rgba(8, 16, 20, 0.94));
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 14px;
+      padding: 0.7rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .tgn-v40-prod:hover { transform: translateY(-2px); border-color: rgba(74, 222, 128, 0.5); }
+    .tgn-v40-prod-img {
+      width: 100%; height: 112px;
+      background: radial-gradient(circle at center, #ffffff 68%, #eef2f6 100%);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      overflow: hidden; margin-bottom: 0.55rem; position: relative;
+    }
+    .tgn-v40-prod-img img { width: 100%; height: 100%; object-fit: contain; padding: 7px; }
+    .tgn-v40-prod-badge {
+      position: absolute; top: 6px; left: 6px;
+      background: rgba(8, 18, 22, 0.88); color: #e2e8f0;
+      font-size: 0.54rem; font-weight: 800; padding: 2px 6px; border-radius: 5px; text-transform: uppercase;
+    }
+    .tgn-v40-prod-badge.cpo { background: rgba(250, 204, 21, 0.92); color: #052e16; }
+    .tgn-v40-prod-brand { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; color: var(--accent); }
+    .tgn-v40-prod-name {
+      font-size: 0.77rem; font-weight: 700; color: #f8fafc; line-height: 1.3;
+      margin: 0.2rem 0 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .tgn-v40-prod-foot {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 0.42rem; border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .tgn-v40-bottom {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 0.9rem;
+      align-items: stretch;
+    }
+    .tgn-v40-forum-list { display: flex; flex-direction: column; gap: 0.48rem; }
+    .tgn-v40-forum-row {
+      display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;
+      background: linear-gradient(155deg, rgba(16, 30, 36, 0.85), rgba(8, 16, 20, 0.94));
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 12px; padding: 0.72rem 0.9rem; cursor: pointer; transition: border-color 0.2s;
+    }
+    .tgn-v40-forum-row:hover { border-color: rgba(56, 189, 248, 0.5); }
+
+    .tgn-v40-event-card {
+      background: linear-gradient(155deg, rgba(16, 30, 36, 0.92), rgba(8, 16, 20, 0.96));
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 14px; padding: 1.05rem 1.15rem;
+      display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: border-color 0.2s;
+    }
+    .tgn-v40-event-card:hover { border-color: var(--blue); }
+
+    /* =====================================================================
+       NAPRAWIONY, SAMODZIELNY DYMEK I OKNO AI & CZAT (LEWY DOLNY RÓG)
+       ===================================================================== */
+    #tgnFloatingAiBtn {
+      position: fixed !important;
+      bottom: 20px !important;
+      left: 20px !important;
+      background: rgba(8, 22, 30, 0.95) !important;
+      color: #f8fafc !important;
+      border: 1.5px solid rgba(56, 189, 248, 0.75) !important;
+      border-radius: 30px !important;
+      padding: 0.62rem 1.05rem !important;
+      font-size: 0.8rem !important;
+      font-weight: 800 !important;
+      display: none;
+      align-items: center !important;
+      gap: 7px !important;
+      cursor: pointer !important;
+      z-index: 8600 !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.78), 0 0 16px rgba(56, 189, 248, 0.22) !important;
+      transition: transform 0.2s !important;
+    }
+    #tgnFloatingAiBtn:hover { transform: scale(1.04) !important; }
+    .tgn-ai-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #4ade80; box-shadow: 0 0 8px #4ade80; flex-shrink: 0;
+    }
+
+    #tgnFloatingAiPopup {
+      position: fixed !important;
+      bottom: 76px !important;
+      left: 20px !important;
+      width: 370px;
+      max-width: calc(100vw - 24px);
+      background: linear-gradient(165deg, #0d1f26, #061014);
+      border: 1.5px solid rgba(56, 189, 248, 0.65);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.92);
+      z-index: 9500 !important;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .tgn-ai-pop-head {
+      padding: 0.8rem 1rem;
+      background: rgba(0, 0, 0, 0.45);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tgn-ai-pop-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.35rem;
+      padding: 0.55rem 0.8rem 0;
+    }
+    .tgn-ai-pop-tab {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #94a3b8;
+      border-radius: 8px;
+      padding: 0.42rem;
+      font-size: 0.74rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .tgn-ai-pop-tab.active.ai { background: var(--blue); color: #041e2b; border-color: var(--blue); }
+    .tgn-ai-pop-tab.active.chat { background: var(--accent); color: #052e16; border-color: var(--accent); }
+
+    .tgn-ai-pop-msgs {
+      height: 230px;
+      overflow-y: auto;
+      padding: 0.75rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .tgn-pop-msg {
+      font-size: 0.74rem;
+      line-height: 1.4;
+      padding: 0.5rem 0.72rem;
+      border-radius: 10px;
+      max-width: 92%;
+    }
+    .tgn-pop-msg.bot {
+      background: rgba(56, 189, 248, 0.12);
+      border-left: 3px solid var(--blue);
+      color: #f1f5f9;
+      align-self: flex-start;
+    }
+    .tgn-pop-msg.incoming {
+      background: rgba(255, 255, 255, 0.07);
+      border-left: 3px solid var(--gold);
+      color: #f1f5f9;
+      align-self: flex-start;
+    }
+    .tgn-pop-msg.user {
+      background: rgba(74, 222, 128, 0.16);
+      border-right: 3px solid var(--accent);
+      color: #dcfce7;
+      align-self: flex-end;
+    }
+    .tgn-ai-pop-chips {
+      display: flex;
+      gap: 0.35rem;
+      overflow-x: auto;
+      padding: 0 0.85rem 0.55rem;
+      white-space: nowrap;
+      scrollbar-width: none;
+    }
+    .tgn-ai-pop-chips::-webkit-scrollbar { display: none; }
+    .tgn-ai-pop-input {
+      display: flex;
+      gap: 0.4rem;
+      padding: 0.65rem 0.85rem;
+      background: rgba(0, 0, 0, 0.4);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .tgn-ai-pop-input input {
+      flex: 1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px; padding: 0.48rem 0.65rem; color: #fff; font-size: 0.76rem; outline: none; min-width: 0;
+    }
+    .tgn-ai-pop-input button {
+      border: none; border-radius: 8px; padding: 0 0.9rem; font-size: 0.75rem; font-weight: 800; cursor: pointer;
+    }
+
+    @media (max-width: 960px) {
+      .tgn-v40-grid,
+      .tgn-v40-prods { grid-template-columns: repeat(2, 1fr); }
+      .tgn-v40-bottom { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .tgn-v40-shell { padding: 0.85rem !important; }
+      .tgn-v40-hero { padding: 1rem; margin-bottom: 0.85rem; }
+      .tgn-v40-title { font-size: 1.28rem; }
+      .tgn-v40-sub { font-size: 0.73rem; }
+      .tgn-v40-grid { gap: 0.6rem; margin-bottom: 1.15rem; }
+      .tgn-v40-card { min-height: 118px; padding: 0.82rem; border-radius: 13px; }
+      .tgn-v40-card-top { margin-bottom: 0.45rem; }
+      .tgn-v40-icon { width: 31px; height: 31px; border-radius: 8px; }
+      .tgn-v40-badge { display: none; }
+      .tgn-v40-card h2 { font-size: 0.84rem; }
+      .tgn-v40-card p { font-size: 0.67rem; line-height: 1.3; }
+      .tgn-v40-cta { margin-top: 0.5rem; font-size: 0.67rem; }
+      .tgn-v40-prods { gap: 0.55rem; margin-bottom: 1.15rem; }
+      .tgn-v40-prod { padding: 0.58rem; }
+      .tgn-v40-prod-img { height: 90px; }
+      #tgnFloatingAiBtn {
+        bottom: 14px !important;
+        left: 14px !important;
+        padding: 0.55rem 0.9rem !important;
+        font-size: 0.74rem !important;
+      }
+      #tgnFloatingAiPopup {
+        left: 12px !important;
+        right: 12px !important;
+        bottom: 66px !important;
+        width: auto !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+const _v40Icons = {
+  search: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`,
+  shop: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
+  forum: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+  bag: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+  flag: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>`,
+  trade: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>`,
+  market: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  calendar: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>`,
+  arrow: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`,
+  chevron: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`
+};
+
+// 1. Samodzielny i odporny pływający widget AI & Czat
+window.FloatingAiWidget = {
+  isOpen: false,
+
+  sync: function() {
+    window.ensureAllPortalDataReady();
+
+    let btn = document.getElementById('tgnFloatingAiBtn');
+    if (!btn) {
+      btn = document.createElement('button');
+      btn.id = 'tgnFloatingAiBtn';
+      btn.type = 'button';
+      btn.onclick = () => window.FloatingAiWidget.toggle();
+      document.body.appendChild(btn);
+    }
+    btn.innerHTML = `<span class="tgn-ai-dot"></span>${_v40Icons.forum}<span>AI & Czat</span>`;
+
+    let popup = document.getElementById('tgnFloatingAiPopup');
+    if (!popup) {
+      popup = document.createElement('div');
+      popup.id = 'tgnFloatingAiPopup';
+      document.body.appendChild(popup);
+    }
+
+    const isLoggedIn = document.getElementById('mainNav')?.style.display !== 'none';
+    btn.style.display = isLoggedIn ? 'flex' : 'none';
+
+    if (!isLoggedIn) {
+      window.FloatingAiWidget.isOpen = false;
+      popup.style.display = 'none';
+      return;
+    }
+
+    if (window.FloatingAiWidget.isOpen) {
+      window.FloatingAiWidget.renderPopup();
+      popup.style.display = 'flex';
+    } else {
+      popup.style.display = 'none';
+    }
+  },
+
+  toggle: function() {
+    window.FloatingAiWidget.isOpen = !window.FloatingAiWidget.isOpen;
+    window.FloatingAiWidget.sync();
+  },
+
+  open: function(mode) {
+    window.ensureAllPortalDataReady();
+    if (mode) window.AppData.homeHubState.activeMode = mode;
+    window.FloatingAiWidget.isOpen = true;
+    window.FloatingAiWidget.sync();
+  },
+
+  close: function() {
+    window.FloatingAiWidget.isOpen = false;
+    window.FloatingAiWidget.sync();
+  },
+
+  setMode: function(mode) {
+    window.ensureAllPortalDataReady();
+    window.AppData.homeHubState.activeMode = mode;
+    window.FloatingAiWidget.renderPopup();
+  },
+
+  sendQuick: function(keyOrText) {
+    window.ensureAllPortalDataReady();
+    const mode = window.AppData.homeHubState.activeMode;
+
+    if (mode === 'AI') {
+      const msgs = window.AppData.homeHubState.aiMessages;
+      if (keyOrText === 'WEDGE_52') {
+        msgs.push(
+          { sender: "Ty", type: "user", text: "Dobierz kij pod lukę 15m (Wedge 52°)." },
+          { sender: "TGN AI", type: "bot", text: "Pod Twój swing 96 mph polecam Titleist Vokey SM10 52°/12F. Możesz go wziąć z opcją wymiany Trade-In w sklepie." }
+        );
+      } else if (keyOrText === 'DRIVER_96') {
+        msgs.push(
+          { sender: "Ty", type: "user", text: "Jaki driver pod 96 mph?" },
+          { sender: "TGN AI", type: "bot", text: "Najlepszy wybór to TaylorMade Qi10 Max 10.5° lub Ping G430 Max 10K na shafcie Stiff (S)." }
+        );
+      } else if (keyOrText === 'CPO') {
+        msgs.push(
+          { sender: "Ty", type: "user", text: "Jak działa komis CPO i Trade-In?" },
+          { sender: "TGN AI", type: "bot", text: "Wchodzisz w dowolny kij w sklepie i klikasz 'Kup w Trade-In' — od razu policzysz orientacyjną dopłatę (+/-) za swój sprzęt." }
+        );
+      }
+      window.FloatingAiWidget.renderPopup();
+    } else {
+      window.FloatingAiWidget.pushChatMessage(keyOrText);
+    }
+  },
+
+  pushChatMessage: function(text) {
+    const userName = (window.AppData.user && window.AppData.user.name) ? window.AppData.user.name.split(' ')[0] : 'Marek';
+    window.AppData.chatMessages.push({ sender: userName, text, type: "outgoing" });
+    window.FloatingAiWidget.renderPopup();
+
+    setTimeout(() => {
+      window.AppData.chatMessages.push({
+        sender: "Tomek_PGA (Support)",
+        text: "Dzięki za wiadomość! Jesteśmy online — w czym możemy pomóc?",
+        type: "incoming"
+      });
+      if (window.FloatingAiWidget.isOpen) window.FloatingAiWidget.renderPopup();
+    }, 850);
+  },
+
+  submitInput: function() {
+    const inp = document.getElementById('tgnAiPopInput');
+    if (!inp || !inp.value.trim()) return;
+    const text = inp.value.trim();
+    const mode = window.AppData.homeHubState.activeMode;
+
+    if (mode === 'AI') {
+      const msgs = window.AppData.homeHubState.aiMessages;
+      msgs.push({ sender: "Ty", type: "user", text });
+      const lower = text.toLowerCase();
+      let reply = "Sprawdziłem ofertę TGN — wpisz model w wyszukiwarkę u góry lub otwórz Sklep, żeby sprawdzić dostępność i Trade-In.";
+      if (lower.includes('driver') || lower.includes('qi10') || lower.includes('ping')) {
+        reply = "Dla 96 mph sugeruję główkę 10K MOI (Qi10 Max lub Ping G430) ze sztywnością Stiff. Oba modele są dostępne w sklepie.";
+      } else if (lower.includes('piłk') || lower.includes('pilk') || lower.includes('logo')) {
+        reply = "Mamy pakiety Lake Balls oraz nowe Titleist Pro V1 z trwałym nadrukiem UV Twojego logo.";
+      } else if (lower.includes('trade') || lower.includes('wymian')) {
+        reply = "Kliknij 'Kup w Trade-In' na dowolnym produkcie w sklepie — system wyliczy wstępne widełki dopłaty do potwierdzenia po oględzinach.";
+      }
+      msgs.push({ sender: "TGN AI", type: "bot", text: reply });
+      window.FloatingAiWidget.renderPopup();
+    } else {
+      window.FloatingAiWidget.pushChatMessage(text);
+    }
+  },
+
+  renderPopup: function() {
+    const popup = document.getElementById('tgnFloatingAiPopup');
+    if (!popup) return;
+    const isAi = window.AppData.homeHubState.activeMode === 'AI';
+
+    const msgsHTML = isAi
+      ? (window.AppData.homeHubState.aiMessages || []).map(m => `
+          <div class="tgn-pop-msg ${m.type === 'user' ? 'user' : 'bot'}">
+            <strong>${m.sender}:</strong> ${m.text}
+          </div>
+        `).join('')
+      : (window.AppData.chatMessages || []).map(m => `
+          <div class="tgn-pop-msg ${m.type === 'outgoing' ? 'user' : 'incoming'}">
+            <strong>${m.sender}:</strong> ${m.text}
+          </div>
+        `).join('');
+
+    popup.innerHTML = `
+      <div class="tgn-ai-pop-head">
+        <div style="display:flex; align-items:center; gap:7px;">
+          <span class="tgn-ai-dot"></span>
+          <strong style="font-size:0.84rem; color:#fff;">${isAi ? 'Asystent AI TGN' : 'Czat Graczy & Support'}</strong>
+        </div>
+        <button type="button" style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:26px; height:26px; border-radius:50%; cursor:pointer;" onclick="window.FloatingAiWidget.close()">✕</button>
+      </div>
+
+      <div class="tgn-ai-pop-tabs">
+        <button type="button" class="tgn-ai-pop-tab ai ${isAi ? 'active' : ''}" onclick="window.FloatingAiWidget.setMode('AI')">Asystent AI</button>
+        <button type="button" class="tgn-ai-pop-tab chat ${!isAi ? 'active' : ''}" onclick="window.FloatingAiWidget.setMode('CHAT')">Czat Live</button>
+      </div>
+
+      <div class="tgn-ai-pop-msgs" id="tgnAiPopMsgs">
+        ${msgsHTML}
+      </div>
+
+      <div class="tgn-ai-pop-chips">
+        ${isAi ? `
+          <button type="button" class="btn-mini-tool" onclick="window.FloatingAiWidget.sendQuick('WEDGE_52')">Wedge 52°</button>
+          <button type="button" class="btn-mini-tool" onclick="window.FloatingAiWidget.sendQuick('DRIVER_96')">Driver 96 mph</button>
+          <button type="button" class="btn-mini-tool" onclick="window.FloatingAiWidget.sendQuick('CPO')">Trade-In & CPO</button>
+        ` : `
+          <button type="button" class="btn-mini-tool" onclick="window.FloatingAiWidget.sendQuick('Ktoś gra w ten weekend?')">Gra w weekend?</button>
+          <button type="button" class="btn-mini-tool" onclick="window.FloatingAiWidget.sendQuick('Mam pytanie o wycenę Trade-In.')">Pytanie o Trade-In</button>
+        `}
+      </div>
+
+      <div class="tgn-ai-pop-input">
+        <input type="text" id="tgnAiPopInput" placeholder="${isAi ? 'Zapytaj AI o sprzęt lub fitting...' : 'Napisz wiadomość...'}" onkeypress="if(event.key==='Enter'){ window.FloatingAiWidget.submitInput(); }">
+        <button type="button" style="background:${isAi ? 'var(--blue)' : 'var(--accent)'}; color:${isAi ? '#041e2b' : '#052e16'};" onclick="window.FloatingAiWidget.submitInput()">Wyślij</button>
+      </div>
+    `;
+
+    const box = document.getElementById('tgnAiPopMsgs');
+    if (box) box.scrollTop = box.scrollHeight;
+  }
+};
+
+// 2. Strona Główna v40.0 z 6 jednolitymi panelami
+window.HomeComponent = {
+  render: function() {
+    window.ensureAllPortalDataReady();
+
+    const u = (window.AppData && window.AppData.user) ? window.AppData.user : window.DefaultUser;
+    const firstName = (u.name || 'Golfista').split(' ')[0];
+    const hcp = u.hcp || 12.4;
+    const products = window.AppData.storeProducts || [];
+    const forumPosts = window.AppData.forumPosts || [];
+    const bagCount = (window.AppData.bag || []).length;
+    const events = window.AppData.events2027 || [];
+    const nextEvent = events[0] || {
+      title: "TGN Polish Masters Open 2027",
+      date: "15–17 Maja 2027",
+      location: "Modry Las Golf Resort",
+      spotsLeft: 14
+    };
+
+    const portalModules = [
+      {
+        tab: 'sklep', tone: 'tone-green', icon: _v40Icons.shop,
+        badge: `${products.length} ofert`, title: 'Pro Shop & Komis CPO',
+        desc: 'Nowe kolekcje, kije używane CPO i wymiana Trade-In.', cta: 'Otwórz sklep'
+      },
+      {
+        tab: 'forum', tone: 'tone-blue', icon: _v40Icons.forum,
+        badge: `${forumPosts.length} tematów`, title: 'Forum Golfowe',
+        desc: 'Testy sprzętu, porady PGA i raporty z polskich pól.', cta: 'Wejdź na forum'
+      },
+      {
+        tab: 'profile', tone: 'tone-gold', icon: _v40Icons.bag,
+        badge: `${bagCount}/14 kijów`, title: 'Moja Torba 3D',
+        desc: 'Twój profil WHS, cyfrowa torba i telemetria gry.', cta: 'Otwórz kokpit'
+      },
+      {
+        tab: 'pola', tone: 'tone-green', icon: _v40Icons.flag,
+        badge: '25 pól', title: 'Pola w Polsce',
+        desc: 'Katalog pól golfowych, parametry i rezerwacja Tee Time.', cta: 'Zobacz atlas'
+      },
+      {
+        tab: 'cpo', tone: 'tone-gold', icon: _v40Icons.trade,
+        badge: 'Wycena +/-', title: 'Skup Kijów CPO',
+        desc: 'Szybka wycena posiadanego sprzętu i odkup serwisowy.', cta: 'Wyceń kij'
+      },
+      {
+        tab: 'marketplace', tone: 'tone-blue', icon: _v40Icons.market,
+        badge: 'Społeczność', title: 'Giełda Graczy C2C',
+        desc: 'Bezpośrednie ogłoszenia kupna i sprzedaży między graczami.', cta: 'Przeglądaj giełdę'
+      }
+    ];
+
+    const modulesHTML = portalModules.map(m => `
+      <div class="tgn-v40-card ${m.tone}" onclick="window.app.switchTab('${m.tab}')">
+        <div>
+          <div class="tgn-v40-card-top">
+            <span class="tgn-v40-icon">${m.icon}</span>
+            <span class="tgn-v40-badge">${m.badge}</span>
+          </div>
+          <h2>${m.title}</h2>
+          <p>${m.desc}</p>
+        </div>
+        <span class="tgn-v40-cta">${m.cta} ${_v40Icons.arrow}</span>
+      </div>
+    `).join('');
+
+    const spotlightHTML = products.slice(0, 4).map(prod => {
+      const imgUrl = (typeof ClubImageEngine !== 'undefined')
+        ? ClubImageEngine.getClubVisualUrl(prod.name, prod.imgUrl)
+        : '';
+      const fallbackUrl = (typeof ClubImageEngine !== 'undefined')
+        ? ClubImageEngine.getFallbackPhoto(prod.name)
+        : '';
+      const isUsed = prod.section === 'USED';
+      const openFn = (typeof StoreComponent !== 'undefined' && StoreComponent.openProductPage)
+        ? `StoreComponent.openProductPage(${prod.id})`
+        : `window.app.switchTab('sklep')`;
+
+      return `
+        <div class="tgn-v40-prod" onclick="${openFn}">
+          <div>
+            <div class="tgn-v40-prod-img">
+              <img src="${imgUrl}" alt="${prod.name}" onerror="this.onerror=null; this.src='${fallbackUrl}';">
+              <span class="tgn-v40-prod-badge ${isUsed ? 'cpo' : ''}">${isUsed ? 'CPO' : 'Nowy'}</span>
+            </div>
+            <div class="tgn-v40-prod-brand">${prod.brand}</div>
+            <div class="tgn-v40-prod-name">${prod.name}</div>
+          </div>
+          <div class="tgn-v40-prod-foot">
+            <strong style="font-size:0.86rem; color:#fff;">${prod.price} zł</strong>
+            <span style="color:var(--accent); display:inline-flex;">${_v40Icons.arrow}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const forumHTML = forumPosts.slice(0, 3).map(post => `
+      <div class="tgn-v40-forum-row" onclick="window.app.switchTab('forum')">
+        <div style="min-width:0;">
+          <div style="font-size:0.65rem; color:var(--blue); font-weight:700; margin-bottom:2px;">
+            ${post.category || 'Społeczność'} • <span style="color:#64748b;">${post.date || 'Dzisiaj'}</span>
+          </div>
+          <strong style="font-size:0.8rem; color:#f1f5f9; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            ${post.title}
+          </strong>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.45rem; color:#94a3b8; font-size:0.7rem; flex-shrink:0;">
+          <span>${(post.comments || []).length} odp.</span>
+          ${_v40Icons.chevron}
+        </div>
+      </div>
+    `).join('');
+
+    setTimeout(() => window.FloatingAiWidget && window.FloatingAiWidget.sync(), 20);
+
+    return `
+      <section class="panel-3d tgn-v40-shell" style="grid-column: span 2;">
+        
+        <div class="tgn-v40-hero">
+          <div class="tgn-v40-hero-top">
+            <div>
+              <span class="tgn-v40-eyebrow">TGN Global Golf</span>
+              <h1 class="tgn-v40-title">Witaj, ${firstName}</h1>
+              <p class="tgn-v40-sub">Pro Shop, komis CPO, cyfrowa torba 3D oraz społeczność golfowa w jednym miejscu.</p>
+            </div>
+
+            <div class="tgn-v40-player-chip" onclick="window.app.switchTab('profile')" title="Otwórz profil i torbę 3D">
+              <div class="tgn-v40-chip-metric">
+                <span>Handicap</span>
+                <strong style="color:var(--accent);">${hcp}</strong>
+              </div>
+              <div class="tgn-v40-chip-sep"></div>
+              <div class="tgn-v40-chip-metric">
+                <span>Torba 3D</span>
+                <strong>${bagCount}/14</strong>
+              </div>
+              <span style="color:#94a3b8; display:inline-flex;">${_v40Icons.chevron}</span>
+            </div>
+          </div>
+
+          <div class="tgn-v40-search">
+            ${_v40Icons.search}
+            <input type="text" id="homeQuickSearch" placeholder="Szukaj sprzętu w sklepie (np. TaylorMade Qi10, Vokey 52, Pro V1)..." onkeypress="if(event.key==='Enter'){ window.app.quickSearchFromHome(); }">
+            <button type="button" onclick="window.app.quickSearchFromHome()">Szukaj</button>
+          </div>
+        </div>
+
+        <div class="tgn-v40-grid">
+          ${modulesHTML}
+        </div>
+
+        <div class="tgn-v40-sec-head">
+          <h3>Wybrane w Pro Shopie</h3>
+          <button type="button" class="tgn-v40-sec-link" onclick="window.app.switchTab('sklep')">
+            Pełny katalog ${_v40Icons.arrow}
+          </button>
+        </div>
+        <div class="tgn-v40-prods">
+          ${spotlightHTML}
+        </div>
+
+        <div class="tgn-v40-bottom">
+          <div>
+            <div class="tgn-v40-sec-head">
+              <h3>Ostatnio na forum</h3>
+              <button type="button" class="tgn-v40-sec-link" onclick="window.app.switchTab('forum')">
+                Wszystkie ${_v40Icons.arrow}
+              </button>
+            </div>
+            <div class="tgn-v40-forum-list">
+              ${forumHTML}
+            </div>
+          </div>
+
+          <div class="tgn-v40-event-card" onclick="window.app.switchTab('wydarzenia')">
+            <div>
+              <div style="display:inline-flex; align-items:center; gap:6px; font-size:0.65rem; font-weight:800; letter-spacing:0.8px; text-transform:uppercase; color:var(--blue); margin-bottom:0.55rem;">
+                ${_v40Icons.calendar}
+                <span>Kalendarz Turniejów 2027</span>
+              </div>
+              <strong style="font-size:0.96rem; color:#ffffff; display:block; margin-bottom:0.35rem; line-height:1.3;">
+                ${nextEvent.title}
+              </strong>
+              <p style="font-size:0.74rem; color:#94a3b8; line-height:1.45; margin:0;">
+                ${nextEvent.date} • ${nextEvent.location}<br>
+                Dostępne miejsca: <strong style="color:var(--accent);">${nextEvent.spotsLeft}</strong>
+              </p>
+            </div>
+            <span style="margin-top:0.85rem; display:inline-flex; align-items:center; gap:5px; font-size:0.74rem; font-weight:700; color:var(--blue);">
+              Zobacz harmonogram i zapisy ${_v40Icons.arrow}
+            </span>
+          </div>
+        </div>
+
+      </section>
+    `;
+  }
+};
+HomeComponent = window.HomeComponent;
+
+// Bezpieczna synchronizacja dymka AI przy nawigacji
+if (!window._tgnV40HooksInstalled) {
+  window._tgnV40HooksInstalled = true;
+  const _enterV40 = window.auth.enterApp;
+  window.auth.enterApp = function(msg) { _enterV40(msg); window.FloatingAiWidget.sync(); };
+  const _logoutV40 = window.auth.logout;
+  window.auth.logout = function() { _logoutV40(); window.FloatingAiWidget.sync(); };
+  const _switchV40 = window.app.switchTab;
+  window.app.switchTab = function(tabName) { _switchV40(tabName); window.FloatingAiWidget.sync(); };
+}
+
