@@ -2084,3 +2084,753 @@ window.app.switchTab = function(tabName) {
   _origSwitchTabV38(tabName);
   window.FloatingAiWidget.sync();
 };
+/* =========================================================================
+   STRONA GŁÓWNA v39.0 (EXECUTIVE GLASS UI • IKONY SVG • BEZ RABATÓW)
+   ========================================================================= */
+
+(function injectHomeV39Styles() {
+  ['tgnCleanHomeV38Styles', 'tgnHomeV39Styles'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  });
+
+  const style = document.createElement('style');
+  style.id = 'tgnHomeV39Styles';
+  style.textContent = `
+    .tgn-v39-shell {
+      max-width: 1120px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.4rem !important;
+      background: linear-gradient(180deg, rgba(10, 20, 24, 0.94), rgba(6, 13, 17, 0.96));
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 22px;
+      box-shadow: 0 28px 65px rgba(0, 0, 0, 0.65);
+    }
+
+    /* 1. Atmosferyczny Hero z wyszukiwarką */
+    .tgn-v39-hero {
+      position: relative;
+      border-radius: 18px;
+      padding: 1.55rem 1.65rem;
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+      border: 1px solid rgba(74, 222, 128, 0.24);
+      background:
+        linear-gradient(125deg, rgba(6, 17, 21, 0.94) 38%, rgba(10, 34, 26, 0.78) 100%),
+        url('https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .tgn-v39-hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.15rem;
+    }
+    .tgn-v39-eyebrow {
+      display: inline-block;
+      font-size: 0.64rem;
+      font-weight: 800;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+    .tgn-v39-title {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #f8fafc;
+      letter-spacing: -0.3px;
+      line-height: 1.18;
+      margin: 0;
+    }
+    .tgn-v39-sub {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      margin-top: 0.3rem;
+      max-width: 480px;
+      line-height: 1.45;
+    }
+    .tgn-v39-player-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      background: rgba(5, 14, 18, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 12px;
+      padding: 0.5rem 0.8rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .tgn-v39-player-chip:hover {
+      border-color: var(--accent);
+      background: rgba(10, 26, 22, 0.9);
+    }
+    .tgn-v39-chip-metric {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+    .tgn-v39-chip-metric span {
+      font-size: 0.56rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #94a3b8;
+    }
+    .tgn-v39-chip-metric strong {
+      font-size: 0.84rem;
+      color: #f8fafc;
+      font-weight: 800;
+    }
+    .tgn-v39-chip-sep {
+      width: 1px;
+      height: 22px;
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    /* Wyszukiwarka glassmorphism */
+    .tgn-v39-search {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: rgba(5, 13, 17, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 12px;
+      padding: 0.38rem 0.42rem 0.38rem 0.9rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .tgn-v39-search:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.12);
+    }
+    .tgn-v39-search svg {
+      color: #94a3b8;
+      flex-shrink: 0;
+    }
+    .tgn-v39-search input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #f8fafc;
+      font-size: 0.84rem;
+      outline: none;
+      min-width: 0;
+    }
+    .tgn-v39-search input::placeholder { color: #64748b; }
+    .tgn-v39-search button {
+      background: var(--accent);
+      color: #052e16;
+      border: none;
+      border-radius: 9px;
+      padding: 0.52rem 1.15rem;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: filter 0.2s;
+    }
+    .tgn-v39-search button:hover { filter: brightness(1.08); }
+
+    /* 2. Dwie Główne Wizualne Karty (Pro Shop + Forum) */
+    .tgn-v39-featured {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .tgn-v39-fcard {
+      position: relative;
+      border-radius: 16px;
+      padding: 1.25rem 1.35rem;
+      min-height: 152px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
+    }
+    .tgn-v39-fcard:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.55);
+    }
+    .tgn-v39-fcard.shop {
+      background:
+        linear-gradient(135deg, rgba(6, 20, 18, 0.92) 40%, rgba(12, 36, 28, 0.76) 100%),
+        url('https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
+      border-color: rgba(74, 222, 128, 0.35);
+    }
+    .tgn-v39-fcard.shop:hover { border-color: var(--accent); }
+    .tgn-v39-fcard.forum {
+      background:
+        linear-gradient(135deg, rgba(7, 17, 28, 0.92) 40%, rgba(12, 32, 48, 0.78) 100%),
+        url('https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+    .tgn-v39-fcard.forum:hover { border-color: var(--blue); }
+
+    .tgn-v39-fcard-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .tgn-v39-icon-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(74, 222, 128, 0.14);
+      border: 1px solid rgba(74, 222, 128, 0.35);
+      color: var(--accent);
+    }
+    .tgn-v39-fcard.forum .tgn-v39-icon-badge {
+      background: rgba(56, 189, 248, 0.14);
+      border-color: rgba(56, 189, 248, 0.35);
+      color: var(--blue);
+    }
+    .tgn-v39-meta-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: #cbd5e1;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+    .tgn-v39-fcard h2 {
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: none;
+      letter-spacing: -0.1px;
+      margin: 0 0 0.25rem 0;
+    }
+    .tgn-v39-fcard p {
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+      margin: 0;
+    }
+    .tgn-v39-fcard-cta {
+      margin-top: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .tgn-v39-fcard.forum .tgn-v39-fcard-cta { color: var(--blue); }
+
+    /* 3. Cztery Moduły Użytkowe (Symetryczny rząd) */
+    .tgn-v39-modules {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.6rem;
+    }
+    .tgn-v39-mod {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 13px;
+      padding: 0.85rem 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.72rem;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      min-width: 0;
+    }
+    .tgn-v39-mod:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(148, 163, 184, 0.35);
+      transform: translateY(-2px);
+    }
+    .tgn-v39-mod-ico {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .tgn-v39-mod:hover .tgn-v39-mod-ico {
+      color: var(--accent);
+      border-color: rgba(74, 222, 128, 0.35);
+    }
+    .tgn-v39-mod-text {
+      min-width: 0;
+    }
+    .tgn-v39-mod-text strong {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tgn-v39-mod-text span {
+      display: block;
+      font-size: 0.68rem;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 4. Nagłówki sekcji */
+    .tgn-v39-sec-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.85rem;
+    }
+    .tgn-v39-sec-head h3 {
+      font-size: 0.84rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      color: #cbd5e1;
+      margin: 0;
+    }
+    .tgn-v39-sec-link {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .tgn-v39-sec-link:hover { text-decoration: underline; }
+
+    /* 5. Wybrane produkty (Premium Showcase) */
+    .tgn-v39-prods {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.85rem;
+      margin-bottom: 1.6rem;
+    }
+    .tgn-v39-prod {
+      background: rgba(255, 255, 255, 0.028);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 0.72rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .tgn-v39-prod:hover {
+      transform: translateY(-2px);
+      border-color: rgba(74, 222, 128, 0.42);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .tgn-v39-prod-img {
+      width: 100%;
+      height: 118px;
+      background: radial-gradient(circle at center, #ffffff 68%, #eef2f6 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 0.65rem;
+      position: relative;
+    }
+    .tgn-v39-prod-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 8px;
+      transition: transform 0.28s ease;
+    }
+    .tgn-v39-prod:hover .tgn-v39-prod-img img { transform: scale(1.05); }
+    .tgn-v39-prod-badge {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: rgba(8, 18, 22, 0.88);
+      color: #e2e8f0;
+      font-size: 0.54rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      padding: 2px 6px;
+      border-radius: 5px;
+      text-transform: uppercase;
+    }
+    .tgn-v39-prod-badge.cpo {
+      background: rgba(250, 204, 21, 0.92);
+      color: #052e16;
+    }
+    .tgn-v39-prod-brand {
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .tgn-v39-prod-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #f8fafc;
+      line-height: 1.32;
+      margin: 0.22rem 0 0.55rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .tgn-v39-prod-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.45rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .tgn-v39-prod-price {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    /* 6. Dolna sekcja: Forum + Nadchodzący Turniej */
+    .tgn-v39-bottom {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+    .tgn-v39-forum-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.48rem;
+    }
+    .tgn-v39-forum-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.026);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 11px;
+      padding: 0.7rem 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .tgn-v39-forum-row:hover {
+      background: rgba(56, 189, 248, 0.06);
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+    .tgn-v39-event-card {
+      background: linear-gradient(155deg, rgba(14, 30, 38, 0.9), rgba(7, 16, 22, 0.96));
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      border-radius: 14px;
+      padding: 1.05rem 1.15rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .tgn-v39-event-card:hover {
+      border-color: var(--blue);
+      transform: translateY(-2px);
+    }
+
+    /* Elegancki styl pływającego dymka AI & Czat (dopasowany do v39) */
+    #tgnFloatingAiBtn {
+      background: rgba(8, 22, 30, 0.94) !important;
+      border: 1.5px solid rgba(56, 189, 248, 0.7) !important;
+      color: #f8fafc !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.75), 0 0 16px rgba(56, 189, 248, 0.22) !important;
+    }
+
+    @media (max-width: 960px) {
+      .tgn-v39-modules,
+      .tgn-v39-prods { grid-template-columns: repeat(2, 1fr); }
+      .tgn-v39-bottom { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .tgn-v39-shell { padding: 0.85rem !important; border-radius: 16px !important; }
+      .tgn-v39-hero { padding: 1.05rem; border-radius: 14px; margin-bottom: 0.85rem; }
+      .tgn-v39-title { font-size: 1.28rem; }
+      .tgn-v39-sub { font-size: 0.74rem; }
+      .tgn-v39-player-chip { padding: 0.38rem 0.65rem; gap: 0.5rem; }
+      .tgn-v39-featured { grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 0.75rem; }
+      .tgn-v39-fcard { min-height: 126px; padding: 0.85rem; border-radius: 13px; }
+      .tgn-v39-fcard-top { margin-bottom: 0.45rem; }
+      .tgn-v39-icon-badge { width: 32px; height: 32px; border-radius: 8px; }
+      .tgn-v39-meta-tag { display: none; }
+      .tgn-v39-fcard h2 { font-size: 0.88rem; }
+      .tgn-v39-fcard p { font-size: 0.68rem; line-height: 1.3; }
+      .tgn-v39-fcard-cta { margin-top: 0.5rem; font-size: 0.68rem; }
+      .tgn-v39-modules { gap: 0.55rem; margin-bottom: 1.15rem; }
+      .tgn-v39-mod { padding: 0.68rem 0.7rem; gap: 0.55rem; border-radius: 11px; }
+      .tgn-v39-mod-ico { width: 30px; height: 30px; }
+      .tgn-v39-mod-text strong { font-size: 0.74rem; }
+      .tgn-v39-mod-text span { font-size: 0.62rem; }
+      .tgn-v39-prods { gap: 0.55rem; margin-bottom: 1.15rem; }
+      .tgn-v39-prod { padding: 0.6rem; border-radius: 12px; }
+      .tgn-v39-prod-img { height: 92px; margin-bottom: 0.45rem; }
+      .tgn-v39-prod-name { font-size: 0.72rem; }
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+const _v39Icons = {
+  search: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`,
+  shop: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
+  forum: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+  bag: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+  flag: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>`,
+  trade: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>`,
+  market: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  calendar: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>`,
+  arrow: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`,
+  chevron: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`
+};
+
+window.HomeComponent = {
+  render: function() {
+    window.ensureAllPortalDataReady();
+
+    const u = (window.AppData && window.AppData.user) ? window.AppData.user : window.DefaultUser;
+    const firstName = (u.name || 'Golfista').split(' ')[0];
+    const hcp = u.hcp || 12.4;
+    const products = window.AppData.storeProducts || [];
+    const forumPosts = window.AppData.forumPosts || [];
+    const bagCount = (window.AppData.bag || []).length;
+    const events = window.AppData.events2027 || [];
+    const nextEvent = events[0] || {
+      title: "TGN Polish Masters Open 2027",
+      date: "15–17 Maja 2027",
+      location: "Modry Las Golf Resort",
+      spotsLeft: 14
+    };
+
+    const spotlightHTML = products.slice(0, 4).map(prod => {
+      const imgUrl = (typeof ClubImageEngine !== 'undefined')
+        ? ClubImageEngine.getClubVisualUrl(prod.name, prod.imgUrl)
+        : '';
+      const fallbackUrl = (typeof ClubImageEngine !== 'undefined')
+        ? ClubImageEngine.getFallbackPhoto(prod.name)
+        : '';
+      const isUsed = prod.section === 'USED';
+      const openFn = (typeof StoreComponent !== 'undefined' && StoreComponent.openProductPage)
+        ? `StoreComponent.openProductPage(${prod.id})`
+        : `window.app.switchTab('sklep')`;
+
+      return `
+        <div class="tgn-v39-prod" onclick="${openFn}">
+          <div>
+            <div class="tgn-v39-prod-img">
+              <img src="${imgUrl}" alt="${prod.name}" onerror="this.onerror=null; this.src='${fallbackUrl}';">
+              <span class="tgn-v39-prod-badge ${isUsed ? 'cpo' : ''}">${isUsed ? 'CPO' : 'Nowy'}</span>
+            </div>
+            <div class="tgn-v39-prod-brand">${prod.brand}</div>
+            <div class="tgn-v39-prod-name">${prod.name}</div>
+          </div>
+          <div class="tgn-v39-prod-foot">
+            <span class="tgn-v39-prod-price">${prod.price} zł</span>
+            <span style="color:var(--accent); display:inline-flex;">${_v39Icons.arrow}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const forumHTML = forumPosts.slice(0, 3).map(post => `
+      <div class="tgn-v39-forum-row" onclick="window.app.switchTab('forum')">
+        <div style="min-width:0;">
+          <div style="font-size:0.65rem; color:var(--blue); font-weight:700; margin-bottom:2px;">
+            ${post.category || 'Społeczność'} • <span style="color:#64748b;">${post.date || 'Dzisiaj'}</span>
+          </div>
+          <strong style="font-size:0.8rem; color:#f1f5f9; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            ${post.title}
+          </strong>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.45rem; color:#94a3b8; font-size:0.7rem; flex-shrink:0;">
+          <span>${(post.comments || []).length} odp.</span>
+          ${_v39Icons.chevron}
+        </div>
+      </div>
+    `).join('');
+
+    setTimeout(() => {
+      if (window.FloatingAiWidget) {
+        window.FloatingAiWidget.sync();
+        const aiBtn = document.getElementById('tgnFloatingAiBtn');
+        if (aiBtn) {
+          aiBtn.innerHTML = `<span class="tgn-ai-dot"></span>${_v39Icons.forum}<span>AI & Czat</span>`;
+        }
+      }
+    }, 20);
+
+    return `
+      <section class="panel-3d tgn-v39-shell" style="grid-column: span 2;">
+        
+        <!-- 1. Hero z atmosferycznym tłem, statusem gracza i wyszukiwarką -->
+        <div class="tgn-v39-hero">
+          <div class="tgn-v39-hero-top">
+            <div>
+              <span class="tgn-v39-eyebrow">TGN Global Golf</span>
+              <h1 class="tgn-v39-title">Witaj, ${firstName}</h1>
+              <p class="tgn-v39-sub">Oficjalny Pro Shop, komis sprzętu CPO, cyfrowa torba 3D oraz społeczność golfowa w jednym miejscu.</p>
+            </div>
+
+            <div class="tgn-v39-player-chip" onclick="window.app.switchTab('profile')" title="Przejdź do profilu i torby 3D">
+              <div class="tgn-v39-chip-metric">
+                <span>Handicap</span>
+                <strong style="color:var(--accent);">${hcp}</strong>
+              </div>
+              <div class="tgn-v39-chip-sep"></div>
+              <div class="tgn-v39-chip-metric">
+                <span>Torba 3D</span>
+                <strong>${bagCount}/14</strong>
+              </div>
+              <span style="color:#94a3b8; display:inline-flex;">${_v39Icons.chevron}</span>
+            </div>
+          </div>
+
+          <div class="tgn-v39-search">
+            ${_v39Icons.search}
+            <input type="text" id="homeQuickSearch" placeholder="Szukaj sprzętu w sklepie (np. TaylorMade Qi10, Vokey 52, Pro V1)..." onkeypress="if(event.key==='Enter'){ window.app.quickSearchFromHome(); }">
+            <button type="button" onclick="window.app.quickSearchFromHome()">Szukaj</button>
+          </div>
+        </div>
+
+        <!-- 2. Dwie główne bramy portalu -->
+        <div class="tgn-v39-featured">
+          <div class="tgn-v39-fcard shop" onclick="window.app.switchTab('sklep')">
+            <div>
+              <div class="tgn-v39-fcard-top">
+                <span class="tgn-v39-icon-badge">${_v39Icons.shop}</span>
+                <span class="tgn-v39-meta-tag">${products.length} produktów</span>
+              </div>
+              <h2>Pro Shop & Komis CPO</h2>
+              <p>Nowe kolekcje, zweryfikowane kije używane i wymiana Trade-In.</p>
+            </div>
+            <span class="tgn-v39-fcard-cta">Przejdź do sklepu ${_v39Icons.arrow}</span>
+          </div>
+
+          <div class="tgn-v39-fcard forum" onclick="window.app.switchTab('forum')">
+            <div>
+              <div class="tgn-v39-fcard-top">
+                <span class="tgn-v39-icon-badge">${_v39Icons.forum}</span>
+                <span class="tgn-v39-meta-tag">${forumPosts.length} aktywnych tematów</span>
+              </div>
+              <h2>Forum Golfowe</h2>
+              <p>Testy sprzętu, porady PGA, raporty z pól i umawianie rund.</p>
+            </div>
+            <span class="tgn-v39-fcard-cta">Otwórz dyskusje ${_v39Icons.arrow}</span>
+          </div>
+        </div>
+
+        <!-- 3. Cztery równe moduły narzędziowe -->
+        <div class="tgn-v39-modules">
+          <div class="tgn-v39-mod" onclick="window.app.switchTab('profile')">
+            <span class="tgn-v39-mod-ico">${_v39Icons.bag}</span>
+            <div class="tgn-v39-mod-text">
+              <strong>Moja Torba 3D</strong>
+              <span>Sprzęt i telemetria</span>
+            </div>
+          </div>
+
+          <div class="tgn-v39-mod" onclick="window.app.switchTab('pola')">
+            <span class="tgn-v39-mod-ico">${_v39Icons.flag}</span>
+            <div class="tgn-v39-mod-text">
+              <strong>Pola w Polsce</strong>
+              <span>Atlas 25 obiektów</span>
+            </div>
+          </div>
+
+          <div class="tgn-v39-mod" onclick="window.app.switchTab('cpo')">
+            <span class="tgn-v39-mod-ico">${_v39Icons.trade}</span>
+            <div class="tgn-v39-mod-text">
+              <strong>Skup CPO</strong>
+              <span>Wycena Twoich kijów</span>
+            </div>
+          </div>
+
+          <div class="tgn-v39-mod" onclick="window.app.switchTab('marketplace')">
+            <span class="tgn-v39-mod-ico">${_v39Icons.market}</span>
+            <div class="tgn-v39-mod-text">
+              <strong>Giełda C2C</strong>
+              <span>Ogłoszenia graczy</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Wybrane pozycje ze sklepu -->
+        <div class="tgn-v39-sec-head">
+          <h3>Wybrane w Pro Shopie</h3>
+          <button type="button" class="tgn-v39-sec-link" onclick="window.app.switchTab('sklep')">
+            Pełny katalog ${_v39Icons.arrow}
+          </button>
+        </div>
+        <div class="tgn-v39-prods">
+          ${spotlightHTML}
+        </div>
+
+        <!-- 5. Społeczność i najbliższy turniej -->
+        <div class="tgn-v39-bottom">
+          <div>
+            <div class="tgn-v39-sec-head">
+              <h3>Ostatnio na forum</h3>
+              <button type="button" class="tgn-v39-sec-link" onclick="window.app.switchTab('forum')">
+                Wszystkie ${_v39Icons.arrow}
+              </button>
+            </div>
+            <div class="tgn-v39-forum-list">
+              ${forumHTML}
+            </div>
+          </div>
+
+          <div class="tgn-v39-event-card" onclick="window.app.switchTab('wydarzenia')">
+            <div>
+              <div style="display:inline-flex; align-items:center; gap:6px; font-size:0.65rem; font-weight:800; letter-spacing:0.8px; text-transform:uppercase; color:var(--blue); margin-bottom:0.55rem;">
+                ${_v39Icons.calendar}
+                <span>Kalendarz Turniejów 2027</span>
+              </div>
+              <strong style="font-size:0.98rem; color:#ffffff; display:block; margin-bottom:0.35rem; line-height:1.3;">
+                ${nextEvent.title}
+              </strong>
+              <p style="font-size:0.75rem; color:#94a3b8; line-height:1.45; margin:0;">
+                ${nextEvent.date} • ${nextEvent.location}<br>
+                Dostępne miejsca: <strong style="color:var(--accent);">${nextEvent.spotsLeft}</strong>
+              </p>
+            </div>
+            <span style="margin-top:0.9rem; display:inline-flex; align-items:center; gap:5px; font-size:0.75rem; font-weight:700; color:var(--blue);">
+              Zobacz harmonogram i zapisy ${_v39Icons.arrow}
+            </span>
+          </div>
+        </div>
+
+      </section>
+    `;
+  }
+};
+HomeComponent = window.HomeComponent;
