@@ -3706,3 +3706,102 @@ if (!window._tgnV40HooksInstalled) {
   window.app.switchTab = function(tabName) { _switchV40(tabName); window.FloatingAiWidget.sync(); };
 }
 
+/* =========================================================================
+   KOREKTA HERO v40.1 — BEZ HCP I OPISU + MNIEJSZA WYSZUKIWARKA
+   ========================================================================= */
+
+(function injectHomeV401Patch() {
+  const old = document.getElementById('tgnHomeV401Styles');
+  if (old) old.remove();
+
+  const style = document.createElement('style');
+  style.id = 'tgnHomeV401Styles';
+  style.textContent = `
+    .tgn-v40-shell {
+      padding-bottom: 4.5rem !important;
+    }
+
+    /* Ukrycie kafelka HCP/Torba oraz opisu pod powitaniem */
+    .tgn-v40-player-chip,
+    .tgn-v40-sub {
+      display: none !important;
+    }
+
+    /* Kompaktowy Hero: na PC powitanie po lewej, mniejsza wyszukiwarka po prawej */
+    .tgn-v40-hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.25rem !important;
+      margin-bottom: 1rem !important;
+    }
+    .tgn-v40-hero-top {
+      margin-bottom: 0 !important;
+    }
+    .tgn-v40-eyebrow {
+      margin-bottom: 0.15rem !important;
+    }
+    .tgn-v40-title {
+      font-size: 1.35rem !important;
+    }
+
+    /* Mniejsza, smuklejsza wyszukiwarka */
+    .tgn-v40-search {
+      width: 100%;
+      max-width: 400px;
+      padding: 0.24rem 0.28rem 0.24rem 0.7rem !important;
+      border-radius: 10px !important;
+      gap: 0.45rem !important;
+    }
+    .tgn-v40-search svg {
+      width: 14px;
+      height: 14px;
+    }
+    .tgn-v40-search input {
+      font-size: 0.76rem !important;
+    }
+    .tgn-v40-search button {
+      padding: 0.36rem 0.85rem !important;
+      font-size: 0.72rem !important;
+      border-radius: 7px !important;
+    }
+
+    @media (max-width: 768px) {
+      .tgn-v40-hero {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.65rem;
+        padding: 0.8rem 0.9rem !important;
+        margin-bottom: 0.75rem !important;
+      }
+      .tgn-v40-title {
+        font-size: 1.18rem !important;
+      }
+      .tgn-v40-search {
+        max-width: 100%;
+        padding: 0.22rem 0.24rem 0.22rem 0.65rem !important;
+      }
+      .tgn-v40-search input {
+        font-size: 0.74rem !important;
+      }
+      .tgn-v40-search button {
+        padding: 0.34rem 0.75rem !important;
+        font-size: 0.7rem !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  if (window.HomeComponent && typeof window.HomeComponent.render === 'function' && !window._tgnV401PlaceholderPatched) {
+    window._tgnV401PlaceholderPatched = true;
+    const _origRenderV40 = window.HomeComponent.render;
+    window.HomeComponent.render = function() {
+      return _origRenderV40().replace(
+        'placeholder="Szukaj sprzętu w sklepie (np. TaylorMade Qi10, Vokey 52, Pro V1)..."',
+        'placeholder="Szukaj sprzętu (np. Qi10, Vokey, Pro V1)..."'
+      );
+    };
+    HomeComponent = window.HomeComponent;
+  }
+})();
