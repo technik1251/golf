@@ -3805,3 +3805,851 @@ if (!window._tgnV40HooksInstalled) {
     HomeComponent = window.HomeComponent;
   }
 })();
+/* =========================================================================
+   STRONA GŁÓWNA v41.0 — UKŁAD DESKTOP-FIRST + WYRÓŻNIONE OGŁOSZENIA C2C
+   ========================================================================= */
+
+(function injectHomeV41Styles() {
+  ['tgnCleanHomeV38Styles', 'tgnHomeV39Styles', 'tgnHomeV40Styles', 'tgnHomeV401Styles', 'tgnHomeV41Styles'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  });
+
+  const style = document.createElement('style');
+  style.id = 'tgnHomeV41Styles';
+  style.textContent = `
+    .panel-3d {
+      background: linear-gradient(180deg, rgba(10, 20, 24, 0.94), rgba(6, 13, 17, 0.96)) !important;
+      border: 1px solid rgba(148, 163, 184, 0.16) !important;
+      border-radius: 20px !important;
+      box-shadow: 0 24px 55px rgba(0, 0, 0, 0.62) !important;
+    }
+
+    .tgn-v41-shell {
+      max-width: 1220px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.25rem 1.4rem 4.5rem !important;
+    }
+
+    /* 1. Zwarty, zbalansowany Hero bez pustej przestrzeni w środku */
+    .tgn-v41-hero {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0.95rem 1.25rem;
+      margin-bottom: 1rem;
+      border-radius: 15px;
+      border: 1px solid rgba(74, 222, 128, 0.24);
+      background:
+        linear-gradient(120deg, rgba(6, 18, 22, 0.95) 35%, rgba(10, 34, 26, 0.82) 100%),
+        url('https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+    }
+    .tgn-v41-eyebrow {
+      display: block;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.12rem;
+    }
+    .tgn-v41-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #f8fafc;
+      letter-spacing: -0.3px;
+      margin: 0;
+      white-space: nowrap;
+    }
+    .tgn-v41-search-wrap {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+    }
+    .tgn-v41-search {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      width: 100%;
+      max-width: 480px;
+      background: rgba(5, 13, 17, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 10px;
+      padding: 0.25rem 0.28rem 0.25rem 0.75rem;
+      transition: border-color 0.2s;
+    }
+    .tgn-v41-search:focus-within { border-color: var(--accent); }
+    .tgn-v41-search svg { color: #94a3b8; flex-shrink: 0; }
+    .tgn-v41-search input {
+      flex: 1; background: transparent; border: none; color: #f8fafc;
+      font-size: 0.78rem; outline: none; min-width: 0;
+    }
+    .tgn-v41-search input::placeholder { color: #64748b; }
+    .tgn-v41-search button {
+      background: var(--accent); color: #052e16; border: none; border-radius: 7px;
+      padding: 0.4rem 0.95rem; font-size: 0.74rem; font-weight: 800; cursor: pointer; white-space: nowrap;
+    }
+
+    /* 2. Kompaktowy pasek 6 działów (1 rząd na PC = brak marnowania wysokości) */
+    .tgn-v41-dock {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.65rem;
+      margin-bottom: 1.35rem;
+    }
+    .tgn-v41-dock-item {
+      background: linear-gradient(155deg, rgba(16, 30, 36, 0.9), rgba(8, 16, 20, 0.95));
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 12px;
+      padding: 0.72rem 0.78rem;
+      display: flex;
+      align-items: center;
+      gap: 0.62rem;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+      min-width: 0;
+    }
+    .tgn-v41-dock-item:hover {
+      transform: translateY(-2px);
+      background: rgba(20, 38, 45, 0.95);
+    }
+    .tgn-v41-dock-item.tone-green:hover { border-color: rgba(74, 222, 128, 0.65); }
+    .tgn-v41-dock-item.tone-blue:hover { border-color: rgba(56, 189, 248, 0.65); }
+    .tgn-v41-dock-item.tone-gold:hover { border-color: rgba(250, 204, 21, 0.65); }
+
+    .tgn-v41-dock-ico {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .tone-green .tgn-v41-dock-ico { background: rgba(74, 222, 128, 0.12); border: 1px solid rgba(74, 222, 128, 0.3); color: var(--accent); }
+    .tone-blue .tgn-v41-dock-ico { background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--blue); }
+    .tone-gold .tgn-v41-dock-ico { background: rgba(250, 204, 21, 0.12); border: 1px solid rgba(250, 204, 21, 0.3); color: var(--gold); }
+
+    .tgn-v41-dock-txt { min-width: 0; }
+    .tgn-v41-dock-txt strong {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #f8fafc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tgn-v41-dock-txt span {
+      display: block;
+      font-size: 0.65rem;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 3. Nagłówki sekcji */
+    .tgn-v41-sec-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .tgn-v41-sec-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .tgn-v41-sec-head h3 {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.85px;
+      color: #e2e8f0;
+      margin: 0;
+    }
+    .tgn-v41-sec-pill {
+      font-size: 0.6rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(250, 204, 21, 0.14);
+      border: 1px solid rgba(250, 204, 21, 0.4);
+      color: var(--gold);
+    }
+    .tgn-v41-head-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .tgn-v41-sec-link {
+      background: none; border: none; color: var(--accent); font-size: 0.74rem;
+      font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+    }
+    .tgn-v41-sec-link:hover { text-decoration: underline; }
+    .tgn-v41-promote-btn {
+      background: rgba(250, 204, 21, 0.12);
+      border: 1px solid rgba(250, 204, 21, 0.55);
+      color: var(--gold);
+      border-radius: 8px;
+      padding: 0.34rem 0.75rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .tgn-v41-promote-btn:hover {
+      background: var(--gold);
+      color: #052e16;
+    }
+
+    /* 4. Siatki kart (Pro Shop + Wyróżnione C2C) */
+    .tgn-v41-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+    .tgn-v41-item-card {
+      background: linear-gradient(155deg, rgba(16, 30, 36, 0.88), rgba(8, 16, 20, 0.95));
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 14px;
+      padding: 0.72rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .tgn-v41-item-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(74, 222, 128, 0.5);
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.45);
+    }
+    .tgn-v41-item-card.c2c-featured {
+      border-color: rgba(250, 204, 21, 0.34);
+      background: linear-gradient(155deg, rgba(24, 28, 22, 0.88), rgba(8, 15, 19, 0.96));
+    }
+    .tgn-v41-item-card.c2c-featured:hover {
+      border-color: var(--gold);
+    }
+    .tgn-v41-img-box {
+      width: 100%; height: 118px;
+      background: radial-gradient(circle at center, #ffffff 68%, #eef2f6 100%);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      overflow: hidden; margin-bottom: 0.55rem; position: relative;
+    }
+    .tgn-v41-img-box img { width: 100%; height: 100%; object-fit: contain; padding: 7px; }
+
+    .tgn-v41-badge {
+      position: absolute; top: 6px; left: 6px;
+      background: rgba(8, 18, 22, 0.88); color: #e2e8f0;
+      font-size: 0.54rem; font-weight: 800; padding: 2px 6px; border-radius: 5px; text-transform: uppercase;
+    }
+    .tgn-v41-badge.cpo { background: rgba(250, 204, 21, 0.92); color: #052e16; }
+    .tgn-v41-badge.promoted {
+      background: linear-gradient(90deg, #facc15, #f59e0b);
+      color: #052e16;
+      letter-spacing: 0.3px;
+    }
+    .tgn-v41-unpin-btn {
+      position: absolute; top: 6px; right: 6px;
+      background: rgba(220, 38, 38, 0.9); color: #fff; border: none;
+      border-radius: 5px; padding: 2px 6px; font-size: 0.58rem; font-weight: 800; cursor: pointer;
+    }
+
+    .tgn-v41-item-meta {
+      font-size: 0.62rem; font-weight: 700; text-transform: uppercase; color: var(--accent);
+      display: flex; justify-content: space-between; align-items: center; gap: 4px;
+    }
+    .c2c-featured .tgn-v41-item-meta { color: var(--gold); }
+    .tgn-v41-item-name {
+      font-size: 0.78rem; font-weight: 700; color: #f8fafc; line-height: 1.3;
+      margin: 0.22rem 0 0.45rem;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .tgn-v41-seller-line {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      margin-bottom: 0.45rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tgn-v41-item-foot {
+      display: flex; justify-content: space-between; align-items: center; gap: 0.4rem;
+      padding-top: 0.45rem; border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .tgn-v41-chat-mini {
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: var(--blue);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 0.66rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .tgn-v41-chat-mini:hover { background: var(--blue); color: #041e2b; }
+
+    /* 5. Dolna sekcja: Forum + Turniej */
+    .tgn-v41-bottom {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 0.9rem;
+      align-items: stretch;
+    }
+    .tgn-v41-forum-list { display: flex; flex-direction: column; gap: 0.48rem; }
+    .tgn-v41-forum-row {
+      display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;
+      background: linear-gradient(155deg, rgba(16, 30, 36, 0.85), rgba(8, 16, 20, 0.94));
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 12px; padding: 0.72rem 0.9rem; cursor: pointer; transition: border-color 0.2s;
+    }
+    .tgn-v41-forum-row:hover { border-color: rgba(56, 189, 248, 0.5); }
+
+    .tgn-v41-event-card {
+      background: linear-gradient(155deg, rgba(16, 30, 36, 0.92), rgba(8, 16, 20, 0.96));
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 14px; padding: 1.05rem 1.15rem;
+      display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: border-color 0.2s;
+    }
+    .tgn-v41-event-card:hover { border-color: var(--blue); }
+
+    /* 6. Modal dodawania wyróżnionego ogłoszenia C2C */
+    #tgnPromoteC2cOverlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.84);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      z-index: 9996; display: none; align-items: center; justify-content: center; padding: 0.8rem;
+    }
+    .tgn-prom-modal {
+      width: 100%; max-width: 500px; max-height: 90dvh; overflow-y: auto;
+      background: linear-gradient(165deg, #0e2228, #061014);
+      border: 1.5px solid var(--gold); border-radius: 18px; padding: 1.15rem 1.25rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+    }
+    .tgn-prom-tabs {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem;
+      background: rgba(0, 0, 0, 0.45); padding: 0.26rem; border-radius: 10px; margin: 0.75rem 0 0.9rem;
+    }
+    .tgn-prom-tab {
+      background: transparent; border: none; color: #94a3b8;
+      padding: 0.46rem; border-radius: 7px; font-size: 0.74rem; font-weight: 800; cursor: pointer;
+    }
+    .tgn-prom-tab.active { background: var(--gold); color: #052e16; }
+
+    .tgn-prom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; margin-bottom: 0.75rem; }
+    .tgn-prom-grid label { display: block; font-size: 0.62rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 3px; font-weight: 700; }
+    .tgn-prom-grid input, .tgn-prom-grid select {
+      width: 100%; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 7px; padding: 0.46rem 0.6rem; color: #fff; font-size: 0.76rem; outline: none;
+    }
+    .tgn-prom-grid select option { background: #09161b; color: #fff; }
+    .tgn-prom-bag-row {
+      display: flex; justify-content: space-between; align-items: center; gap: 0.6rem;
+      background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px; padding: 0.6rem 0.75rem; margin-bottom: 0.45rem;
+    }
+
+    /* 7. Samodzielny dymek i okno AI & Czat (lewy dolny róg) */
+    #tgnFloatingAiBtn {
+      position: fixed !important; bottom: 20px !important; left: 20px !important;
+      background: rgba(8, 22, 30, 0.95) !important; color: #f8fafc !important;
+      border: 1.5px solid rgba(56, 189, 248, 0.75) !important; border-radius: 30px !important;
+      padding: 0.62rem 1.05rem !important; font-size: 0.8rem !important; font-weight: 800 !important;
+      display: none; align-items: center !important; gap: 7px !important; cursor: pointer !important;
+      z-index: 8600 !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.78), 0 0 16px rgba(56, 189, 248, 0.22) !important;
+      transition: transform 0.2s !important;
+    }
+    #tgnFloatingAiBtn:hover { transform: scale(1.04) !important; }
+    .tgn-ai-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; flex-shrink: 0; }
+    #tgnFloatingAiPopup {
+      position: fixed !important; bottom: 76px !important; left: 20px !important;
+      width: 370px; max-width: calc(100vw - 24px);
+      background: linear-gradient(165deg, #0d1f26, #061014);
+      border: 1.5px solid rgba(56, 189, 248, 0.65); border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.92); z-index: 9500 !important;
+      display: none; flex-direction: column; overflow: hidden;
+    }
+    .tgn-ai-pop-head { padding: 0.8rem 1rem; background: rgba(0, 0, 0, 0.45); border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center; }
+    .tgn-ai-pop-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem; padding: 0.55rem 0.8rem 0; }
+    .tgn-ai-pop-tab { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); color: #94a3b8; border-radius: 8px; padding: 0.42rem; font-size: 0.74rem; font-weight: 800; cursor: pointer; }
+    .tgn-ai-pop-tab.active.ai { background: var(--blue); color: #041e2b; border-color: var(--blue); }
+    .tgn-ai-pop-tab.active.chat { background: var(--accent); color: #052e16; border-color: var(--accent); }
+    .tgn-ai-pop-msgs { height: 230px; overflow-y: auto; padding: 0.75rem 0.85rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .tgn-pop-msg { font-size: 0.74rem; line-height: 1.4; padding: 0.5rem 0.72rem; border-radius: 10px; max-width: 92%; }
+    .tgn-pop-msg.bot { background: rgba(56, 189, 248, 0.12); border-left: 3px solid var(--blue); color: #f1f5f9; align-self: flex-start; }
+    .tgn-pop-msg.incoming { background: rgba(255, 255, 255, 0.07); border-left: 3px solid var(--gold); color: #f1f5f9; align-self: flex-start; }
+    .tgn-pop-msg.user { background: rgba(74, 222, 128, 0.16); border-right: 3px solid var(--accent); color: #dcfce7; align-self: flex-end; }
+    .tgn-ai-pop-chips { display: flex; gap: 0.35rem; overflow-x: auto; padding: 0 0.85rem 0.55rem; white-space: nowrap; scrollbar-width: none; }
+    .tgn-ai-pop-chips::-webkit-scrollbar { display: none; }
+    .tgn-ai-pop-input { display: flex; gap: 0.4rem; padding: 0.65rem 0.85rem; background: rgba(0, 0, 0, 0.4); border-top: 1px solid rgba(255, 255, 255, 0.08); }
+    .tgn-ai-pop-input input { flex: 1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 8px; padding: 0.48rem 0.65rem; color: #fff; font-size: 0.76rem; outline: none; min-width: 0; }
+    .tgn-ai-pop-input button { border: none; border-radius: 8px; padding: 0 0.9rem; font-size: 0.75rem; font-weight: 800; cursor: pointer; }
+
+    @media (max-width: 1100px) {
+      .tgn-v41-dock { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .tgn-v41-cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .tgn-v41-bottom { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .tgn-v41-shell { padding: 0.8rem 0.8rem 4.5rem !important; }
+      .tgn-v41-hero { grid-template-columns: 1fr; gap: 0.65rem; padding: 0.85rem 0.9rem; }
+      .tgn-v41-title { font-size: 1.18rem; }
+      .tgn-v41-search { max-width: 100%; }
+      .tgn-v41-dock { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1.1rem; }
+      .tgn-v41-dock-item { padding: 0.62rem 0.65rem; gap: 0.5rem; }
+      .tgn-v41-dock-ico { width: 30px; height: 30px; }
+      .tgn-v41-dock-txt strong { font-size: 0.74rem; }
+      .tgn-v41-dock-txt span { font-size: 0.61rem; }
+      .tgn-v41-cards-grid { gap: 0.55rem; margin-bottom: 1.2rem; }
+      .tgn-v41-item-card { padding: 0.58rem; }
+      .tgn-v41-img-box { height: 92px; }
+      .tgn-prom-grid { grid-template-columns: 1fr; }
+      #tgnFloatingAiBtn { bottom: 14px !important; left: 14px !important; padding: 0.55rem 0.9rem !important; font-size: 0.74rem !important; }
+      #tgnFloatingAiPopup { left: 12px !important; right: 12px !important; bottom: 66px !important; width: auto !important; }
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+const _v41Icons = {
+  search: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`,
+  shop: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
+  forum: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+  bag: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+  flag: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>`,
+  trade: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>`,
+  market: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  calendar: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>`,
+  arrow: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`,
+  chevron: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`
+};
+
+// =========================================================================
+// 1. MODUŁ WYRÓŻNIONYCH OGŁOSZEŃ Z MARKETPLACE C2C (Z ZAPISYWANIEM)
+// =========================================================================
+window.HomeFeaturedC2C = {
+  storageKey: 'tgn_home_featured_c2c_v41',
+  modalTab: 'NEW',
+
+  defaultAds: [
+    {
+      id: 9001, title: "Scotty Cameron Phantom X 5.5 (34\")", category: "Putter",
+      price: 1550, cond: "9.5/10", seller: "Krzysztof_SZ", city: "Szczecin", imgUrl: ""
+    },
+    {
+      id: 9002, title: "Callaway Paradym Ai Smoke Max 10.5° Stiff", category: "Driver",
+      price: 1790, cond: "9/10", seller: "Michal_WWA", city: "Warszawa", imgUrl: ""
+    },
+    {
+      id: 9003, title: "Torba Titleist Players 4 StaDry Wodoodporna", category: "Torba",
+      price: 780, cond: "9/10", seller: "Anna_Golf", city: "Gdańsk", imgUrl: ""
+    },
+    {
+      id: 9004, title: "Dalmierz Bushnell Tour V6 Shift Slope", category: "Elektronika",
+      price: 1390, cond: "9.5/10", seller: "Piotr_Krk", city: "Kraków", imgUrl: ""
+    }
+  ],
+
+  getAds: function() {
+    try {
+      const saved = localStorage.getItem(this.storageKey);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+    return [...this.defaultAds];
+  },
+
+  saveAds: function(list) {
+    try { localStorage.setItem(this.storageKey, JSON.stringify(list)); } catch (e) {}
+  },
+
+  removeAd: function(adId) {
+    const updated = this.getAds().filter(a => Number(a.id) !== Number(adId));
+    this.saveAds(updated);
+    window.app.switchTab('home');
+    window.app.showToast('Usunięto ogłoszenie z wyróżnionych na stronie głównej.');
+  },
+
+  openModal: function(tab = 'NEW') {
+    this.modalTab = tab;
+    if (typeof ProfileAndBagComponent !== 'undefined' && ProfileAndBagComponent.initSavedBag) {
+      ProfileAndBagComponent.initSavedBag();
+    }
+    this.renderModal();
+  },
+
+  closeModal: function() {
+    const ov = document.getElementById('tgnPromoteC2cOverlay');
+    if (ov) ov.style.display = 'none';
+  },
+
+  promoteFromBag: function(clubId) {
+    const club = (window.AppData.bag || []).find(c => Number(c.id) === Number(clubId));
+    if (!club) return;
+    const u = window.AppData.user || window.DefaultUser;
+    const numPrice = parseInt(String(club.val || '1200').replace(/\D/g, ''), 10) || 1200;
+
+    const newAd = {
+      id: Date.now(),
+      title: `${club.name} (${club.loft})`,
+      category: 'Z Torby 3D',
+      price: numPrice,
+      cond: club.cond || '9/10',
+      seller: u.name || 'Gracz TGN',
+      city: u.city || 'Polska',
+      imgUrl: club.imgUrl || ''
+    };
+
+    const list = this.getAds();
+    list.unshift(newAd);
+    this.saveAds(list);
+    this.closeModal();
+    window.app.switchTab('home');
+    window.app.showToast(`Wyróżniono ogłoszenie na stronie głównej: ${club.name}`);
+  },
+
+  submitNewAd: function() {
+    const title = document.getElementById('promAdTitle')?.value.trim();
+    const price = parseInt(document.getElementById('promAdPrice')?.value, 10);
+    const category = document.getElementById('promAdCat')?.value || 'Sprzęt';
+    const cond = document.getElementById('promAdCond')?.value || '9/10';
+    const city = document.getElementById('promAdCity')?.value.trim() || (window.AppData.user?.city || 'Polska');
+    const imgUrl = document.getElementById('promAdImg')?.value.trim() || '';
+
+    if (!title || !price) {
+      window.app.showToast('Wpisz nazwę sprzętu oraz cenę!');
+      return;
+    }
+
+    const u = window.AppData.user || window.DefaultUser;
+    const newAd = {
+      id: Date.now(),
+      title, category, price, cond,
+      seller: u.name || 'Gracz TGN',
+      city, imgUrl
+    };
+
+    const list = this.getAds();
+    list.unshift(newAd);
+    this.saveAds(list);
+    this.closeModal();
+    window.app.switchTab('home');
+    window.app.showToast(`Dodano wyróżnione ogłoszenie: ${title}`);
+  },
+
+  renderModal: function() {
+    let ov = document.getElementById('tgnPromoteC2cOverlay');
+    if (!ov) {
+      ov = document.createElement('div');
+      ov.id = 'tgnPromoteC2cOverlay';
+      ov.onclick = () => window.HomeFeaturedC2C.closeModal();
+      document.body.appendChild(ov);
+    }
+
+    const u = window.AppData.user || window.DefaultUser;
+    const bag = window.AppData.bag || [];
+    const isNew = this.modalTab === 'NEW';
+
+    const bagHTML = bag.length === 0
+      ? `<p style="font-size:0.76rem; color:#94a3b8; text-align:center; padding:1rem 0;">Brak kijów w Twojej Torbie 3D. Użyj zakładki „Nowe ogłoszenie”.</p>`
+      : bag.map(c => `
+          <div class="tgn-prom-bag-row">
+            <div style="min-width:0;">
+              <strong style="font-size:0.78rem; color:#fff; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.name}</strong>
+              <span style="font-size:0.66rem; color:#94a3b8;">${c.loft} • Stan: ${c.cond} • ${c.val}</span>
+            </div>
+            <button type="button" class="tgn-v41-promote-btn" style="flex-shrink:0;" onclick="window.HomeFeaturedC2C.promoteFromBag(${c.id})">Wyróżnij →</button>
+          </div>
+        `).join('');
+
+    ov.innerHTML = `
+      <div class="tgn-prom-modal" onclick="event.stopPropagation()">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <strong style="color:var(--gold); font-size:0.9rem;">Wyróżnij ogłoszenie na Stronie Głównej</strong>
+            <span style="display:block; font-size:0.68rem; color:#94a3b8;">Twoja oferta z Giełdy C2C trafi prosto na ekran startowy TGN</span>
+          </div>
+          <button type="button" style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:28px; height:28px; border-radius:50%; cursor:pointer;" onclick="window.HomeFeaturedC2C.closeModal()">✕</button>
+        </div>
+
+        <div class="tgn-prom-tabs">
+          <button type="button" class="tgn-prom-tab ${isNew ? 'active' : ''}" onclick="window.HomeFeaturedC2C.openModal('NEW')">Nowe ogłoszenie</button>
+          <button type="button" class="tgn-prom-tab ${!isNew ? 'active' : ''}" onclick="window.HomeFeaturedC2C.openModal('BAG')">Z mojej Torby 3D (${bag.length})</button>
+        </div>
+
+        ${isNew ? `
+          <div class="tgn-prom-grid">
+            <div style="grid-column:span 2;">
+              <label>Nazwa sprzętu *</label>
+              <input type="text" id="promAdTitle" placeholder="np. Titleist TSR3 10° Ventus Blue 6S">
+            </div>
+            <div>
+              <label>Kategoria</label>
+              <select id="promAdCat">
+                <option value="Driver">Driver</option>
+                <option value="Irony">Zestaw Ironów</option>
+                <option value="Wedge">Wedge</option>
+                <option value="Putter">Putter</option>
+                <option value="Torba">Torba / Wózek</option>
+                <option value="Elektronika">Dalmierz / GPS</option>
+              </select>
+            </div>
+            <div>
+              <label>Cena (PLN) *</label>
+              <input type="number" id="promAdPrice" placeholder="np. 1450">
+            </div>
+            <div>
+              <label>Stan</label>
+              <select id="promAdCond">
+                <option value="10/10 (Mint)">10/10 (Mint)</option>
+                <option value="9.5/10" selected>9.5/10</option>
+                <option value="9/10">9/10</option>
+                <option value="8/10">8/10</option>
+              </select>
+            </div>
+            <div>
+              <label>Miasto</label>
+              <input type="text" id="promAdCity" value="${u.city || 'Szczecin'}">
+            </div>
+            <div style="grid-column:span 2;">
+              <label>Link URL do zdjęcia (opcjonalnie — puste pobierze automatycznie)</label>
+              <input type="text" id="promAdImg" placeholder="https://...">
+            </div>
+          </div>
+          <button type="button" class="btn-primary" style="margin:0; padding:0.65rem;" onclick="window.HomeFeaturedC2C.submitNewAd()">
+            Opublikuj wyróżnione ogłoszenie
+          </button>
+        ` : bagHTML}
+      </div>
+    `;
+    ov.style.display = 'flex';
+  }
+};
+
+// =========================================================================
+// 2. STRONA GŁÓWNA v41.0
+// =========================================================================
+window.HomeComponent = {
+  render: function() {
+    window.ensureAllPortalDataReady();
+
+    const u = (window.AppData && window.AppData.user) ? window.AppData.user : window.DefaultUser;
+    const isAdmin = u.role === 'ADMIN';
+    const firstName = (u.name || 'Golfista').split(' ')[0];
+    const products = window.AppData.storeProducts || [];
+    const forumPosts = window.AppData.forumPosts || [];
+    const bagCount = (window.AppData.bag || []).length;
+    const featuredAds = window.HomeFeaturedC2C.getAds();
+    const events = window.AppData.events2027 || [];
+    const nextEvent = events[0] || {
+      title: "TGN Polish Masters Open 2027",
+      date: "15–17 Maja 2027",
+      location: "Modry Las Golf Resort",
+      spotsLeft: 14
+    };
+
+    const dockModules = [
+      { tab: 'sklep', tone: 'tone-green', icon: _v41Icons.shop, title: 'Pro Shop & CPO', sub: `${products.length} ofert` },
+      { tab: 'marketplace', tone: 'tone-gold', icon: _v41Icons.market, title: 'Giełda C2C', sub: 'Ogłoszenia graczy' },
+      { tab: 'forum', tone: 'tone-blue', icon: _v41Icons.forum, title: 'Forum Golfowe', sub: `${forumPosts.length} tematów` },
+      { tab: 'profile', tone: 'tone-gold', icon: _v41Icons.bag, title: 'Moja Torba 3D', sub: `${bagCount}/14 kijów` },
+      { tab: 'pola', tone: 'tone-green', icon: _v41Icons.flag, title: 'Pola w Polsce', sub: '25 obiektów' },
+      { tab: 'cpo', tone: 'tone-blue', icon: _v41Icons.trade, title: 'Skup CPO', sub: 'Wycena kijów' }
+    ];
+
+    const dockHTML = dockModules.map(m => `
+      <div class="tgn-v41-dock-item ${m.tone}" onclick="window.app.switchTab('${m.tab}')">
+        <span class="tgn-v41-dock-ico">${m.icon}</span>
+        <div class="tgn-v41-dock-txt">
+          <strong>${m.title}</strong>
+          <span>${m.sub}</span>
+        </div>
+      </div>
+    `).join('');
+
+    const spotlightHTML = products.slice(0, 4).map(prod => {
+      const imgUrl = (typeof ClubImageEngine !== 'undefined')
+        ? ClubImageEngine.getClubVisualUrl(prod.name, prod.imgUrl) : '';
+      const fallbackUrl = (typeof ClubImageEngine !== 'undefined')
+        ? ClubImageEngine.getFallbackPhoto(prod.name) : '';
+      const isUsed = prod.section === 'USED';
+      const openFn = (typeof StoreComponent !== 'undefined' && StoreComponent.openProductPage)
+        ? `StoreComponent.openProductPage(${prod.id})`
+        : `window.app.switchTab('sklep')`;
+
+      return `
+        <div class="tgn-v41-item-card" onclick="${openFn}">
+          <div>
+            <div class="tgn-v41-img-box">
+              <img src="${imgUrl}" alt="${prod.name}" onerror="this.onerror=null; this.src='${fallbackUrl}';">
+              <span class="tgn-v41-badge ${isUsed ? 'cpo' : ''}">${isUsed ? 'CPO' : 'Nowy'}</span>
+            </div>
+            <div class="tgn-v41-item-meta"><span>${prod.brand}</span></div>
+            <div class="tgn-v41-item-name">${prod.name}</div>
+          </div>
+          <div class="tgn-v41-item-foot">
+            <strong style="font-size:0.88rem; color:#fff;">${prod.price} zł</strong>
+            <span style="color:var(--accent); display:inline-flex;">${_v41Icons.arrow}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const featuredC2cHTML = featuredAds.slice(0, 4).map(ad => {
+      const imgUrl = (typeof ClubImageEngine !== 'undefined')
+        ? ClubImageEngine.getClubVisualUrl(ad.title, ad.imgUrl) : '';
+      const fallbackUrl = (typeof ClubImageEngine !== 'undefined')
+        ? ClubImageEngine.getFallbackPhoto(ad.title) : '';
+      const safeSeller = (ad.seller || 'Sprzedawca').replace(/'/g, "");
+
+      return `
+        <div class="tgn-v41-item-card c2c-featured" onclick="window.app.switchTab('marketplace')">
+          <div>
+            <div class="tgn-v41-img-box">
+              <img src="${imgUrl}" alt="${ad.title}" onerror="this.onerror=null; this.src='${fallbackUrl}';">
+              <span class="tgn-v41-badge promoted">Wyróżnione</span>
+              ${isAdmin ? `<button type="button" class="tgn-v41-unpin-btn" onclick="event.stopPropagation(); window.HomeFeaturedC2C.removeAd(${ad.id})">✕ Odepnij</button>` : ''}
+            </div>
+            <div class="tgn-v41-item-meta">
+              <span>${ad.category}</span>
+              <span style="color:#94a3b8; font-weight:600;">Stan ${ad.cond}</span>
+            </div>
+            <div class="tgn-v41-item-name">${ad.title}</div>
+            <div class="tgn-v41-seller-line">${ad.seller} • ${ad.city}</div>
+          </div>
+          <div class="tgn-v41-item-foot">
+            <strong style="font-size:0.88rem; color:var(--gold);">${ad.price} zł</strong>
+            <button type="button" class="tgn-v41-chat-mini" onclick="event.stopPropagation(); window.app.openChat('${safeSeller}')">Napisz</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const forumHTML = forumPosts.slice(0, 3).map(post => `
+      <div class="tgn-v41-forum-row" onclick="window.app.switchTab('forum')">
+        <div style="min-width:0;">
+          <div style="font-size:0.65rem; color:var(--blue); font-weight:700; margin-bottom:2px;">
+            ${post.category || 'Społeczność'} • <span style="color:#64748b;">${post.date || 'Dzisiaj'}</span>
+          </div>
+          <strong style="font-size:0.8rem; color:#f1f5f9; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            ${post.title}
+          </strong>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.45rem; color:#94a3b8; font-size:0.7rem; flex-shrink:0;">
+          <span>${(post.comments || []).length} odp.</span>
+          ${_v41Icons.chevron}
+        </div>
+      </div>
+    `).join('');
+
+    setTimeout(() => window.FloatingAiWidget && window.FloatingAiWidget.sync(), 20);
+
+    return `
+      <section class="panel-3d tgn-v41-shell" style="grid-column: span 2;">
+        
+        <!-- 1. Zbalansowany Hero -->
+        <div class="tgn-v41-hero">
+          <div>
+            <span class="tgn-v41-eyebrow">TGN Global Golf</span>
+            <h1 class="tgn-v41-title">Witaj, ${firstName}</h1>
+          </div>
+          <div class="tgn-v41-search-wrap">
+            <div class="tgn-v41-search">
+              ${_v41Icons.search}
+              <input type="text" id="homeQuickSearch" placeholder="Szukaj sprzętu (np. Qi10, Vokey, Pro V1)..." onkeypress="if(event.key==='Enter'){ window.app.quickSearchFromHome(); }">
+              <button type="button" onclick="window.app.quickSearchFromHome()">Szukaj</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Jeden zwarty rząd 6 działów na PC (2x3 na telefonie) -->
+        <div class="tgn-v41-dock">
+          ${dockHTML}
+        </div>
+
+        <!-- 3. Wybrane w Pro Shopie -->
+        <div class="tgn-v41-sec-head">
+          <div class="tgn-v41-sec-title-wrap">
+            <h3>Wybrane w Pro Shopie</h3>
+          </div>
+          <button type="button" class="tgn-v41-sec-link" onclick="window.app.switchTab('sklep')">
+            Pełny katalog ${_v41Icons.arrow}
+          </button>
+        </div>
+        <div class="tgn-v41-cards-grid">
+          ${spotlightHTML}
+        </div>
+
+        <!-- 4. Wyróżnione ogłoszenia z Giełdy Graczy C2C -->
+        <div class="tgn-v41-sec-head">
+          <div class="tgn-v41-sec-title-wrap">
+            <h3>Wyróżnione na Giełdzie C2C</h3>
+            <span class="tgn-v41-sec-pill">Promowane</span>
+          </div>
+          <div class="tgn-v41-head-actions">
+            <button type="button" class="tgn-v41-promote-btn" onclick="window.HomeFeaturedC2C.openModal('NEW')">
+              + Wyróżnij ogłoszenie
+            </button>
+            <button type="button" class="tgn-v41-sec-link" style="color:var(--gold);" onclick="window.app.switchTab('marketplace')">
+              Cała giełda ${_v41Icons.arrow}
+            </button>
+          </div>
+        </div>
+        <div class="tgn-v41-cards-grid">
+          ${featuredC2cHTML}
+        </div>
+
+        <!-- 5. Forum + Turnieje -->
+        <div class="tgn-v41-bottom">
+          <div>
+            <div class="tgn-v41-sec-head">
+              <h3>Ostatnio na forum</h3>
+              <button type="button" class="tgn-v41-sec-link" onclick="window.app.switchTab('forum')">
+                Wszystkie ${_v41Icons.arrow}
+              </button>
+            </div>
+            <div class="tgn-v41-forum-list">
+              ${forumHTML}
+            </div>
+          </div>
+
+          <div class="tgn-v41-event-card" onclick="window.app.switchTab('wydarzenia')">
+            <div>
+              <div style="display:inline-flex; align-items:center; gap:6px; font-size:0.65rem; font-weight:800; letter-spacing:0.8px; text-transform:uppercase; color:var(--blue); margin-bottom:0.55rem;">
+                ${_v41Icons.calendar}
+                <span>Kalendarz Turniejów 2027</span>
+              </div>
+              <strong style="font-size:0.96rem; color:#ffffff; display:block; margin-bottom:0.35rem; line-height:1.3;">
+                ${nextEvent.title}
+              </strong>
+              <p style="font-size:0.74rem; color:#94a3b8; line-height:1.45; margin:0;">
+                ${nextEvent.date} • ${nextEvent.location}<br>
+                Dostępne miejsca: <strong style="color:var(--accent);">${nextEvent.spotsLeft}</strong>
+              </p>
+            </div>
+            <span style="margin-top:0.85rem; display:inline-flex; align-items:center; gap:5px; font-size:0.74rem; font-weight:700; color:var(--blue);">
+              Zobacz harmonogram i zapisy ${_v41Icons.arrow}
+            </span>
+          </div>
+        </div>
+
+      </section>
+    `;
+  }
+};
+HomeComponent = window.HomeComponent;
